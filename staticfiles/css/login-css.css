@@ -1,0 +1,30 @@
+.auth-form-container{
+    	display: block;
+	width: 300px;
+	background-color: #1864ab;
+	border: 1px solid rgb(156, 152, 152);
+	padding: 40px;
+	margin-bottom: 15px;
+	border-radius: 3px;
+	border: 1px solid;
+	box-shadow: 1px 2px 3px #888888;
+    margin-top: 50px;
+    margin-left: 40%;
+}
+
+.auth-form p {
+    padding-bottom: 20px;
+}
+
+button{
+    border-radius: 30px;
+    height: 30px;
+    width: 60px;
+    border: none;
+    margin-left: 50px;
+    background-color: #ffc078;
+    margin-bottom: 20px;
+}
+
+
+

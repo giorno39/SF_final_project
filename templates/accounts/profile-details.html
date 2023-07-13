@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    {% if is_owner %}
+        <a href="{% url 'edit-user' pk=object.pk %}">Edit</a>
+        <a href="{% url 'delete-user' pk=object.pk %}">Delete</a>
+    {% endif %}
+    <p>{{ object.get_full_name }}</p>
+    <p>{{ object.email }}</p>
+    <p>{{ object.user_type }}</p>
+
+{% endblock %}
