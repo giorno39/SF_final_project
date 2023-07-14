@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    {% if is_owner %}
+        <a href="{% url 'term-paper-edit' pk=object.pk %}">Edit</a>
+        <a href="{% url 'term-paper-delete' pk=object.pk %}">Delete</a>
+    {% endif %}
+    <p>{{ object.title }}</p>
+    <p>{{ object.university }}</p>
+    <p>{{ object.death_line }}</p>
+    <p>{{ object.price_cap }}</p>
+    <p>{{ object.description }}</p>
+
+    <a href="{% url 'term-paper-file-open' pk=object.pk %}">Open File</a>
+
+{% endblock %}

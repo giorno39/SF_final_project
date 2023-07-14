@@ -1,0 +1,13 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div>Term Papers:</div>
+    {% for object in object_list %}
+        <div class="term-paper-card">
+            <p>{{ object.title }}</p>
+
+            <a href="{% url 'term-paper-details' pk=object.pk %}">Details</a>
+        </div>
+    {% endfor %}
+
+{% endblock %}

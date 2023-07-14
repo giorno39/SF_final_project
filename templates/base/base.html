@@ -16,6 +16,7 @@
         <h1 class="page-title"><a href="{% url 'index' %}">Project title</a></h1>
         <nav class="navigation">
             {% if request.user.is_authenticated %}
+                <a href="{% url 'term-paper-add' %}">Add term paper</a>
                 <a href="{% url 'details-user' pk=request.user.pk %}">Profile</a>
             <a href="{% url 'logout-user' %}">Log Out</a>
             {% else %}

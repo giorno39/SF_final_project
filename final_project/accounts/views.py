@@ -46,14 +46,13 @@ class ProfileEdit(LoginRequiredMixin, views.UpdateView):
     fields = ('first_name', 'last_name', 'email')
     template_name = 'accounts/profile-edit.html'
 
-    # TODO redirect when other user tries to access
+
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
         if self.request.user != self.object:
             return redirect('details-user', pk=self.object.pk)
 
         return result
-
 
 
     def get_success_url(self):
@@ -63,6 +62,14 @@ class ProfileEdit(LoginRequiredMixin, views.UpdateView):
 
 
 class ProfileDelete(LoginRequiredMixin, views.DeleteView):
+
     model = UserModel
     template_name = 'accounts/profile-delete.html'
     success_url = reverse_lazy('index')
+
+    def get(self, request, *args, **kwargs):
+        result = super().get(request, *args, **kwargs)
+        if self.request.user != self.object:
+            return redirect('details-user', pk=self.object.pk)
+
+        return result
