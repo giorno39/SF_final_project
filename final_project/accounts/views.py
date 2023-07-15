@@ -1,3 +1,5 @@
+from statistics import mean
+
 from django.contrib.auth import views as auth_views, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
@@ -5,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views import generic as views
 
 from final_project.accounts.forms import UserCreateForm, UserEditForm
+from final_project.trophies.models import Trophy
 
 UserModel = get_user_model()
 
@@ -37,6 +40,12 @@ class ProfileDetails(LoginRequiredMixin, views.DetailView):
         context = super().get_context_data(**kwargs)
 
         context['is_owner'] = self.request.user == self.object
+        if self.object.user_type == 'teacher':
+            trophies = Trophy.objects.filter(completed_by=self.object.pk).all()
+            avg_rate = mean([trophy.rate for trophy in list(trophies)])
+
+            context['avg_rate'] = avg_rate
+
         return context
 
 
@@ -46,14 +55,12 @@ class ProfileEdit(LoginRequiredMixin, views.UpdateView):
     fields = ('first_name', 'last_name', 'email')
     template_name = 'accounts/profile-edit.html'
 
-
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
         if self.request.user != self.object:
             return redirect('details-user', pk=self.object.pk)
 
         return result
-
 
     def get_success_url(self):
         return reverse_lazy('details-user', kwargs={
@@ -62,7 +69,6 @@ class ProfileEdit(LoginRequiredMixin, views.UpdateView):
 
 
 class ProfileDelete(LoginRequiredMixin, views.DeleteView):
-
     model = UserModel
     template_name = 'accounts/profile-delete.html'
     success_url = reverse_lazy('index')

@@ -26,7 +26,8 @@ INSTALLED_APPS = [
 
     'final_project.accounts',
     'final_project.common',
-    'final_project.term_papers'
+    'final_project.term_papers',
+    'final_project.trophies',
 
 ]
 

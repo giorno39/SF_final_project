@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -16,6 +17,13 @@ class TermPaperIndexView(views.ListView):
     model = TermPaper
     template_name = 'term-papers/term-paper-index.html'
 
+    def get_queryset(self, *args, **kwargs):
+        queryset = TermPaper.objects \
+            .filter(taken_by=None) \
+            .all()
+
+        return queryset
+
 
 class TermPaperDetailsView(views.DetailView):
     model = TermPaper
@@ -24,6 +32,7 @@ class TermPaperDetailsView(views.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_owner'] = self.request.user.pk == self.object.user_id
+        context['is_taken'] = self.object.taken_by
 
         return context
 
@@ -46,6 +55,7 @@ class TermPaperCreateView(views.CreateView):
 
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
+        # TODO check how to acces related objects
         c_user = UserModel.objects. \
             filter(pk=self.request.user.pk). \
             get()
@@ -68,6 +78,7 @@ class TermPaperEditView(views.UpdateView):
 
 
 class TermPaperDeleteView(views.DeleteView):
+    #TODO delete the file as well as the paper
     model = TermPaper
     template_name = 'term-papers/term-paper-delete.html'
     success_url = reverse_lazy('term-paper-index')
@@ -80,3 +91,38 @@ def open_file(request, pk):
     response = FileResponse(open(file_path, 'rb'))
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
     return response
+
+
+@login_required
+def take_term_paper(request, pk):
+    c_user = UserModel.objects. \
+        filter(pk=request.user.pk). \
+        get()
+
+    if c_user.user_type == 'student':
+        return redirect('term-paper-details', pk=pk)
+
+    term_paper = TermPaper.objects \
+        .filter(pk=pk) \
+        .get()
+
+    term_paper.taken_by = request.user
+    return redirect('term-paper-details', pk=pk)
+
+
+class CompletePaper(views.UpdateView):
+    model = TermPaper
+    template_name = 'teacher/teacher-complete-paper.html'
+    fields = ('content',)
+
+    def get_success_url(self):
+        return reverse_lazy('teacher-papers')
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        form.instance.completed = True
+
+        return form
+
+    #TODO redirect if accessed by someone the is not the appropriate teacher
+

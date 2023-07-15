@@ -56,7 +56,13 @@ class TermPaper(models.Model):
         validators=(file_size_validator,)
     )
 
-    is_taken = models.BooleanField(
+    completed = models.BooleanField(
+        null=False,
+        blank=True,
+        default=False,
+    )
+
+    rated = models.BooleanField(
         null=False,
         blank=True,
         default=False,
@@ -66,5 +72,18 @@ class TermPaper(models.Model):
         UserModel,
         on_delete=models.CASCADE,
     )
+
+    taken_by = models.OneToOneField(
+        UserModel,
+        on_delete=models.RESTRICT,
+        related_name='taken_by_teacher',
+        null=True,
+        blank=True,
+        default=None,
+    )
+
+
+
+
 
 

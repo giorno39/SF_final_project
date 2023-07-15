@@ -14,4 +14,18 @@
 
     <a href="{% url 'term-paper-file-open' pk=object.pk %}">Open File</a>
 
+    {% if not is_taken %}
+        <div>
+        {% if request.user.user_type == 'teacher' %}
+    <a href="{% url 'term-paper-take' pk=object.pk %}">Take term paper</a>
+            {% endif %}
+        </div>
+        {% elif object.completed %}
+        <p>Completed</p>
+        <p><a href="{% url 'trophy-add' paper_pk=object.pk %}">Rate</a></p>
+
+        {% else %}
+        <p>Already taken</p>
+    {% endif %}
+
 {% endblock %}
