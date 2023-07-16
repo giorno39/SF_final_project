@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'final_project.common',
     'final_project.term_papers',
     'final_project.trophies',
+    'final_project.lessons',
 
 ]
 

@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div>Lessons:</div>
+    {% for object in object_list %}
+{#        TODO make a new card class#}
+        <div class="term-paper-card">
+            <p>{{ object.title }}</p>
+
+            <a href="{% url 'lesson-details' pk=object.pk %}">Details</a>
+        </div>
+    {% endfor %}
+
+{% endblock %}

@@ -70,11 +70,25 @@ class TermPaperEditView(views.UpdateView):
     model = TermPaper
     fields = ('title', 'death_line', 'price_cap',)
     template_name = 'term-papers/term-paper-edit.html'
-
+#TODO if accessed by someone that is not the creator it must be redirected
     def get_success_url(self):
         return reverse_lazy('term-paper-details', kwargs={
             'pk': self.object.pk,
         })
+
+    def get(self, request, *args, **kwargs):
+        result = super().get(request, *args, **kwargs)
+
+        if self.request.user != self.object.user:
+            result = reverse_lazy('term-paper-details', kwargs={
+                'pk': self.object.pk,
+            })
+
+            return redirect(result)
+
+        return result
+
+
 
 
 class TermPaperDeleteView(views.DeleteView):
@@ -106,7 +120,8 @@ def take_term_paper(request, pk):
         .filter(pk=pk) \
         .get()
 
-    term_paper.taken_by = request.user
+    term_paper.taken_by_id = request.user.pk
+    term_paper.save()
     return redirect('term-paper-details', pk=pk)
 
 

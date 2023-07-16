@@ -23,6 +23,8 @@
 {#             TODO make finish paper func with the completed field, and check the filters in the list views#}
 {#             TODO       , add the completed func#}
                     <a href="{% url 'teacher-papers' %}">Taken Papers</a>
+                    <a href="{% url 'lesson-add' %}">Add lesson</a>
+                    <a href="{% url 'own-lesson-index' %}">My lessons</a>
                     {% endif %}
 
                 <a href="{% url 'details-user' pk=request.user.pk %}">Profile</a>
@@ -35,7 +37,7 @@
       </header>
         {% block content %}
         {% endblock %}
-      <footer>Copyright © 2027 by The Code Magazine.</footer>
+      <footer>Copyright © 2027 by The student helper.</footer>
     </div>
   </body>
 </html>

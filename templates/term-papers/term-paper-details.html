@@ -27,5 +27,8 @@
         {% else %}
         <p>Already taken</p>
     {% endif %}
+    {% if object.taken_by %}
+    <p><a href="{% url 'details-user' pk=object.taken_by_id %}">Taken by</a></p>
+    {% endif %}
 
 {% endblock %}
