@@ -15,17 +15,14 @@ class CreateTrophyView(views.CreateView):
     fields = ('rate',)
     success_url = reverse_lazy('student-papers')
 
-
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)
         term_paper = TermPaper.objects \
             .filter(pk=self.kwargs['paper_pk']) \
             .get()
 
-
         form.instance.project = term_paper.title
         form.instance.completed_by = term_paper.taken_by
-
 
         return form
 
@@ -47,7 +44,6 @@ class CreateTrophyView(views.CreateView):
 
         return result
 
-
     def post(self, request, *args, **kwargs):
         result = super().post(request, *args, **kwargs)
 
@@ -59,4 +55,3 @@ class CreateTrophyView(views.CreateView):
         term_paper.save()
 
         return result
-

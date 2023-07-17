@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views import generic as views
 
 from final_project.accounts.forms import UserCreateForm, UserEditForm
+from final_project.completed_papers.models import CompletedPaper
 from final_project.trophies.models import Trophy
 
 UserModel = get_user_model()
@@ -42,9 +43,12 @@ class ProfileDetails(LoginRequiredMixin, views.DetailView):
         context['is_owner'] = self.request.user == self.object
         if self.object.user_type == 'teacher':
             trophies = Trophy.objects.filter(completed_by=self.object.pk).all()
-            avg_rate = mean([trophy.rate for trophy in list(trophies)])
+            if trophies:
+                avg_rate = mean([trophy.rate for trophy in list(trophies)])
 
-            context['avg_rate'] = avg_rate
+                context['avg_rate'] = avg_rate
+            else:
+                context['avg_rate'] = None
 
         return context
 
@@ -77,5 +81,10 @@ class ProfileDelete(LoginRequiredMixin, views.DeleteView):
         result = super().get(request, *args, **kwargs)
         if self.request.user != self.object:
             return redirect('details-user', pk=self.object.pk)
+
+        return result
+
+    def post(self, request, *args, **kwargs):
+        result = super().post(request, *args, **kwargs)
 
         return result

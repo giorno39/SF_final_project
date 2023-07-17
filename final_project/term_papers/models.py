@@ -17,7 +17,7 @@ class TermPaper(models.Model):
 
     title = models.CharField(
         max_length=TERM_PAPER_MAX_LEN,
-        validators=(validators.MinLengthValidator,),
+        validators=(validators.MinLengthValidator(TERM_PAPER_MIN_LEN),),
         null=False,
         blank=False,
     )
@@ -73,7 +73,7 @@ class TermPaper(models.Model):
         on_delete=models.CASCADE,
     )
 
-    taken_by = models.OneToOneField(
+    taken_by = models.ForeignKey(
         UserModel,
         on_delete=models.RESTRICT,
         related_name='taken_by_teacher',

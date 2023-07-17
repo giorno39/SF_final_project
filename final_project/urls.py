@@ -24,5 +24,7 @@ urlpatterns = [
     path('term-paper/', include('final_project.term_papers.urls')),
     path('trophy/', include('final_project.trophies.urls')),
     path('lesson/', include('final_project.lessons.urls')),
+    path('completed-papers/', include('final_project.completed_papers.urls')),
+    path('useful-materials/', include('final_project.useful_materials.urls')),
 
 ]

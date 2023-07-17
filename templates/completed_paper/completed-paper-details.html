@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <p>{{ object.title }}</p>
+    <p>{{ object.university }}</p>
+    <p>{{ object.subject }}</p>
+    {% if object.completed_by %}
+    <p><a href="{% url 'details-user' pk=object.completed_by_id %}">{{ object.completed_by }}</a></p>
+    {% endif %}
+
+    <a href="{% url 'completed_paper-open' pk=object.pk %}">Open File</a>
+
+
+{% endblock %}

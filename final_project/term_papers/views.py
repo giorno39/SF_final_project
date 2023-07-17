@@ -7,6 +7,7 @@ from django.views import generic as views
 import os
 
 from final_project import settings
+from final_project.completed_papers.models import CompletedPaper
 from final_project.term_papers.forms import TermPaperCreateForm
 from final_project.term_papers.models import TermPaper
 
@@ -19,7 +20,7 @@ class TermPaperIndexView(views.ListView):
 
     def get_queryset(self, *args, **kwargs):
         queryset = TermPaper.objects \
-            .filter(taken_by=None) \
+            .filter(taken_by=None, completed=False) \
             .all()
 
         return queryset
@@ -70,7 +71,8 @@ class TermPaperEditView(views.UpdateView):
     model = TermPaper
     fields = ('title', 'death_line', 'price_cap',)
     template_name = 'term-papers/term-paper-edit.html'
-#TODO if accessed by someone that is not the creator it must be redirected
+
+    # TODO if accessed by someone that is not the creator it must be redirected
     def get_success_url(self):
         return reverse_lazy('term-paper-details', kwargs={
             'pk': self.object.pk,
@@ -89,10 +91,8 @@ class TermPaperEditView(views.UpdateView):
         return result
 
 
-
-
 class TermPaperDeleteView(views.DeleteView):
-    #TODO delete the file as well as the paper
+    # TODO delete the file as well as the paper
     model = TermPaper
     template_name = 'term-papers/term-paper-delete.html'
     success_url = reverse_lazy('term-paper-index')
@@ -133,11 +133,25 @@ class CompletePaper(views.UpdateView):
     def get_success_url(self):
         return reverse_lazy('teacher-papers')
 
-    def get_form(self, *args, **kwargs):
-        form = super().get_form(*args, **kwargs)
-        form.instance.completed = True
 
-        return form
+    def post(self, request, *args, **kwargs):
+        result = super().post(request, *args, **kwargs)
 
-    #TODO redirect if accessed by someone the is not the appropriate teacher
+        self.object.completed = True
 
+        CompletedPaper.objects.create(
+            title=self.object.title,
+            subject=self.object.subject,
+            university=self.object.university,
+            content=self.object.content,
+            completed_by=self.object.taken_by,
+        )
+
+        # self.object.taken_by_id = None
+        self.object.save()
+
+
+        return result
+
+
+    # TODO redirect if accessed by someone the is not the appropriate teacher

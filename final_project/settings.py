@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'final_project.term_papers',
     'final_project.trophies',
     'final_project.lessons',
+    'final_project.completed_papers',
+    'final_project.useful_materials',
 
 ]
 
