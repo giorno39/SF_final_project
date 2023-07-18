@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{#TODO ADD ALL FIELDS#}
+{{ object.username }}
+{% for group in groups %}
+    {{ group.name }}
+{% endfor %}
+
+<a href="{% url 'admin-user-delete' pk=object.pk %}">DELETE</a>
+</body>
+</html>

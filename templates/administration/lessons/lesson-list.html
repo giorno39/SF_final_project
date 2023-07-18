@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for object in object_list %}
+
+    <div>
+    {{ object.title }}
+    {{ object.price }}
+    </div>
+    <a href="{% url 'admin-lesson-edit' pk=object.pk %}">Change</a>
+    <a href="{% url 'admin-lesson-details' pk=object.pk %}">Details</a>
+
+{% endfor %}
+</body>
+</html>

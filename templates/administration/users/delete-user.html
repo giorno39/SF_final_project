@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Do you want to delete the user</h2>
+    <form method="post" action={% url 'admin-user-delete' pk=object.pk %}>
+        {% csrf_token %}
+        <button>Yes</button>
+    </form>
+<a href="{% url 'admin-user-details' pk=object.pk %}">Go back</a>
+</body>
+</html>

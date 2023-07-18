@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% for object in object_list %}
+        <div>
+        {{ object.user_type }}
+        {{ object.username }}
+        </div>
+        <a href="{% url 'admin-user-edit' pk=object.pk %}">Change</a>
+        <a href="{% url 'admin-user-details' pk=object.pk %}">Details</a>
+    {% endfor %}
+</body>
+</html>

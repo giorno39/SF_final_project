@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'final_project.lessons',
     'final_project.completed_papers',
     'final_project.useful_materials',
+    'final_project.administration'
 
 ]
 

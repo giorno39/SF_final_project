@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for object in object_list %}
+
+    <div>
+    {{ object.title }}
+    {{ object.university }}
+    </div>
+
+    <a href="{% url 'admin-completed-edit' pk=object.pk %}">Change</a>
+    <a href="{% url 'admin-completed-details' pk=object.pk %}">Details</a>
+
+{% endfor %}
+</body>
+</html>

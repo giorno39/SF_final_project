@@ -2,6 +2,7 @@ from statistics import mean
 
 from django.contrib.auth import views as auth_views, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
@@ -51,6 +52,7 @@ class ProfileDetails(LoginRequiredMixin, views.DetailView):
                 context['avg_rate'] = None
 
         return context
+
 
 
 class ProfileEdit(LoginRequiredMixin, views.UpdateView):

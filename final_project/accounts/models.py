@@ -5,7 +5,6 @@ from django.contrib.auth.models import UserManager
 from django.core import validators
 from django.db import models
 
-
 from final_project.core.model_mixins import ChoicesEnumMixin
 
 
@@ -44,4 +43,5 @@ class AppUser(auth_models.AbstractUser):
 
     objects = UserManager()
 
-
+    def __str__(self):
+        return f'{self.user_type};{self.username}'

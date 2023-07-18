@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <h3>Groups</h3>
+    <a href="{% url 'admin-group-add' %}">Add</a>
+
+</div>
+<div>
+    <h3>Users</h3>
+    <a href="{% url 'admin-user-add' %}">Add</a>
+    <a href="{% url 'admin-user-list' %}">List</a>
+
+</div>
+<div>
+    <h3>Term-Papers</h3>
+    <a href="{% url 'admin-paper-add' %}">Add</a>
+        <a href="{% url 'admin-paper-list' %}">List</a>
+
+</div>
+<div>
+    <h3>Lessons</h3>
+    <a href="{% url 'admin-lesson-add' %}">Add</a>
+    <a href="{% url 'admin-lesson-list' %}">List</a>
+
+</div>
+<div>
+    <h3>Completed Papers</h3>
+    <a href="{% url 'admin-completed-add' %}">Add</a>
+    <a href="{% url 'admin-completed-list' %}">List</a>
+
+</div>
+<div>
+    <h3>Trophies</h3>
+    <a href="{% url 'admin-trophy-add' %}">Add</a>
+
+</div>
+
+
+</body>
+</html>
