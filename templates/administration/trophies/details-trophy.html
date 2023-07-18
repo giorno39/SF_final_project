@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{ object.rate }}
+{{ object.completed_by }}
+
+<a href="{% url 'admin-trophy-delete' pk=object.pk %}">Delete</a>
+</body>
+</html>

@@ -22,7 +22,6 @@ def allow_groups(groups=None):
 
         return wrapper
 
-    print(groups)
     if callable(groups):
         func = groups
         groups = []

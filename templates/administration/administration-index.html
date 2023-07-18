@@ -12,31 +12,52 @@
 </div>
 <div>
     <h3>Users</h3>
+    {% if add_users %}
     <a href="{% url 'admin-user-add' %}">Add</a>
+    {% endif %}
     <a href="{% url 'admin-user-list' %}">List</a>
 
 </div>
 <div>
     <h3>Term-Papers</h3>
+    {% if add_papers %}
     <a href="{% url 'admin-paper-add' %}">Add</a>
+    {% endif %}
         <a href="{% url 'admin-paper-list' %}">List</a>
 
 </div>
 <div>
     <h3>Lessons</h3>
+    {% if add_lessons %}
     <a href="{% url 'admin-lesson-add' %}">Add</a>
+    {% endif %}
     <a href="{% url 'admin-lesson-list' %}">List</a>
 
 </div>
 <div>
     <h3>Completed Papers</h3>
+    {% if add_completed %}
     <a href="{% url 'admin-completed-add' %}">Add</a>
+    {% endif %}
     <a href="{% url 'admin-completed-list' %}">List</a>
 
 </div>
 <div>
+    <h3>Materials</h3>
+    {% if add_materials %}
+    <a href="#">Add</a>
+    {% endif %}
+    <a href="{% url 'admin-materials-list' %}">List</a>
+
+</div>
+
+
+<div>
     <h3>Trophies</h3>
+    {% if add_trophies %}
     <a href="{% url 'admin-trophy-add' %}">Add</a>
+    {% endif %}
+    <a href="{% url 'admin-trophy-list' %}">List</a>
 
 </div>
 

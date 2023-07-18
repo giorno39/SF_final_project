@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for object in object_list %}
+
+    {{ object.rate }}
+    <div>
+    <a href="{% url 'admin-trophy-edit' pk=object.pk %}">Change</a>
+    <a href="{% url 'admin-trophy-details' pk=object.pk %}">Details</a>
+    </div>
+
+{% endfor %}
+</body>
+</html>

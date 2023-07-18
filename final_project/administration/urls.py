@@ -5,8 +5,8 @@ from final_project.administration.views import admin_index, AdminCreateUserView,
     AdminEditUserView, AdminListUserView, AdminDetailsUserView, AdminDeleteUserView, AdminListPaperView, \
     AdminEditPaperView, AdminDetailsPaperView, AdminDeletePaperView, AdminListLessonView, AdminDetailsLessonView, \
     AdminEditLessonView, AdminDeleteLessonView, AdminListCompletedView, AdminDetailsCompletedView, \
-    AdminEditCompletedView, AdminDeleteCompletedView
-
+    AdminEditCompletedView, AdminDeleteCompletedView, AdminListTrophyView, AdminDetailsTrophyView, AdminEditTrophyView, \
+    AdminDeleteTrophyView, AdminListMaterialsView, AdminCreateMaterialsView
 
 urlpatterns = (
     path('', admin_index, name='admin-index'),
@@ -37,11 +37,24 @@ urlpatterns = (
     path('completed-papers/', include([
         path('add/', AdminCreateCompletedPaperView.as_view(), name='admin-completed-add'),
         path('list/', AdminListCompletedView.as_view(), name='admin-completed-list'),
-        path('details/<int:pk>', AdminDetailsCompletedView.as_view(), name='admin-completed-details'),
-        path('edit/<int:pk>', AdminEditCompletedView.as_view(), name='admin-completed-edit'),
+        path('details/<int:pk>/', AdminDetailsCompletedView.as_view(), name='admin-completed-details'),
+        path('edit/<int:pk>/', AdminEditCompletedView.as_view(), name='admin-completed-edit'),
         path('delete/<int:pk>/', AdminDeleteCompletedView.as_view(), name='admin-completed-delete'),
     ])),
     path('trophies/', include([
-        path('add/', AdminCreateTrophyView.as_view(), name='admin-trophy-add')
+        path('add/', AdminCreateTrophyView.as_view(), name='admin-trophy-add'),
+        path('list/', AdminListTrophyView.as_view(), name='admin-trophy-list'),
+        path('details/<int:pk>/', AdminDetailsTrophyView.as_view(), name='admin-trophy-details'),
+        path('edit<int:pk>/', AdminEditTrophyView.as_view(), name='admin-trophy-edit'),
+        path('delete/<int:pk>/', AdminDeleteTrophyView.as_view(), name='admin-trophy-delete')
+
+    ])),
+    path('materials/', include([
+        path('add/', AdminCreateMaterialsView.as_view(), name='admin-materials-add'),
+        path('list/', AdminListMaterialsView.as_view(), name='admin-materials-list'),
+        path('details/<int:pk>/', AdminDetailsTrophyView.as_view(), name='admin-trophy-details'),
+        path('edit<int:pk>/', AdminEditTrophyView.as_view(), name='admin-trophy-edit'),
+        path('delete/<int:pk>/', AdminDeleteTrophyView.as_view(), name='admin-trophy-delete')
+
     ])),
 )
