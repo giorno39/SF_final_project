@@ -6,14 +6,13 @@
 </head>
 <body>
 {% for object in object_list %}
-
-    {{ object.rate }}
     <div>
-    {% if change_materials %}
-    <a href="{% url 'admin-material-edit' pk=object.pk %}">Change</a>
+    {{ object.name }}
+        {% if change_group %}
+    <a href="{% url 'admin-group-edit' pk=object.pk %}">Change</a>
         {% endif %}
-    {% if view_materials %}
-    <a href="{% url 'admin-material-details' pk=object.pk %}">Details</a>
+    {% if view_group %}
+    <a href="{% url 'admin-group-delete' pk=object.pk %}">Delete</a>
     {% endif %}
     </div>
 

@@ -1,6 +1,15 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+                <form method="get" action="{% url 'term-paper-index' %}">
+                {{ search_form }}
+                <button>
+                    search
+                </button>
+                {% csrf_token %}
+            </form>
+
+
     <div>Term Papers:</div>
     {% for object in object_list %}
         <div class="term-paper-card">

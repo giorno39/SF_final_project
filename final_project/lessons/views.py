@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
-from final_project.lessons.forms import CreateLessonForm
+from final_project.lessons.forms import CreateLessonForm, LessonSearchForm
 from final_project.lessons.models import Lesson
 
 
@@ -13,8 +13,7 @@ class CreateLessonView(views.CreateView):
     model = Lesson
     form_class = CreateLessonForm
     template_name = 'lessons/lesson-create.html'
-    # TODO redirect to lessons list view
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('lesson-index')
 
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)
@@ -28,6 +27,25 @@ class LessonIndexView(views.ListView):
     model = Lesson
     template_name = 'lessons/lesson-index.html'
 
+    def get_queryset(self):
+        search_form = LessonSearchForm(self.request.GET)
+        search_pattern = None
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data['lesson_title']
+
+        lessons = Lesson.objects.all()
+
+        if search_pattern:
+            lessons = lessons.filter(title__icontains=search_pattern)
+
+        return lessons
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['search_form'] = LessonSearchForm(self.request.GET)
+
+        return context
 
 
 class LessonDetailsView(views.DetailView):
@@ -65,9 +83,6 @@ class LessonEditView(views.UpdateView):
         return result
 
 
-class LessonDeleteView(views.DeleteView):
-    model = Lesson
-    template_name = ''
 
 
 class OwnLessonView(views.ListView):
@@ -88,6 +103,13 @@ class OwnLessonView(views.ListView):
             return redirect('index')
 
         return result
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['search_form'] = LessonSearchForm(self.request.GET)
+
+        return context
 
 
 class LessonDeleteView(views.DeleteView):

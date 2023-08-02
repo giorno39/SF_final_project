@@ -10,6 +10,7 @@
     <p>{{ object.user_type }}</p>
     {% if avg_rate %}
     <p>{{ avg_rate }}</p>
+        <a href="{% url 'teacher-trophy' teacher=object.pk %}">All trophies</a>
     {% endif %}
 
 {% endblock %}

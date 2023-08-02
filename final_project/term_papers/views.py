@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
@@ -8,7 +10,8 @@ import os
 
 from final_project import settings
 from final_project.completed_papers.models import CompletedPaper
-from final_project.term_papers.forms import TermPaperCreateForm
+from final_project.core.funcs import get_user_by_id
+from final_project.term_papers.forms import TermPaperCreateForm, TermPaperSearchForm
 from final_project.term_papers.models import TermPaper
 
 UserModel = get_user_model()
@@ -19,11 +22,26 @@ class TermPaperIndexView(views.ListView):
     template_name = 'term-papers/term-paper-index.html'
 
     def get_queryset(self, *args, **kwargs):
+        search_form = TermPaperSearchForm(self.request.GET)
+        search_pattern = None
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data['paper_title']
+
         queryset = TermPaper.objects \
-            .filter(taken_by=None, completed=False) \
+            .filter(taken_by=None, completed=False, death_line__gt=datetime.today()) \
             .all()
 
+        if search_pattern:
+            queryset = queryset.filter(title__icontains=search_pattern)
+
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['search_form'] = TermPaperSearchForm(self.request.GET)
+
+        return context
 
 
 class TermPaperDetailsView(views.DetailView):
@@ -56,10 +74,7 @@ class TermPaperCreateView(views.CreateView):
 
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
-        # TODO check how to acces related objects
-        c_user = UserModel.objects. \
-            filter(pk=self.request.user.pk). \
-            get()
+        c_user = get_user_by_id(self.request.user.pk)
 
         if c_user.user_type == 'teacher':
             return redirect('index')
@@ -72,7 +87,7 @@ class TermPaperEditView(views.UpdateView):
     fields = ('title', 'death_line', 'price_cap',)
     template_name = 'term-papers/term-paper-edit.html'
 
-    # TODO if accessed by someone that is not the creator it must be redirected
+
     def get_success_url(self):
         return reverse_lazy('term-paper-details', kwargs={
             'pk': self.object.pk,
@@ -80,7 +95,7 @@ class TermPaperEditView(views.UpdateView):
 
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
-
+        # TODO redirect, to a page that tells them, they don't have perms
         if self.request.user != self.object.user:
             result = reverse_lazy('term-paper-details', kwargs={
                 'pk': self.object.pk,
@@ -133,7 +148,6 @@ class CompletePaper(views.UpdateView):
     def get_success_url(self):
         return reverse_lazy('teacher-papers')
 
-
     def post(self, request, *args, **kwargs):
         result = super().post(request, *args, **kwargs)
 
@@ -150,8 +164,19 @@ class CompletePaper(views.UpdateView):
         # self.object.taken_by_id = None
         self.object.save()
 
-
         return result
 
 
-    # TODO redirect if accessed by someone the is not the appropriate teacher
+
+    def get(self, *args, **kwargs):
+        result = super().get(*args, **kwargs)
+        # TODO redirect, to a page that tells them, they don't have perms
+        if self.request.user != self.object.taken_by:
+            result = reverse_lazy('term-paper-details', kwargs={
+                'pk': self.object.pk,
+            })
+
+            return redirect(result)
+
+        return result
+

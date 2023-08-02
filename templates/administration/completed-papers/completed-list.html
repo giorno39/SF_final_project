@@ -11,9 +11,12 @@
     {{ object.title }}
     {{ object.university }}
     </div>
-
+    {% if change_completed %}
     <a href="{% url 'admin-completed-edit' pk=object.pk %}">Change</a>
+    {% endif %}
+    {% if view_completed %}
     <a href="{% url 'admin-completed-details' pk=object.pk %}">Details</a>
+    {% endif %}
 
 {% endfor %}
 </body>

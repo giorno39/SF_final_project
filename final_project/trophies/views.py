@@ -55,3 +55,16 @@ class CreateTrophyView(views.CreateView):
         term_paper.save()
 
         return result
+
+
+class TeacherTrophies(views.ListView):
+    model = Trophy
+    template_name = 'trophies/trophy-list.html'
+
+    def get_queryset(self):
+        teacher = self.kwargs['teacher']
+        trophies = Trophy.objects.filter(completed_by=teacher)
+
+        return trophies
+
+

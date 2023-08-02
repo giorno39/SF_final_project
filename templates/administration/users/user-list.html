@@ -10,8 +10,12 @@
         {{ object.user_type }}
         {{ object.username }}
         </div>
+        {% if change_user %}
         <a href="{% url 'admin-user-edit' pk=object.pk %}">Change</a>
+        {% endif %}
+        {% if view_user %}
         <a href="{% url 'admin-user-details' pk=object.pk %}">Details</a>
+        {% endif %}
     {% endfor %}
 </body>
 </html>

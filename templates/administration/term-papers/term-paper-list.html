@@ -9,8 +9,13 @@
     <div>
     {{ object.title }}
     </div>
+    {% if change_paper %}
     <a href="{% url 'admin-paper-edit' pk=object.pk %}">Change</a>
+    {% endif %}
+    {% if view_paper %}
     <a href="{% url 'admin-paper-details' pk=object.pk %}">Details</a>
+    {% endif %}
+
 
 {% endfor %}
 </body>

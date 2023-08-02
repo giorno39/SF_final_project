@@ -6,7 +6,8 @@ from final_project.administration.views import admin_index, AdminCreateUserView,
     AdminEditPaperView, AdminDetailsPaperView, AdminDeletePaperView, AdminListLessonView, AdminDetailsLessonView, \
     AdminEditLessonView, AdminDeleteLessonView, AdminListCompletedView, AdminDetailsCompletedView, \
     AdminEditCompletedView, AdminDeleteCompletedView, AdminListTrophyView, AdminDetailsTrophyView, AdminEditTrophyView, \
-    AdminDeleteTrophyView, AdminListMaterialsView, AdminCreateMaterialsView
+    AdminDeleteTrophyView, AdminListMaterialsView, AdminCreateMaterialsView, AdminDetailsMaterialView, \
+    AdminDeleteMaterialView, AdminEditMaterialView, AdminListGroupView, AdminDeleteGroupView, AdminEditGroupView
 
 urlpatterns = (
     path('', admin_index, name='admin-index'),
@@ -18,7 +19,10 @@ urlpatterns = (
         path('delete/<int:pk>/', AdminDeleteUserView.as_view(), name='admin-user-delete')
     ])),
     path('group/', include([
-        path('add/', AdminCreateGroupView.as_view(), name='admin-group-add')
+        path('add/', AdminCreateGroupView.as_view(), name='admin-group-add'),
+        path('list/', AdminListGroupView.as_view(), name='admin-group-list'),
+        path('edit/<int:pk>/', AdminEditGroupView.as_view(), name='admin-group-edit'),
+        path('delete/<int:pk>/', AdminDeleteGroupView.as_view(), name='admin-group-delete'),
     ])),
     path('term-paper/', include([
         path('add/', AdminCreatePaperView.as_view(), name='admin-paper-add'),
@@ -52,9 +56,9 @@ urlpatterns = (
     path('materials/', include([
         path('add/', AdminCreateMaterialsView.as_view(), name='admin-materials-add'),
         path('list/', AdminListMaterialsView.as_view(), name='admin-materials-list'),
-        path('details/<int:pk>/', AdminDetailsTrophyView.as_view(), name='admin-trophy-details'),
-        path('edit<int:pk>/', AdminEditTrophyView.as_view(), name='admin-trophy-edit'),
-        path('delete/<int:pk>/', AdminDeleteTrophyView.as_view(), name='admin-trophy-delete')
+        path('details/<int:pk>/', AdminDetailsMaterialView.as_view(), name='admin-material-details'),
+        path('edit<int:pk>/', AdminEditMaterialView.as_view(), name='admin-material-edit'),
+        path('delete/<int:pk>/', AdminDeleteMaterialView.as_view(), name='admin-material-delete')
 
     ])),
 )

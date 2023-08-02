@@ -3,6 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import generic as views
 
+from final_project.core.funcs import get_user_by_id
+from final_project.term_papers.forms import TermPaperSearchForm
 from final_project.term_papers.models import TermPaper
 
 # Create your views here.
@@ -24,10 +26,7 @@ class StudentPaperView(LoginRequiredMixin, views.ListView):
 
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
-        #TODO search all views for this and put it in a function
-        c_user = UserModel.objects. \
-            filter(pk=self.request.user.pk). \
-            get()
+        c_user = get_user_by_id(self.request.user.pk)
 
         if c_user.user_type == 'teacher':
             return redirect('teacher-papers')
@@ -35,9 +34,15 @@ class StudentPaperView(LoginRequiredMixin, views.ListView):
         return result
 
     def get_queryset(self):
-        #TODO accesing related objects with filter(user__)
         queryset = TermPaper.objects.filter(user_id=self.request.user.pk)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['search_form'] = TermPaperSearchForm(self.request.GET)
+
+        return context
 
 
 class TeacherPaperView(LoginRequiredMixin, views.ListView):
@@ -46,10 +51,7 @@ class TeacherPaperView(LoginRequiredMixin, views.ListView):
 
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
-        # TODO search all views for this and put it in a function
-        c_user = UserModel.objects. \
-            filter(pk=self.request.user.pk). \
-            get()
+        c_user = get_user_by_id(self.request.user.pk)
 
         if c_user.user_type == 'student':
             return redirect('student-papers')
@@ -57,6 +59,5 @@ class TeacherPaperView(LoginRequiredMixin, views.ListView):
         return result
 
     def get_queryset(self):
-        # TODO accesing related objects with filter(user__)
         queryset = TermPaper.objects.filter(taken_by=self.request.user.pk, completed=False)
         return queryset

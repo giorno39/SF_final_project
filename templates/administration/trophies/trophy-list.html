@@ -9,8 +9,12 @@
 
     {{ object.rate }}
     <div>
+    {% if change_trophy %}
     <a href="{% url 'admin-trophy-edit' pk=object.pk %}">Change</a>
+        {% endif %}
+    {% if view_trophy %}
     <a href="{% url 'admin-trophy-details' pk=object.pk %}">Details</a>
+    {% endif %}
     </div>
 
 {% endfor %}

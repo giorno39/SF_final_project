@@ -5,13 +5,13 @@ from django.contrib.auth.models import UserManager
 from django.core import validators
 from django.db import models
 
-from final_project.core.model_mixins import ChoicesEnumMixin
+from final_project.core.model_mixins import NumberChoicesEnumMixin
 
 
 # Create your models here.
 
 
-class TypesOfUsers(ChoicesEnumMixin, Enum):
+class TypesOfUsers(NumberChoicesEnumMixin, Enum):
     student = 'student'
     teacher = 'teacher'
 

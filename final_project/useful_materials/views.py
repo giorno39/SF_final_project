@@ -6,7 +6,7 @@ from django.views import generic as views
 import os
 
 from final_project import settings
-from final_project.useful_materials.forms import MaterialCreateForm
+from final_project.useful_materials.forms import MaterialCreateForm, MaterialSearchForm
 from final_project.useful_materials.models import Materials
 
 
@@ -16,6 +16,26 @@ from final_project.useful_materials.models import Materials
 class MaterialsIndexView(views.ListView):
     model = Materials
     template_name = 'useful_material/materials-index.html'
+
+    def get_queryset(self):
+        search_form = MaterialSearchForm(self.request.GET)
+        search_pattern = None
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data['material_title']
+
+        materials = Materials.objects.all()
+
+        if search_pattern:
+            materials = materials.filter(title__icontains=search_pattern)
+
+        return materials
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['search_form'] = MaterialSearchForm(self.request.GET)
+
+        return context
 
 
 class MaterialCreateView(LoginRequiredMixin, views.CreateView):
@@ -80,10 +100,6 @@ class MaterialDeleteView(views.DeleteView):
             return redirect(result)
 
         return result
-
-
-
-
 
 
 def download_completed_paper(request, pk):

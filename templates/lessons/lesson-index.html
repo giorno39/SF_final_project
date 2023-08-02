@@ -1,6 +1,13 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+                <form  method="get" action="{% url 'lesson-index' %}">
+                {{ search_form }}
+                <button>
+                    search
+                </button>
+                {% csrf_token %}
+            </form>
     <div>Lessons:</div>
     {% for object in object_list %}
 {#        TODO make a new card class#}

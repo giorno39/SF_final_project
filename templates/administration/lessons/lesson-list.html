@@ -11,8 +11,12 @@
     {{ object.title }}
     {{ object.price }}
     </div>
+    {% if change_lesson %}
     <a href="{% url 'admin-lesson-edit' pk=object.pk %}">Change</a>
+    {% endif %}
+    {% if view_lesson %}
     <a href="{% url 'admin-lesson-details' pk=object.pk %}">Details</a>
+    {% endif %}
 
 {% endfor %}
 </body>
