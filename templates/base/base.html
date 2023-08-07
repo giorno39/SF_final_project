@@ -25,8 +25,7 @@
                     <a href="{% url 'term-paper-add' %}">Add term paper</a>
                     <a href="{% url 'student-papers' %}">My papers</a>
                     {% else %}
-{#             TODO make finish paper func with the completed field, and check the filters in the list views#}
-{#             TODO       , add the completed func#}
+
                     <a href="{% url 'teacher-papers' %}">Taken Papers</a>
                     <a href="{% url 'lesson-add' %}">Add lesson</a>
                     <a href="{% url 'own-lesson-index' %}">My lessons</a>
@@ -46,3 +45,8 @@
     </div>
   </body>
 </html>
+
+
+
+
+

@@ -22,7 +22,7 @@ def index(request):
 class StudentPaperView(LoginRequiredMixin, views.ListView):
     model = TermPaper
     template_name = 'term-papers/term-paper-index.html'
-
+    paginate_by = 4
 
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
@@ -34,7 +34,7 @@ class StudentPaperView(LoginRequiredMixin, views.ListView):
         return result
 
     def get_queryset(self):
-        queryset = TermPaper.objects.filter(user_id=self.request.user.pk)
+        queryset = TermPaper.objects.filter(user_id=self.request.user.pk).order_by('title')
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -48,6 +48,7 @@ class StudentPaperView(LoginRequiredMixin, views.ListView):
 class TeacherPaperView(LoginRequiredMixin, views.ListView):
     model = TermPaper
     template_name = 'teacher/teacher-taken-papers.html'
+    paginate_by = 4
 
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
@@ -60,4 +61,20 @@ class TeacherPaperView(LoginRequiredMixin, views.ListView):
 
     def get_queryset(self):
         queryset = TermPaper.objects.filter(taken_by=self.request.user.pk, completed=False)
+
+        search_form = TermPaperSearchForm(self.request.GET)
+        search_pattern = None
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data['paper_title']
+
+        if search_pattern:
+            queryset = queryset.filter(title__icontains=search_pattern)
+
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['search_form'] = TermPaperSearchForm(self.request.GET)
+
+        return context

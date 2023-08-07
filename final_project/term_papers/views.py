@@ -20,6 +20,7 @@ UserModel = get_user_model()
 class TermPaperIndexView(views.ListView):
     model = TermPaper
     template_name = 'term-papers/term-paper-index.html'
+    paginate_by = 4
 
     def get_queryset(self, *args, **kwargs):
         search_form = TermPaperSearchForm(self.request.GET)
@@ -87,7 +88,6 @@ class TermPaperEditView(views.UpdateView):
     fields = ('title', 'death_line', 'price_cap',)
     template_name = 'term-papers/term-paper-edit.html'
 
-
     def get_success_url(self):
         return reverse_lazy('term-paper-details', kwargs={
             'pk': self.object.pk,
@@ -111,6 +111,18 @@ class TermPaperDeleteView(views.DeleteView):
     model = TermPaper
     template_name = 'term-papers/term-paper-delete.html'
     success_url = reverse_lazy('term-paper-index')
+
+    def get(self, request, *args, **kwargs):
+        result = super().get(request, *args, **kwargs)
+
+        if self.request.user != self.object.user:
+            result = reverse_lazy('term-paper-details', kwargs={
+                'pk': self.object.pk,
+            })
+
+            return redirect(result)
+
+        return result
 
 
 def open_file(request, pk):
@@ -166,8 +178,6 @@ class CompletePaper(views.UpdateView):
 
         return result
 
-
-
     def get(self, *args, **kwargs):
         result = super().get(*args, **kwargs)
         # TODO redirect, to a page that tells them, they don't have perms
@@ -179,4 +189,3 @@ class CompletePaper(views.UpdateView):
             return redirect(result)
 
         return result
-

@@ -1,13 +1,16 @@
 {% extends 'base/base.html' %}
 
+
+
+
 {% block content %}
-                <form method="get" action="{% url 'term-paper-index' %}">
-                {{ search_form }}
-                <button>
-                    search
-                </button>
-                {% csrf_token %}
-            </form>
+    <form method="get" action="{% url 'term-paper-index' %}">
+        {{ search_form }}
+        <button>
+            search
+        </button>
+        {% csrf_token %}
+    </form>
 
 
     <div>Term Papers:</div>
@@ -18,5 +21,17 @@
             <a href="{% url 'term-paper-details' pk=object.pk %}">Details</a>
         </div>
     {% endfor %}
+
+    <a href="?page=1">1...  </a>
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}"> <- </a>
+    {% endif %}
+
+    {{ page_obj.number }}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"> -> </a>
+    {% endif %}
+    <a href="?page={{ page_obj.paginator.num_pages }}">  ... {{ page_obj.paginator.num_pages }}</a>
 
 {% endblock %}

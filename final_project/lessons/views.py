@@ -26,6 +26,7 @@ class CreateLessonView(views.CreateView):
 class LessonIndexView(views.ListView):
     model = Lesson
     template_name = 'lessons/lesson-index.html'
+    paginate_by = 4
 
     def get_queryset(self):
         search_form = LessonSearchForm(self.request.GET)
@@ -83,11 +84,10 @@ class LessonEditView(views.UpdateView):
         return result
 
 
-
-
 class OwnLessonView(views.ListView):
     model = Lesson
     template_name = 'lessons/lesson-index.html'
+    paginate_by = 4
 
     def get_queryset(self, *args, **kwargs):
         queryset = Lesson.objects \

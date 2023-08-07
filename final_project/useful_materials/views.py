@@ -16,6 +16,7 @@ from final_project.useful_materials.models import Materials
 class MaterialsIndexView(views.ListView):
     model = Materials
     template_name = 'useful_material/materials-index.html'
+    paginate_by = 4
 
     def get_queryset(self):
         search_form = MaterialSearchForm(self.request.GET)

@@ -13,6 +13,7 @@ from final_project.completed_papers.models import CompletedPaper
 class CompletedPapersIndexView(views.ListView):
     model = CompletedPaper
     template_name = 'completed_paper/completed-paper-index.html'
+    paginate_by = 4
 
     def get_queryset(self):
         search_form = CompletedPaperSearchForm(self.request.GET)
