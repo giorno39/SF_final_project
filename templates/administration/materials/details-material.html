@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{{ object.title }}
+{% extends 'administration/base-admin/base-admin.html' %}
+
+{% block admin_content %}
+
+    <div class="main-admin-card">
+
+<p class="admin-card-p">Title: {{ object.title }}</p>
+<p class="admin-card-p">Field: {{ object.field }}</p>
+<p class="admin-card-p">University: {{ object.university }}</p>
+<p class="admin-card-p">References: {{ object.references }}</p>
+<p class="admin-card-p">Uploaded by: {{ object.uploaded_by }}</p>
 
 
-<a href="{% url 'admin-material-delete' pk=object.pk %}">DELETE</a>
-</body>
-</html>
+<a class="admin-card-links" href="{% url 'admin-material-delete' pk=object.pk %}">DELETE</a>
+    </div>
+{% endblock %}>

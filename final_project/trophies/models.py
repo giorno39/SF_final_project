@@ -6,6 +6,8 @@ UserModel = get_user_model()
 
 
 class Trophy(models.Model):
+    class Meta:
+        verbose_name_plural = 'Trophies'
     PROJECT_MAX_LEN = 50
     PROJECT_MIN_LEN = 2
 

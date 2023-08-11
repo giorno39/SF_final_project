@@ -1,13 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{{ object.rate }}
-{{ object.completed_by }}
+{% extends 'administration/base-admin/base-admin.html' %}
 
-<a href="{% url 'admin-trophy-delete' pk=object.pk %}">Delete</a>
-</body>
-</html>
+{% block admin_content %}
+
+    <div class="main-admin-card">
+<p class="admin-card-p">Rate: {{ object.rate }}</p>
+<p class="admin-card-p">Project: {{ object.project }}</p>
+<p class="admin-card-p">Obtained at: {{ object.obtained_at }}</p>
+<p class="admin-card-p">Completed by: {{ object.completed_by }}</p>
+
+<a class="admin-card-links" href="{% url 'admin-trophy-delete' pk=object.pk %}">Delete</a>
+    </div>
+
+{% endblock %}

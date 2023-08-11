@@ -1,21 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'administration/base-admin/base-admin.html' %}
+
+{% block admin_content %}
     {% for object in object_list %}
-        <div>
-        {{ object.user_type }}
-        {{ object.username }}
+        <div class="main-admin-card">
+            <div>
+                <h3 class="admin-card-p">Username: {{ object.username }}</h3>
+                <h3 class="admin-card-p">User type: {{ object.user_type }}</h3>
+
+            </div>
+            {% if change_user %}
+                <a class="admin-card-links" href="{% url 'admin-user-edit' pk=object.pk %}">Change</a>
+            {% endif %}
+            {% if view_user %}
+                <a class="admin-card-links" href="{% url 'admin-user-details' pk=object.pk %}">Details</a>
+            {% endif %}
         </div>
-        {% if change_user %}
-        <a href="{% url 'admin-user-edit' pk=object.pk %}">Change</a>
-        {% endif %}
-        {% if view_user %}
-        <a href="{% url 'admin-user-details' pk=object.pk %}">Details</a>
-        {% endif %}
     {% endfor %}
-</body>
-</html>
+
+{% endblock %}

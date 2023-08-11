@@ -4,11 +4,121 @@
   box-sizing: border-box;
 }
 
-.admin-navigation{
-    background-color: darkgreen;
+.admin-header {
+    display: flex;
+    padding: 15px 0;
+    justify-content: space-between;
+    border-bottom: solid #8c5f19 8px;
+    background-color: #099268;
+    align-content: center;
+    padding-left: 50px;
 }
 
-a:link {
-    
+
+body{
+    background-color: #63e6be;
+    color: #593804;
 }
 
+a:link, a:visited{
+    text-decoration: none;
+    color: #593804;
+}
+
+a:hover, a:active{
+
+}
+
+.navigation-admin {
+    display: flex;
+    gap: 30px;
+    margin-right: 50px;
+    padding-top: 10px;
+    font-size: 18px;
+}
+
+.main-admin-card{
+    border: #8c5f19 solid 2px;
+    margin: 10px;
+    padding: 20px;
+}
+
+.admin-card-links:link , .admin-card-links:visited{
+    display: inline-block;
+    background-color: #8c5f19;
+    color: #63e6be;
+    text-decoration: none;
+    border-radius: 20px;
+    padding: 10px;
+    align-items: center;
+}
+
+.admin-card-links:hover, .admin-card-links:active {
+    display: inline-block;
+    background-color: #8c5f19;
+    color: #63e6be;
+    text-decoration: none;
+    border-radius: 20px;
+    padding: 10px;
+    align-items: center;
+}
+
+.admin-card-p{
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.admin-search-form{
+    padding-left: 30px;
+    padding-top: 15px;
+    margin-bottom: 20px;
+}
+
+button{
+    border-radius: 30px;
+    height: 30px;
+    width: 60px;
+    border: none;
+    margin-left: 50px;
+    background-color: #8c5f19;
+    margin-bottom: 20px;
+    color: #63e6be;
+}
+
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+
+::-webkit-scrollbar-track {
+  background: #099268;
+}
+
+
+::-webkit-scrollbar-thumb {
+  background: #8c5f19;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background: #593804;
+}
+
+.admin-auth-form-container{
+    	display: block;
+	width: 380px;
+	background-color: #099268;
+	border: 1px solid rgb(156, 152, 152);
+	padding: 40px;
+	margin-bottom: 15px;
+	border-radius: 3px;
+	border: 1px solid;
+	box-shadow: 1px 2px 3px #888888;
+    margin-top: 50px;
+    margin-left: 40%;
+}
+
+p{
+    padding-bottom:15px ;
+}

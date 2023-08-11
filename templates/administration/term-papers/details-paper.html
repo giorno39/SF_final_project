@@ -1,15 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{{ object.title }}
-{{ object.subject }}
+{% extends 'administration/base-admin/base-admin.html' %}
 
-<div>
-    <a href="{% url 'admin-paper-delete' pk=object.pk %}">Delete</a>
-</div>
-</body>
-</html>
+{% block admin_content %}
+
+    <div class="main-admin-card">
+
+<p class="admin-card-p">
+    Title:
+    {{ object.title }}
+</p>
+<p class="admin-card-p">Subject: {{ object.subject }}</p>
+<p class="admin-card-p">University: {{ object.university }}</p>
+<p class="admin-card-p">Death line: {{ object.death_line }}</p>
+<p class="admin-card-p">Price cap{{ object.price_cap }}</p>
+<p class="admin-card-p">description{{ object.description }}</p>
+<p class="admin-card-p">{{ object.content }}</p>
+
+<p class="admin-card-p">uploaded by: {{ object.user }}</p>
+<p class="admin-card-p">taken by: {{ object.taken_by }}</p>
+<p class="admin-card-p">completed: {{ object.completed }}</p>
+<p class="admin-card-p">rated: {{ object.rated }}</p>
+
+
+    <a class="admin-card-links" href="{% url 'admin-paper-delete' pk=object.pk %}">Delete</a>
+    <a class="admin-card-links" href="{% url 'term-paper-file-open' pk=object.pk %}">Download File</a>
+
+    </div>
+
+{% endblock %}

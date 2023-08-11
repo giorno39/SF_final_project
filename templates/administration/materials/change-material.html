@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <div class="auth-form-container">
+{% extends 'administration/base-admin/base-admin.html' %}
+
+    {% block admin_content %}
+
+    <div class="admin-auth-form-container">
     <form class="auth-form" method="post" action="{% url 'admin-material-edit' pk=object.pk %}" enctype="multipart/form-data">
             {{ form.as_p }}
             {% csrf_token %}
         <button>Edit</button>
     </form>
 </div>
-</body>
-</html>
+{% endblock %}

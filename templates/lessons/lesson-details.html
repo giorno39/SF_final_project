@@ -2,13 +2,17 @@
 
 {% block content %}
 
+        <div class="details-container">
+
     {% if is_owner %}
-        <a href="{% url 'lesson-edit' pk=object.pk %}">Edit</a>
-        <a href="{% url 'lesson-delete' pk=object.pk %}">Delete</a>
+        <a class="main-card-link" href="{% url 'lesson-edit' pk=object.pk %}">Edit</a>
+        <a class="main-card-link" href="{% url 'lesson-delete' pk=object.pk %}">Delete</a>
     {% endif %}
-    <p>Title: {{ object.title }}</p>
-    <p>Subject: {{ object.subject }}</p>
-    <p>Price per hour: {{ object.price }}</p>
-    <p><a href="{% url 'details-user' pk=object.teacher_id %}">Teacher</a></p>
+    <p class="term-paper-card-p">Title: {{ object.title }}</p>
+    <p class="term-paper-card-p">Subject: {{ object.subject }}</p>
+    <p class="term-paper-card-p">Price per hour: {{ object.price }}</p>
+    <p><a class="main-card-link" href="{% url 'details-user' pk=object.teacher_id %}">Teacher</a></p>
+
+        </div>
 
 {% endblock %}

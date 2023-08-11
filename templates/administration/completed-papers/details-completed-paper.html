@@ -1,13 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{{ object.title }}
-{{ object.university }}
+{% extends 'administration/base-admin/base-admin.html' %}
 
-<a href="{% url 'admin-completed-delete' pk=object.pk %}">Delete</a>
-</body>
-</html>
+{% block admin_content %}
+    <div class="main-admin-card">
+<p class="admin-card-p">Title: {{ object.title }}</p>
+<p class="admin-card-p">Subject: {{ object.subject }}</p>
+<p class="admin-card-p">University: {{ object.university }}</p>
+<p class="admin-card-p">Content: {{ object.content }}</p>
+<p class="admin-card-p">Completed by: {{ object.completed_by }}</p>
+
+<a class="admin-card-links" href="{% url 'admin-completed-delete' pk=object.pk %}">Delete</a>
+    <a class="admin-card-links" href="{% url 'completed_paper-open' pk=object.pk %}">Download File</a>
+    </div>
+{% endblock %}

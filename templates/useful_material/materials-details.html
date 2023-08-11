@@ -1,23 +1,24 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-
+<div class="details-container">
     {% if is_owner %}
         <a href="{% url 'materials-edit' pk=object.pk %}">Edit</a>
         <a href="{% url 'materials-delete' pk=object.pk %}">Delete</a>
     {% endif %}
-    <p>{{ object.title }}</p>
-    <p>{{ object.field }}</p>
+    <p class="term-paper-card-p">{{ object.title }}</p>
+    <p class="term-paper-card-p">{{ object.field }}</p>
 
     {% if object.content %}
-    <a href="{% url 'materials-download' pk=object.pk %}">Download File</a>
+    <a class="main-card-link" href="{% url 'materials-download' pk=object.pk %}">Download File</a>
     {% endif %}
     {% if object.references %}
         <div></div>
-    <a href="{{ object.references }}">References</a>
+    <a class="main-card-link" href="{{ object.references }}">References</a>
     {% endif %}
 
-    <p><a href="{% url 'details-user' pk=object.uploaded_by_id %}">Uploaded by</a></p>
+    <a class="main-card-link" href="{% url 'details-user' pk=object.uploaded_by_id %}">Uploaded by</a>
 
+</div>
 
 {% endblock %}

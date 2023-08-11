@@ -1,22 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{% for object in object_list %}
+{% extends 'administration/base-admin/base-admin.html' %}
 
-    {{ object.rate }}
-    <div>
+{% block admin_content %}
+                    <form class="admin-search-form" method="post" action="{% url 'admin-trophy-list' %}">
+                {{ search_form }}
+                <button>
+                    search
+                </button>
+                {% csrf_token %}
+            </form>
+
+{% for object in object_list %}
+    <div class="main-admin-card">
+
+    <h3 class="admin-card-p">{{ object.rate }}</h3>
+    <h3 class="admin-card-p">{{ object.completed_by }}</h3>
+
     {% if change_trophy %}
-    <a href="{% url 'admin-trophy-edit' pk=object.pk %}">Change</a>
+    <a class="admin-card-links" href="{% url 'admin-trophy-edit' pk=object.pk %}">Change</a>
         {% endif %}
     {% if view_trophy %}
-    <a href="{% url 'admin-trophy-details' pk=object.pk %}">Details</a>
+    <a class="admin-card-links" href="{% url 'admin-trophy-details' pk=object.pk %}">Details</a>
     {% endif %}
     </div>
 
 {% endfor %}
-</body>
-</html>
+{% endblock %}

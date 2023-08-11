@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -156,6 +157,7 @@ class CompletePaper(views.UpdateView):
     model = TermPaper
     template_name = 'teacher/teacher-complete-paper.html'
     fields = ('content',)
+    is_updatable = None
 
     def get_success_url(self):
         return reverse_lazy('teacher-papers')
@@ -163,24 +165,24 @@ class CompletePaper(views.UpdateView):
     def post(self, request, *args, **kwargs):
         result = super().post(request, *args, **kwargs)
 
-        self.object.completed = True
+        if self.is_updatable:
+            self.object.completed = True
 
-        CompletedPaper.objects.create(
-            title=self.object.title,
-            subject=self.object.subject,
-            university=self.object.university,
-            content=self.object.content,
-            completed_by=self.object.taken_by,
-        )
+            CompletedPaper.objects.create(
+                title=self.object.title,
+                subject=self.object.subject,
+                university=self.object.university,
+                content=self.object.content,
+                completed_by=self.object.taken_by,
+            )
 
-        # self.object.taken_by_id = None
-        self.object.save()
+            self.object.save()
 
         return result
 
     def get(self, *args, **kwargs):
         result = super().get(*args, **kwargs)
-        # TODO redirect, to a page that tells them, they don't have perms
+
         if self.request.user != self.object.taken_by:
             result = reverse_lazy('term-paper-details', kwargs={
                 'pk': self.object.pk,
@@ -189,3 +191,17 @@ class CompletePaper(views.UpdateView):
             return redirect(result)
 
         return result
+
+    def form_valid(self, form, *args, **kwargs):
+
+        initial_data = self.get_object().__dict__.copy()
+
+        cleaned_data = form.cleaned_data
+
+        if initial_data['content'] == cleaned_data['content']:
+            self.is_updatable = False
+            return render(self.request, 'common/no-changes_detected.html')
+
+        self.is_updatable = True
+
+        return super().form_valid(form)

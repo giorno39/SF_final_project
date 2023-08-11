@@ -11,6 +11,14 @@
     <title>Document</title>
   </head>
   <body>
+    <header class="admin-header">
+        <h1><a href="{% url 'admin-index' %}" >CustomAdmin-Page</a></h1>
+            <nav class="navigation-admin">
+                <a  href="{% url 'index' %}">Main page</a>
+                <a  href="{% url 'logout-user' %}">Logout</a>
+            </nav>
+
+    </header>
 
   {% block admin_content %}
 

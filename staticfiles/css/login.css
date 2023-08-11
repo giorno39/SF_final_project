@@ -1,6 +1,6 @@
 .auth-form-container{
     	display: block;
-	width: 300px;
+	width: 380px;
 	background-color: #1864ab;
 	border: 1px solid rgb(156, 152, 152);
 	padding: 40px;
@@ -24,6 +24,10 @@ button{
     margin-left: 50px;
     background-color: #ffc078;
     margin-bottom: 20px;
+}
+
+.paper-details{
+
 }
 
 

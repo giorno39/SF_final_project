@@ -1,5 +1,6 @@
 from enum import Enum
 
+from django.contrib import admin
 from django.contrib.auth import models as auth_models
 from django.contrib.auth.models import UserManager
 from django.core import validators
@@ -45,3 +46,8 @@ class AppUser(auth_models.AbstractUser):
 
     def __str__(self):
         return f'{self.user_type};{self.username}'
+
+
+
+
+

@@ -1,16 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{#TODO ADD ALL FIELDS#}
-{{ object.username }}
-{% for group in groups %}
-    {{ group.name }}
-{% endfor %}
+{% extends 'administration/base-admin/base-admin.html' %}
 
-<a href="{% url 'admin-user-delete' pk=object.pk %}">DELETE</a>
-</body>
-</html>
+{% block admin_content %}
+
+    <div class="main-admin-card">
+
+<p class="admin-card-p">Username: {{ object.username }}</p>
+<p class="admin-card-p">First name: {{ object.first_name }}</p>
+<p class="admin-card-p">Last name: {{ object.last_name }}</p>
+<p class="admin-card-p">Email: {{ object.email }}</p>
+<p class="admin-card-p">User type: {{ object.user_type }}</p>
+<p class="admin-card-p">Date joined: {{ object.date_joined }}</p>
+<p class="admin-card-p">Is Superuser: {{ object.is_superuser }}</p>
+<p class="admin-card-p">Is Staff: {{ object.is_staff }}</p>
+<p class="admin-card-p">Is Active: {{ object.is_active }}</p>
+{% for group in groups %}
+    Groups:
+    <p class="admin-card-p">{{ group.name }}</p>
+{% endfor %}
+<p class="admin-card-p">Last login: {{ object.last_login }}</p>
+
+<a class="admin-card-links" href="{% url 'admin-user-delete' pk=object.pk %}">DELETE</a>
+
+    </div>
+{% endblock %}

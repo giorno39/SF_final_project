@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-        <form method="get" action="{% url 'teacher-papers' %}">
+        <form  class="search-form" method="get" action="{% url 'teacher-papers' %}">
         {{ search_form }}
         <button>
             search
@@ -11,29 +11,34 @@
 
 
     {% for object in object_list %}
-        <p>{{ object.title }}</p>
-        <p>{{ object.university }}</p>
-        <p>{{ object.death_line }}</p>
-        <p>{{ object.price_cap }}</p>
-        <p>{{ object.description }}</p>
+        <div class="term-paper-card" >
+        <p class="term-paper-card-p">Title: {{ object.title }}</p>
+        <p class="term-paper-card-p">University: {{ object.university }}</p>
+        <p class="term-paper-card-p">Death line: {{ object.death_line }}</p>
+        <p class="term-paper-card-p">Price cap: {{ object.price_cap }}</p>
+        <p class="term-paper-card-p">Description: {{ object.description }}</p>
 
-        <a href="{% url 'term-paper-file-open' pk=object.pk %}">Open File</a>
+        <a class="main-card-link" href="{% url 'term-paper-file-open' pk=object.pk %}">Open File</a>
 
-        <div>
-            <a href="{% url 'term-paper-complete' pk=object.pk %}">Complete paper</a>
-        </div>
+
+            <a class="main-card-link" href="{% url 'term-paper-complete' pk=object.pk %}">Complete paper</a>
+    </div>
     {% endfor %}
 
-    <a href="?page=1">1...  </a>
+
+
+    <a class="main-card-link" href="?page=1">1...  </a>
     {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}"> <- </a>
+        <a class="main-card-link" href="?page={{ page_obj.previous_page_number }}"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#343a40}</style><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg></a>
     {% endif %}
 
     {{ page_obj.number }}
 
     {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}"> -> </a>
+        <a class="main-card-link" href="?page={{ page_obj.next_page_number }}"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#343a40}</style><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg></a>
     {% endif %}
-    <a href="?page={{ page_obj.paginator.num_pages }}">  ... {{ page_obj.paginator.num_pages }}</a>
+    <a class="main-card-link" href="?page={{ page_obj.paginator.num_pages }}">  ... {{ page_obj.paginator.num_pages }}</a>
+
+
 
 {% endblock %}

@@ -12,11 +12,16 @@ from django.views import generic as views
 
 from final_project.administration.forms import AdminUserCreateForm, AdminLessonCreateForm, AdminTermPaperCreateForm, \
     AdminCompletedPaperCreateForm, AdminTrophyCreateForm
+from final_project.completed_papers.forms import CompletedPaperSearchForm
 from final_project.completed_papers.models import CompletedPaper
 from final_project.core.decorators import allow_groups
+from final_project.lessons.forms import LessonSearchForm
 from final_project.lessons.models import Lesson
+from final_project.term_papers.forms import TermPaperSearchForm
 from final_project.term_papers.models import TermPaper
+from final_project.trophies.forms import TrophySearchForm
 from final_project.trophies.models import Trophy
+from final_project.useful_materials.forms import MaterialSearchForm
 from final_project.useful_materials.models import Materials
 
 UserModel = get_user_model()
@@ -37,7 +42,7 @@ def admin_index(request):
     if request.user.is_staff or request.user.is_superuser:
         return render(request, 'administration/administration-index.html', context=context)
     else:
-        return HttpResponse("You don't have permissions to visit this page")
+        return render(request, 'common/no-perms.html')
 
 
 # ADMIN LIST VIEWS
@@ -60,11 +65,28 @@ class AdminListPaperView(views.ListView):
     model = TermPaper
     template_name = 'administration/term-papers/term-paper-list.html'
 
+    def get_queryset(self):
+        search_form = TermPaperSearchForm(self.request.GET)
+        search_pattern = None
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data['paper_title']
+
+        papers = TermPaper.objects.all()
+
+        if search_pattern:
+           papers = papers.filter(title__icontains=search_pattern)
+
+        return papers
+
+
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['change_paper'] = self.request.user.has_perm('term_papers.change_termpaper')
         context['view_paper'] = self.request.user.has_perm('term_papers.view_termpaper')
+        context['search_form'] = TermPaperSearchForm(self.request.GET)
 
         return context
 
@@ -74,11 +96,26 @@ class AdminListLessonView(views.ListView):
     model = Lesson
     template_name = 'administration/lessons/lesson-list.html'
 
+    def get_queryset(self):
+        search_form = LessonSearchForm(self.request.GET)
+        search_pattern = None
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data['lesson_title']
+
+        lessons = Lesson.objects.all()
+
+        if search_pattern:
+           lessons = lessons.filter(title__icontains=search_pattern)
+
+        return lessons
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['change_lesson'] = self.request.user.has_perm('lessons.change_lesson')
         context['view_lesson'] = self.request.user.has_perm('lessons.view_lesson')
+        context['search_form'] = LessonSearchForm(self.request.GET)
 
         return context
 
@@ -88,11 +125,25 @@ class AdminListCompletedView(views.ListView):
     model = CompletedPaper
     template_name = 'administration/completed-papers/completed-list.html'
 
+    def get_queryset(self):
+        search_form = CompletedPaperSearchForm(self.request.GET)
+        search_pattern = None
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data['completed_title']
+
+        completed_papers = CompletedPaper.objects.all()
+
+        if search_pattern:
+            completed_papers = completed_papers.filter(title__icontains=search_pattern)
+
+        return completed_papers
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['change_completed'] = self.request.user.has_perm('completed_papers.change_completedpaper')
         context['view_completed'] = self.request.user.has_perm('completed_papers.view_completedpaper')
+        context['search_form'] = CompletedPaperSearchForm(self.request.GET)
 
         return context
 
@@ -102,11 +153,25 @@ class AdminListTrophyView(views.ListView):
     model = Trophy
     template_name = 'administration/trophies/trophy-list.html'
 
+    def get_queryset(self):
+        search_form = TrophySearchForm(self.request.GET)
+        search_pattern = None
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data['trophy_owner']
+
+        trophy = Trophy.objects.all()
+
+        if search_pattern:
+            trophy = trophy.filter(completed_by_id=search_pattern)
+
+        return trophy
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['change_trophy'] = self.request.user.has_perm('trophies.change_trophy')
         context['view_trophy'] = self.request.user.has_perm('trophies.view_trophy')
+        context['search_form'] = TrophySearchForm(self.request.GET)
 
         return context
 
@@ -116,11 +181,25 @@ class AdminListMaterialsView(views.ListView):
     model = Materials
     template_name = 'administration/materials/materials-list.html'
 
+    def get_queryset(self):
+        search_form = MaterialSearchForm(self.request.GET)
+        search_pattern = None
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data['material_title']
+
+        materials = Materials.objects.all()
+
+        if search_pattern:
+            materials = materials.filter(title__icontains=search_pattern)
+
+        return materials
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['change_materials'] = self.request.user.has_perm('useful_materials.change_materials')
         context['view_materials'] = self.request.user.has_perm('useful_materials.view_materials')
+        context['search_form'] = MaterialSearchForm(self.request.GET)
 
         return context
 
@@ -164,6 +243,7 @@ class AdminCreatePaperView(views.CreateView):
     # fields = '__all__'
     form_class = AdminTermPaperCreateForm
 
+
 @method_decorator(allow_groups(groups=['None']), name='dispatch')
 class AdminCreateLessonView(views.CreateView):
     model = Lesson
@@ -180,6 +260,7 @@ class AdminCreateCompletedPaperView(views.CreateView):
     # fields = '__all__'
     form_class = AdminCompletedPaperCreateForm
 
+
 @method_decorator(allow_groups(groups=['None']), name='dispatch')
 class AdminCreateTrophyView(views.CreateView):
     model = Trophy
@@ -187,6 +268,7 @@ class AdminCreateTrophyView(views.CreateView):
     template_name = 'administration/trophies/add-trophy.html'
     # fields = '__all__'
     form_class = AdminTrophyCreateForm
+
 
 @method_decorator(allow_groups(groups=['None']), name='dispatch')
 class AdminCreateMaterialsView(views.CreateView):

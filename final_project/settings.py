@@ -24,6 +24,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rangefilter',
+
     'final_project.accounts',
     'final_project.common',
     'final_project.term_papers',

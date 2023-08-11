@@ -2,14 +2,15 @@
 
 {% block content %}
 
-    <p>{{ object.title }}</p>
-    <p>{{ object.university }}</p>
-    <p>{{ object.subject }}</p>
+    <div class="details-container">
+    <p class="term-paper-card-p">Title: {{ object.title }}</p>
+    <p class="term-paper-card-p">University: {{ object.university }}</p>
+    <p class="term-paper-card-p">Subject: {{ object.subject }}</p>
     {% if object.completed_by %}
-    <p><a href="{% url 'details-user' pk=object.completed_by_id %}">{{ object.completed_by }}</a></p>
+    <a class="main-card-link" href="{% url 'details-user' pk=object.completed_by_id %}">{{ object.completed_by }}</a>
     {% endif %}
 
-    <a href="{% url 'completed_paper-open' pk=object.pk %}">Open File</a>
+    <a class="main-card-link" href="{% url 'completed_paper-open' pk=object.pk %}">Download File</a>
 
-
+</div>
 {% endblock %}

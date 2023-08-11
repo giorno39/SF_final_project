@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "administration/base-admin/base-admin.html" %}
+
+{% block admin_content %}
 {% for object in object_list %}
-    <div>
-    {{ object.name }}
+    <div class="main-admin-card">
+    <h3 class="admin-card-p">Group name: {{ object.name }}</h3>
         {% if change_group %}
-    <a href="{% url 'admin-group-edit' pk=object.pk %}">Change</a>
+            <div></div>
+    <a class="admin-card-links" href="{% url 'admin-group-edit' pk=object.pk %}">Change</a>
         {% endif %}
     {% if view_group %}
-    <a href="{% url 'admin-group-delete' pk=object.pk %}">Delete</a>
+    <a class="admin-card-links" href="{% url 'admin-group-delete' pk=object.pk %}">Delete</a>
     {% endif %}
     </div>
 
 {% endfor %}
-</body>
-</html>
+{% endblock %}

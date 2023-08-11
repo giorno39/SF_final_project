@@ -2,26 +2,28 @@
 
 {% block content %}
 
-    {% if is_owner %}
-        <a href="{% url 'term-paper-edit' pk=object.pk %}">Edit</a>
-        <a href="{% url 'term-paper-delete' pk=object.pk %}">Delete</a>
-    {% endif %}
-    <p>{{ object.title }}</p>
-    <p>{{ object.university }}</p>
-    <p>{{ object.death_line }}</p>
-    <p>{{ object.price_cap }}</p>
-    <p>{{ object.description }}</p>
+    <div class="details-container">
 
-    <a href="{% url 'term-paper-file-open' pk=object.pk %}">Open File</a>
+    {% if is_owner %}
+        <a class="main-card-link" href="{% url 'term-paper-edit' pk=object.pk %}">Edit</a>
+        <a class="main-card-link" href="{% url 'term-paper-delete' pk=object.pk %}">Delete</a>
+    {% endif %}
+    <p class="term-paper-card-p">Title: {{ object.title }}</p>
+    <p class="term-paper-card-p">University: {{ object.university }}</p>
+    <p class="term-paper-card-p">Death Line{{ object.death_line }}</p>
+    <p class="term-paper-card-p">Price Cap{{ object.price_cap }}</p>
+    <p class="term-paper-card-p">Description: {{ object.description }}</p>
+
+    <a class="main-card-link" href="{% url 'term-paper-file-open' pk=object.pk %}">Download File</a>
 
 
 
     {% if is_taken and object.completed == False %}
         <p>Already taken</p>
-        <p><a href="{% url 'details-user' pk=object.taken_by_id %}">Taken by</a></p>
+        <p><a class="main-card-link" href="{% url 'details-user' pk=object.taken_by_id %}">Taken by</a></p>
         {% else %}
             {% if request.user.user_type == 'teacher' %}
-            <a href="{% url 'term-paper-take' pk=object.pk %}">Take term paper</a>
+            <a class="main-card-link" href="{% url 'term-paper-take' pk=object.pk %}">Take term paper</a>
             {% endif %}
         {% endif %}
         {% if object.completed %}
@@ -30,6 +32,6 @@
 
 
     {% endif %}
-
+</div>
 
 {% endblock %}

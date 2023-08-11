@@ -1,23 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'administration/base-admin/base-admin.html' %}
+
+{% block admin_content %}
+                <form class="admin-search-form" method="get" action="{% url 'admin-lesson-list' %}">
+                {{ search_form }}
+                <button>
+                    search
+                </button>
+                {% csrf_token %}
+            </form>
+
+
 {% for object in object_list %}
 
-    <div>
-    {{ object.title }}
-    {{ object.price }}
-    </div>
+    <div class="main-admin-card">
+    <h3 class="admin-card-p">Title: {{ object.title }}</h3>
+    <h3 class="admin-card-p">Price: {{ object.price }}</h3>
+
     {% if change_lesson %}
-    <a href="{% url 'admin-lesson-edit' pk=object.pk %}">Change</a>
+    <a class="admin-card-links" href="{% url 'admin-lesson-edit' pk=object.pk %}">Change</a>
     {% endif %}
     {% if view_lesson %}
-    <a href="{% url 'admin-lesson-details' pk=object.pk %}">Details</a>
+    <a class="admin-card-links" href="{% url 'admin-lesson-details' pk=object.pk %}">Details</a>
     {% endif %}
-
+</div>
 {% endfor %}
-</body>
-</html>
+
+{% endblock %}

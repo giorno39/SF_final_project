@@ -34,7 +34,7 @@ class StudentPaperView(LoginRequiredMixin, views.ListView):
         return result
 
     def get_queryset(self):
-        queryset = TermPaper.objects.filter(user_id=self.request.user.pk).order_by('title')
+        queryset = TermPaper.objects.filter(user_id=self.request.user.pk).order_by('-completed')
         return queryset
 
     def get_context_data(self, **kwargs):

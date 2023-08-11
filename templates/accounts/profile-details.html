@@ -1,16 +1,19 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+    <div class="details-container">
     {% if is_owner %}
-        <a href="{% url 'edit-user' pk=object.pk %}">Edit</a>
-        <a href="{% url 'delete-user' pk=object.pk %}">Delete</a>
+        <a class="main-card-link" href="{% url 'edit-user' pk=object.pk %}">Edit</a>
+        <a class="main-card-link" href="{% url 'delete-user' pk=object.pk %}">Delete</a>
     {% endif %}
-    <p>{{ object.get_full_name }}</p>
-    <p>{{ object.email }}</p>
-    <p>{{ object.user_type }}</p>
+    {% if object.fist_name or object.last_name %}
+    <p class="term-paper-card-p">Name: {{ object.get_full_name }}</p>
+    {% endif %}
+    <p class="term-paper-card-p">Email: {{ object.email }}</p>
+    <p class="term-paper-card-p">User type: {{ object.user_type }}</p>
     {% if avg_rate %}
-    <p>{{ avg_rate }}</p>
-        <a href="{% url 'teacher-trophy' teacher=object.pk %}">All trophies</a>
+    <p class="term-paper-card-p">{{ avg_rate }}</p>
+        <a class="main-card-link" href="{% url 'teacher-trophy' teacher=object.pk %}">All trophies</a>
     {% endif %}
-
+</div>
 {% endblock %}

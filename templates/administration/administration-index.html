@@ -1,71 +1,62 @@
 {% extends 'administration/base-admin/base-admin.html' %}
 
 {% block admin_content %}
-
-
-    <nav class="admin-navigation">
-            <h1>
-                <a href="{% url 'admin-index' %}" >Administration</a>
-            </h1>
-
-    </nav>
-
-<div>
-    <h3>Groups</h3>
+<div class="main-admin-card">
+    <h3 class="admin-card-p" >Groups</h3>
     {% if add_groups %}
-    <a href="{% url 'admin-group-add' %}">Add</a>
+    <a class="admin-card-links" href="{% url 'admin-group-add' %}">Add</a>
     {% endif %}
-    <a href="{% url 'admin-group-list' %}">List</a>
+    <a class="admin-card-links" href="{% url 'admin-group-list' %}">List</a>
 
 </div>
-<div>
-    <h3>Users</h3>
+<div class="main-admin-card">
+    <h3 class="admin-card-p" >Users</h3>
     {% if add_users %}
-    <a href="{% url 'admin-user-add' %}">Add</a>
+    <a class="admin-card-links" href="{% url 'admin-user-add' %}">Add</a>
     {% endif %}
-    <a href="{% url 'admin-user-list' %}">List</a>
+    <a class="admin-card-links" href="{% url 'admin-user-list' %}">List</a>
 
 </div>
-<div>
-    <h3>Term-Papers</h3>
+<div class="main-admin-card">
+    <h3 class="admin-card-p" >Term-Papers</h3>
     {% if add_papers %}
-    <a href="{% url 'admin-paper-add' %}">Add</a>
+    <a class="admin-card-links" href="{% url 'admin-paper-add' %}">Add</a>
     {% endif %}
-        <a href="{% url 'admin-paper-list' %}">List</a>
+        <a class="admin-card-links" href="{% url 'admin-paper-list' %}">List</a>
 
 </div>
-<div>
-    <h3>Lessons</h3>
+<div class="main-admin-card">
+    <h3 class="admin-card-p" >Lessons</h3>
     {% if add_lessons %}
-    <a href="{% url 'admin-lesson-add' %}">Add</a>
+    <a class="admin-card-links" href="{% url 'admin-lesson-add' %}">Add</a>
     {% endif %}
-    <a href="{% url 'admin-lesson-list' %}">List</a>
+    <a class="admin-card-links" href="{% url 'admin-lesson-list' %}">List</a>
 
 </div>
-<div>
-    <h3>Completed Papers</h3>
+<div class="main-admin-card">
+    <h3 class="admin-card-p" >Completed Papers</h3>
     {% if add_completed %}
-    <a href="{% url 'admin-completed-add' %}">Add</a>
+    <a class="admin-card-links" href="{% url 'admin-completed-add' %}">Add</a>
     {% endif %}
-    <a href="{% url 'admin-completed-list' %}">List</a>
+    <a class="admin-card-links" href="{% url 'admin-completed-list' %}">List</a>
 
 </div>
-<div>
-    <h3>Materials</h3>
+<div class="main-admin-card">
+    <h3 class="admin-card-p" >Materials</h3>
     {% if add_materials %}
-    <a href="{% url 'admin-materials-add' %}">Add</a>
+    <a class="admin-card-links" href="{% url 'admin-materials-add' %}">Add</a>
     {% endif %}
-    <a href="{% url 'admin-materials-list' %}">List</a>
+    <a class="admin-card-links" href="{% url 'admin-materials-list' %}">List</a>
 
 </div>
 
 
-<div>
-    <h3>Trophies</h3>
+<div class="main-admin-card">
+    <h3 class="admin-card-p" >Trophies</h3>
     {% if add_trophies %}
-    <a href="{% url 'admin-trophy-add' %}">Add</a>
+    <a class="admin-card-links" href="{% url 'admin-trophy-add' %}">Add</a>
     {% endif %}
-    <a href="{% url 'admin-trophy-list' %}">List</a>
+    <a class="admin-card-links" href="{% url 'admin-trophy-list' %}">List</a>
 
 </div>
 

@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'administration/base-admin/base-admin.html' %}
+
+{% block admin_content %}
+
+<div class="main-admin-card">
 <h2>Do you want to delete the group</h2>
     <form method="post" action={% url 'admin-group-delete' pk=object.pk %}>
         {% csrf_token %}
         <button>Yes</button>
     </form>
-<a href="{% url 'admin-group-list' %}">Go back</a>
-</body>
-</html>
+<a class="admin-card-links" href="{% url 'admin-group-list' %}">Go back</a>
+    </div>
+
+{% endblock %}

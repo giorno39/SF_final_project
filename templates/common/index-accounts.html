@@ -2,13 +2,55 @@
 
 {% block content %}
 
-    <a href="{% url 'term-paper-index' %}">Term Papers</a>
-    <div></div>
-    <a href="{% url 'lesson-index' %}">Lessons</a>
-    <div></div>
-    <a href="{% url 'completed_paper-index' %}">Completed Papers</a>
-    <div></div>
-    <a href="{% url 'materials-index' %}">Materials</a>
+    <div class="main-card">
+    <div class="main-card-text-box">
+        <h1 class="main-card-header">Find someone to help you out!</h1>
+        <p class="main-card-description">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scelerisque vitae
+            commodo vitae, egestas in sem. Praesent sed turpis efficitur, bibendum orci at,
+            dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
+        <a class="main-card-link" href="{% url 'term-paper-index' %}">Term Papers</a>
+        </div>
+        <img class="main-card-img" src="https://www.helpforassessment.com/blog/wp-content/uploads/2020/06/how-to-write-a-term-paper.jpg" alt="Photo"/>
+    </div>
+
+
+        <div class="main-card">
+        <div class="main-card-text-box">
+        <h1 class="main-card-header">Lessons to make you feel more secure</h1>
+            <p class="main-card-description">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scelerisque vitae
+            commodo vitae, egestas in sem. Praesent sed turpis efficitur, bibendum orci at,
+            dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
+    <a class="main-card-link" href="{% url 'lesson-index' %}">Lessons</a>
+            </div>
+         <img class="main-card-img" src="https://riskresltd.com/wp-content/uploads/2020/06/lessons-learned.jpg" alt="Photo"/>
+    </div>
+
+
+        <div class="main-card">
+        <div class="main-card-text-box">
+            <h1 class="main-card-header">Find something that someone already did</h1>
+                        <p class="main-card-description">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scelerisque vitae
+            commodo vitae, egestas in sem. Praesent sed turpis efficitur, bibendum orci at,
+            dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
+    <a class="main-card-link" href="{% url 'completed_paper-index' %}">Completed Papers</a>
+            </div>
+        <img class="main-card-img" src="https://t3.ftcdn.net/jpg/04/77/57/18/360_F_477571855_izGnZ6cNWXswv5mN8In2Png4GYkzYfCk.jpg" alt="Photo"/>
+    </div>
+        <div class="main-card">
+        <div class="main-card-text-box">
+         <h1 class="main-card-header">Look into our choices of useful materials</h1>
+                                    <p class="main-card-description">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scelerisque vitae
+            commodo vitae, egestas in sem. Praesent sed turpis efficitur, bibendum orci at,
+            dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
+
+    <a class="main-card-link" href="{% url 'materials-index' %}">Materials</a>
+            </div>
+         <img class="main-card-img" src="https://greatusefulstuff.com/cdn/shop/files/GUSWEBSITELOGO.png?height=628&pad_color=ffffff&v=1613703252&width=1200" alt="Photo"/>
+            </div>
 
 
 

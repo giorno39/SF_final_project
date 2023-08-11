@@ -9,6 +9,7 @@ UserModel = get_user_model()
 
 # Create your models here.
 class Materials(models.Model):
+
     TITLE_MIN_LEN = 2
     TITLE_MAX_LEN = 50
     FIELD_MIN_LEN = 5
