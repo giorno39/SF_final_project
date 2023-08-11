@@ -9,6 +9,10 @@ body {
     position: relative;
 }
 
+p{
+    margin: 10px;
+}
+
 a:link, a:visited{
     color: #ced4da;
     text-decoration: none;

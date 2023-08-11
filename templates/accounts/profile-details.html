@@ -5,6 +5,7 @@
     {% if is_owner %}
         <a class="main-card-link" href="{% url 'edit-user' pk=object.pk %}">Edit</a>
         <a class="main-card-link" href="{% url 'delete-user' pk=object.pk %}">Delete</a>
+        <p><a class="main-card-link" href="{% url 'change-password' %}">Change Password</a></p>
     {% endif %}
     {% if object.fist_name or object.last_name %}
     <p class="term-paper-card-p">Name: {{ object.get_full_name }}</p>

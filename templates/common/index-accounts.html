@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -11,7 +12,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scele
             dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
         <a class="main-card-link" href="{% url 'term-paper-index' %}">Term Papers</a>
         </div>
-        <img class="main-card-img" src="https://www.helpforassessment.com/blog/wp-content/uploads/2020/06/how-to-write-a-term-paper.jpg" alt="Photo"/>
+        <img class="main-card-img" src="{% static 'images/how-to-write-a-term-paper.jpg' %}" alt="Photo"/>
     </div>
 
 
@@ -24,7 +25,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scele
             dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
     <a class="main-card-link" href="{% url 'lesson-index' %}">Lessons</a>
             </div>
-         <img class="main-card-img" src="https://riskresltd.com/wp-content/uploads/2020/06/lessons-learned.jpg" alt="Photo"/>
+         <img class="main-card-img" src="{% static 'images/lessons-learned.jpg' %}" alt="Photo"/>
     </div>
 
 
@@ -37,7 +38,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scele
             dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
     <a class="main-card-link" href="{% url 'completed_paper-index' %}">Completed Papers</a>
             </div>
-        <img class="main-card-img" src="https://t3.ftcdn.net/jpg/04/77/57/18/360_F_477571855_izGnZ6cNWXswv5mN8In2Png4GYkzYfCk.jpg" alt="Photo"/>
+        <img class="main-card-img" src="{% static 'images/completed.jpg' %}" alt="Photo"/>
     </div>
         <div class="main-card">
         <div class="main-card-text-box">
@@ -49,7 +50,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scele
 
     <a class="main-card-link" href="{% url 'materials-index' %}">Materials</a>
             </div>
-         <img class="main-card-img" src="https://greatusefulstuff.com/cdn/shop/files/GUSWEBSITELOGO.png?height=628&pad_color=ffffff&v=1613703252&width=1200" alt="Photo"/>
+         <img class="main-card-img" src="{% static 'images/materials.webp' %}" alt="Photo"/>
             </div>
 
 

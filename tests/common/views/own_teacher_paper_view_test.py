@@ -35,7 +35,7 @@ class OwnTeacherPaperViewTests(BaseTestCase):
         self.assertRedirects(response, expected_url, status_code=302, target_status_code=200, msg_prefix='',
                              fetch_redirect_response=True)
 
-#TODO CHECK THIS TEST
+
     def test_teacher_paper__when_has_to_show_only_taken_expect_correct_number_of_papers(self):
         profile_user = self._create_user_and_login(self.VALID_STUDENT_DATA)
         user = self._create_user_and_login(self.VALID_TEACHER_DATA)

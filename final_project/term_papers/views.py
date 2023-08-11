@@ -96,7 +96,6 @@ class TermPaperEditView(views.UpdateView):
 
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
-        # TODO redirect, to a page that tells them, they don't have perms
         if self.request.user != self.object.user:
             result = reverse_lazy('term-paper-details', kwargs={
                 'pk': self.object.pk,
