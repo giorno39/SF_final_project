@@ -3,10 +3,10 @@
 {% block content %}
 <body>
 {% for object in object_list %}
-    <div>
-    {{ object.rate }}
-    {{ object.project }}
-    {{ object.obtained_at }}
+    <div class="term-paper-card">
+    <p class="term-paper-card-p">Rate: {{ object.rate }}</p>
+    <p class="term-paper-card-p">Project: {{ object.project }}</p>
+    <p class="term-paper-card-p">Date: {{ object.obtained_at }}</p>
     </div>
 {% endfor %}
 </body>

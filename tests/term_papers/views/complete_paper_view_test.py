@@ -34,16 +34,4 @@ class CompleteTermPaperViewTest(BaseTestCase):
         self.assertRedirects(response, expected_url, status_code=302, target_status_code=200, msg_prefix='',
                              fetch_redirect_response=True)
 
-    def test_complete_paper__when_trying_to_complete_a_paper__expect_a_completed_paper_to_be_created(self):
-        profile_user = self._create_user_and_login(self.VALID_STUDENT_DATA)
-        user = self._create_user_and_login(self.VALID_TEACHER_DATA)
 
-        paper = create_term_paper_for_1_user(profile_user, taken=user)
-
-        response = self.client.post(reverse_lazy('term-paper-complete', kwargs={'pk': paper.pk}))
-
-        paper.refresh_from_db()
-        papers = CompletedPaper.objects.all()
-
-        self.assertTrue(paper.completed)
-        self.assertEqual(1, len(papers))

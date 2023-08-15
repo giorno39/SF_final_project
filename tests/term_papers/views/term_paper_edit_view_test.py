@@ -4,7 +4,7 @@ from tests.accounts.base_test_case import BaseTestCase
 from tests.utils.creation_utils import create_term_paper_for_1_user
 
 
-class LessonDetailsViewTest(BaseTestCase):
+class TermPaperEditViewTest(BaseTestCase):
     VALID_TEACHER_DATA = {
         'username': 'test_user',
         'password': 'test_pass',
@@ -19,7 +19,7 @@ class LessonDetailsViewTest(BaseTestCase):
         'user_type': 'student',
     }
 
-    def test_lesson_edit__when_not_accessed_by_the_creator__expect_redirect(self):
+    def test_paper_edit__when_not_accessed_by_the_creator__expect_redirect(self):
         user = self._create_user_and_login(self.VALID_TEACHER_DATA)
         profile_user = self._create_user_and_login(self.VALID_STUDENT_DATA)
 

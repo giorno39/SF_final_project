@@ -10,8 +10,8 @@
     {% endif %}
     <p class="term-paper-card-p">Title: {{ object.title }}</p>
     <p class="term-paper-card-p">University: {{ object.university }}</p>
-    <p class="term-paper-card-p">Death Line{{ object.death_line }}</p>
-    <p class="term-paper-card-p">Price Cap{{ object.price_cap }}</p>
+    <p class="term-paper-card-p">Death Line: {{ object.death_line }}</p>
+    <p class="term-paper-card-p">Price Cap: {{ object.price_cap }}</p>
     <p class="term-paper-card-p">Description: {{ object.description }}</p>
 
     <a class="main-card-link" href="{% url 'term-paper-file-open' pk=object.pk %}">Download File</a>
@@ -28,7 +28,7 @@
         {% endif %}
         {% if object.completed %}
         <p>Completed</p>
-        <p><a href="{% url 'trophy-add' paper_pk=object.pk %}">Rate</a></p>
+        <p><a class="main-card-link" href="{% url 'trophy-add' paper_pk=object.pk %}">Rate</a></p>
 
 
     {% endif %}

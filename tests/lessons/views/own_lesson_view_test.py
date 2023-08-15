@@ -5,7 +5,7 @@ from tests.accounts.base_test_case import BaseTestCase
 from tests.utils.creation_utils import create_lessons_from_2_users
 
 
-class LessonDetailsViewTest(BaseTestCase):
+class OwnLessonViewTest(BaseTestCase):
     VALID_TEACHER_DATA = {
         'username': 'test_user',
         'password': 'test_pass',

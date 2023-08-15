@@ -1,5 +1,5 @@
 from django.http import FileResponse
-from django.shortcuts import render
+
 from django.views import generic as views
 import os
 
@@ -7,8 +7,6 @@ from final_project import settings
 from final_project.completed_papers.forms import CompletedPaperSearchForm
 from final_project.completed_papers.models import CompletedPaper
 
-
-# Create your views here.
 
 class CompletedPapersIndexView(views.ListView):
     model = CompletedPaper

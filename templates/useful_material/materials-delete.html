@@ -7,7 +7,7 @@
         {% csrf_token %}
         <button>Yes</button>
     </form>
-    <a href="{% url 'materials-details' pk=object.pk %}">Go back</a>
+    <a class="main-card-link" href="{% url 'materials-details' pk=object.pk %}">Go back</a>
 
 
 {% endblock %}

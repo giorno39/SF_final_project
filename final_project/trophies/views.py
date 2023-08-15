@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic as views
 
@@ -6,8 +6,6 @@ from final_project.term_papers.models import TermPaper
 
 from final_project.trophies.models import Trophy
 
-
-# Create your views here.
 
 class CreateTrophyView(views.CreateView):
     model = Trophy
@@ -66,5 +64,3 @@ class TeacherTrophies(views.ListView):
         trophies = Trophy.objects.filter(completed_by=teacher)
 
         return trophies
-
-

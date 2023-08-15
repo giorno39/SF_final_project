@@ -7,7 +7,7 @@
     <p class="term-paper-card-p">University: {{ object.university }}</p>
     <p class="term-paper-card-p">Subject: {{ object.subject }}</p>
     {% if object.completed_by %}
-    <a class="main-card-link" href="{% url 'details-user' pk=object.completed_by_id %}">{{ object.completed_by }}</a>
+    <a class="main-card-link" href="{% url 'details-user' pk=object.completed_by_id %}">Completed by</a>
     {% endif %}
 
     <a class="main-card-link" href="{% url 'completed_paper-open' pk=object.pk %}">Download File</a>

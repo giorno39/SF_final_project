@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.core.checks import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
@@ -92,10 +92,5 @@ class ProfileDelete(LoginRequiredMixin, views.DeleteView):
         result = super().get(request, *args, **kwargs)
         if self.request.user != self.object:
             return redirect('details-user', pk=self.object.pk)
-
-        return result
-
-    def post(self, request, *args, **kwargs):
-        result = super().post(request, *args, **kwargs)
 
         return result

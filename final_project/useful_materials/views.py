@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import FileResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 import os
@@ -8,9 +8,6 @@ import os
 from final_project import settings
 from final_project.useful_materials.forms import MaterialCreateForm, MaterialSearchForm
 from final_project.useful_materials.models import Materials
-
-
-# Create your views here.
 
 
 class MaterialsIndexView(views.ListView):

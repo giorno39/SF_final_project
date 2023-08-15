@@ -75,7 +75,7 @@ class TermPaper(models.Model):
 
     taken_by = models.ForeignKey(
         UserModel,
-        on_delete=models.RESTRICT,
+        on_delete=models.SET_NULL,
         related_name='taken_by_teacher',
         null=True,
         blank=True,

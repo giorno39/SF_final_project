@@ -3,8 +3,8 @@
 {% block content %}
 <div class="details-container">
     {% if is_owner %}
-        <a href="{% url 'materials-edit' pk=object.pk %}">Edit</a>
-        <a href="{% url 'materials-delete' pk=object.pk %}">Delete</a>
+        <a class="main-card-link" href="{% url 'materials-edit' pk=object.pk %}">Edit</a>
+        <a class="main-card-link" href="{% url 'materials-delete' pk=object.pk %}">Delete</a>
     {% endif %}
     <p class="term-paper-card-p">{{ object.title }}</p>
     <p class="term-paper-card-p">{{ object.field }}</p>

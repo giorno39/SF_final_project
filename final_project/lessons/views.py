@@ -1,13 +1,10 @@
-from django.core import exceptions
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
 from final_project.lessons.forms import CreateLessonForm, LessonSearchForm
 from final_project.lessons.models import Lesson
 
-
-# Create your views here.
 
 class CreateLessonView(views.CreateView):
     model = Lesson

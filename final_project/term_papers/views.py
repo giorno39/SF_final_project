@@ -2,7 +2,6 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
 from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -107,7 +106,6 @@ class TermPaperEditView(views.UpdateView):
 
 
 class TermPaperDeleteView(views.DeleteView):
-    # TODO delete the file as well as the paper
     model = TermPaper
     template_name = 'term-papers/term-paper-delete.html'
     success_url = reverse_lazy('term-paper-index')
@@ -124,6 +122,14 @@ class TermPaperDeleteView(views.DeleteView):
 
         return result
 
+    def post(self, *args, **kwargs):
+        result = super().post(*args, **kwargs)
+
+        path = os.path.join(settings.MEDIA_ROOT, str(self.object.content))
+        os.remove(path)
+
+        return result
+
 
 def open_file(request, pk):
     term_paper = TermPaper.objects.filter(pk=pk).get()
@@ -136,9 +142,7 @@ def open_file(request, pk):
 
 @login_required
 def take_term_paper(request, pk):
-    c_user = UserModel.objects. \
-        filter(pk=request.user.pk). \
-        get()
+    c_user = get_user_by_id(request.user.pk)
 
     if c_user.user_type == 'student':
         return redirect('term-paper-details', pk=pk)
