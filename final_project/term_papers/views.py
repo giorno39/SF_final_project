@@ -85,7 +85,7 @@ class TermPaperCreateView(views.CreateView):
 
 class TermPaperEditView(views.UpdateView):
     model = TermPaper
-    fields = ('title', 'death_line', 'price_cap',)
+    fields = ('title', 'death_line', 'price_cap','description')
     template_name = 'term-papers/term-paper-edit.html'
 
     def get_success_url(self):

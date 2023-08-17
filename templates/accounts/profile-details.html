@@ -13,7 +13,7 @@
     <p class="term-paper-card-p">Email: {{ object.email }}</p>
     <p class="term-paper-card-p">User type: {{ object.user_type }}</p>
     {% if avg_rate %}
-    <p class="term-paper-card-p">{{ avg_rate }}</p>
+    <p class="term-paper-card-p">Average rate: {{ avg_rate }}</p>
         <a class="main-card-link" href="{% url 'teacher-trophy' teacher=object.pk %}">All trophies</a>
     {% endif %}
 </div>
