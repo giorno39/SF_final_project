@@ -2,10 +2,58 @@
 
 {% block content %}
 <div class="auth-form-container">
-    <form class="auth-form" method="post" action="{% url 'materials-add' %}" enctype="multipart/form-data">
-            {{ form.as_p }}
-            {% csrf_token %}
-        <button>Add</button>
-    </form>
+  <form class="auth-form" method="post" action="{% url 'materials-add' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <p>
+        {{ form.title.label_tag }}
+        {{ form.title }}
+      </p>
+
+      <p>
+        {{ form.field.label_tag }}
+        {{ form.field }}
+      </p>
+
+      <div>
+        {{ form.content.label_tag }}
+        <div class="custom-file">
+          <span class="custom-file-label">Choose file</span>
+          <span class="custom-file-name" id="file-name">No file chosen</span>
+          {{ form.content }}
+
+{#        TODO Check if the validator is being used here and if this actually works, by throwing an error the validator needs to also check about file types#}
+            <!-- helper text, always visible -->
+        <span class="help-text">Allowed formats: PDF, DOCX, ZIP • Max size: 2MB</span>
+
+              <!-- show error only if validation fails -->
+          {% if form.content.errors %}
+              <span class="field-error">{{ form.content.errors.0 }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <p>
+        {{ form.references.label_tag }}
+        {{ form.references }}
+      </p>
+
+      <button type="submit" class="btn">Add</button>
+  </form>
 </div>
+
+<script>
+  // JS for showing selected file name
+  document.addEventListener("DOMContentLoaded", function() {
+    const fileInput = document.querySelector('input[type="file"]');
+    const fileName = document.getElementById('file-name');
+    if (fileInput && fileName) {
+      fileInput.addEventListener('change', () => {
+        fileName.textContent = fileInput.files.length > 0
+          ? fileInput.files[0].name
+          : 'No file chosen';
+      });
+    }
+  });
+</script>
 {% endblock %}

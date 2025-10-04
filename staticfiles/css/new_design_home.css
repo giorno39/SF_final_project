@@ -1,0 +1,350 @@
+/* ===== Design tokens ===== */
+:root{
+  --brand: #1864ab;     /* blue */
+  --brand-600:#155893;
+  --accent:#ffc078;     /* orange */
+  --bg:#f7fafc;         /* page background */
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --radius:14px;
+  --maxw:1100px;
+  --shadow:0 8px 24px rgba(0,0,0,.08);
+}
+
+/* ===== Reset / base ===== */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font:16px/1.5 "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+img{max-width:100%; display:block}
+a{color:inherit; text-decoration:none}
+a:hover{opacity:.9}
+p{margin:0 0 .8rem}
+
+/* ===== Layout helpers ===== */
+.container{width:100%; max-width:var(--maxw); margin:0 auto; padding:0 1rem}
+.grid{display:grid; gap:1rem}
+
+/* ===== Header & Nav ===== */
+.main-header{
+  position:sticky; top:0; z-index:10;
+  background:var(--brand); color:#fff;
+  border-bottom:4px solid var(--accent);
+}
+.main-header .page-title{
+  color:#fff; font-weight:800; letter-spacing:.2px;
+}
+.main-header h1{font-size:1.25rem; margin:0}
+.header-inner{display:flex; align-items:center; justify-content:space-between; padding:.9rem 0}
+
+/* top nav */
+.navigation{
+  display:flex; align-items:center; gap:.75rem;
+  font-size:0.95rem; margin:0;
+}
+.nav-links{padding:.45rem .7rem; border-radius:10px; color:#eaf2fb}
+.nav-links:hover{background:rgba(255,255,255,.12)}
+
+/* call-to-action style (e.g. Register) */
+.navigation .btn{
+  background:var(--accent); color:#1f2937; font-weight:600; border-radius:12px;
+  padding:.45rem .8rem;
+}
+
+/* avatar icon link wrapper if you keep the SVGs */
+.navigation .icon{display:inline-flex; align-items:center; padding:.35rem; border-radius:10px}
+.navigation .icon:hover{background:rgba(255,255,255,.12)}
+
+/* (Optional) mobile nav toggle (if you use it in base.html) */
+.nav-toggle{
+  display:none; background:transparent; border:0; font-size:1.5rem; color:#fff; cursor:pointer;
+}
+
+/* ===== Hero / main card ===== */
+.main-card{
+  display:grid; grid-template-columns: minmax(260px,440px) 1fr;
+  gap:2.2rem; align-items:center;
+  padding:2.5rem 1rem;
+}
+.main-card-text-box{grid-column:1/2}
+.main-card-header{
+  font-size:2.25rem; line-height:1.15; margin-bottom:.6rem; color:#0f2a45;
+}
+.main-card-description{
+  font-size:1.05rem; color:var(--muted); margin-bottom:1.4rem;
+}
+.main-card-link{
+  display:inline-block; background:var(--accent); color:#1f2937;
+  padding:.65rem 1rem; border-radius:999px; font-weight:600; box-shadow:var(--shadow);
+}
+.main-card-img{
+  grid-column:2/3; width:100%; height:auto; border-radius:24px; box-shadow:var(--shadow);
+}
+
+/* ===== Forms & search ===== */
+.search-form{margin:1.2rem 0}
+input, select, textarea{
+  width:100%; padding:.65rem .8rem; border:1px solid var(--border); border-radius:12px;
+  background:#fff; color:var(--text);
+}
+label{display:block; font-weight:600; margin:.4rem 0 .25rem}
+
+/* Buttons (generic) */
+button, .btn{
+  appearance:none; border:0; border-radius:999px; cursor:pointer;
+  background:var(--brand); color:#fff; font-weight:600;
+  padding:.55rem 1rem; box-shadow:var(--shadow);
+}
+button:hover, .btn:hover{background:var(--brand-600)}
+
+/* ===== Cards ===== */
+.term-paper-card{
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:1rem; margin:1rem 0; box-shadow:var(--shadow);
+}
+.term-paper-card-p{margin-bottom:.5rem}
+
+/* ===== Details pages ===== */
+.details-container{padding:1.5rem 1rem}
+
+/* ===== Footer ===== */
+footer{
+  background:var(--brand); color:#eaf2fb; border-top:4px solid var(--accent);
+  margin-top:2.5rem;
+}
+footer .container{padding:1rem; text-align:center}
+
+/* ===== Scrollbar (WebKit) ===== */
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--brand)}
+::-webkit-scrollbar-thumb{background:var(--accent)}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* ===== Flash messages (if you use Django messages) ===== */
+.flash{margin:1rem 0}
+.flash-item{background:#fff; border:1px solid var(--border); padding:.7rem .9rem; border-radius:12px; margin-bottom:.5rem}
+.flash-item.success{border-color:#b7f7c3; background:#f0fff3}
+.flash-item.error{border-color:#ffd1d1; background:#fff1f1}
+
+/* ===== Responsive ===== */
+@media (max-width: 960px){
+  .main-card{grid-template-columns:1fr; padding:1.8rem 1rem}
+  .main-card-img{grid-column:1/2; order:-1}
+  .main-card-header{font-size:1.9rem}
+}
+
+@media (max-width: 860px){
+  .nav-toggle{display:block}
+  .navigation{
+    position:absolute; left:0; right:0; top:100%;
+    display:none; flex-direction:column; align-items:flex-start;
+    background:var(--brand); border-top:3px solid var(--accent);
+    padding:.4rem 0;
+  }
+  .navigation.open{display:flex}
+  .nav-links, .navigation .btn{width:100%; border-radius:0; padding:.9rem 1rem}
+}
+
+.brand {
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: #1864ab; /* brand blue for main text */
+}
+
+/* Icon buttons in the top nav (profile + logout) */
+.site-nav .icon-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.4rem;
+  padding:.45rem .75rem;           /* same feel as .btn */
+  border-radius:999px;
+  background:var(--brand);
+  color:#fff;
+  font-weight:600;
+  line-height:1;
+  box-shadow:var(--shadow);
+  transition:transform .12s ease, background .12s ease;
+}
+.site-nav .icon-btn:hover{ background:var(--brand-600); transform:translateY(-1px); }
+
+/* unify svg look with buttons */
+.site-nav .icon-btn svg{
+  width:18px; height:18px;         /* consistent sizing */
+  display:block;
+  fill:#fff !important;            /* override inline gray */
+}
+
+/* optional: add a tiny pill-only version (no label) */
+.site-nav .icon-pill{
+  padding:.45rem;                  /* perfect circle when only an icon */
+}
+
+/* a helper for accessibility text if you want it */
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+/* ===== Profile details ===== */
+.profile-wrap{ padding:1.5rem 1rem; }
+
+.profile-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:1.25rem 1.25rem 1rem;
+  max-width:780px;
+}
+
+.profile-header{
+  display:flex; align-items:center; gap:1rem; margin-bottom:1rem;
+}
+
+.profile-avatar{
+  width:64px; height:64px; border-radius:50%;
+  display:grid; place-items:center;
+  background:linear-gradient(135deg, var(--brand) 0%, #2572b9 100%);
+  color:#fff; font-size:1.35rem; font-weight:800;
+  box-shadow:var(--shadow);
+}
+
+.profile-title{ margin:0; font-size:1.35rem; color:#0f2a45; }
+.profile-sub{ margin:.2rem 0 0; color:var(--muted); }
+
+.profile-info{
+  display:grid; gap:.35rem; margin:.5rem 0 1rem;
+}
+.profile-info .label{ color:var(--muted); font-weight:600; margin-right:.4rem; }
+
+.profile-actions{
+  display:flex; flex-wrap:wrap; gap:.6rem; margin:.5rem 0 .25rem;
+}
+.profile-actions .main-card-link{ padding:.55rem .9rem; }
+
+/* Optional little badge for teacher/student */
+.badge{
+  display:inline-block; padding:.25rem .55rem; border-radius:999px;
+  background:#eef5ff; color:#0f2a45; font-weight:700; font-size:.8rem;
+  border:1px solid var(--border);
+}
+
+/* ===== Lessons index ===== */
+.lessons-wrap { padding: 1rem 0; }
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  max-width: 640px;
+}
+
+.search-bar input[type="text"],
+.search-bar input[type="search"]{
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: .7rem .9rem;
+  background: #fff;
+  box-shadow: var(--shadow-light, 0 2px 4px rgba(0,0,0,.05));
+  font: inherit;
+}
+
+.search-bar .btn { padding: .55rem 1rem; }
+
+/* Cards grid (reuses your .term-paper-card) */
+.lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* ===== Pagination ===== */
+.pager {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: 1rem;
+}
+
+.pager .page-btn {                /* pill buttons */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 .85rem;
+  border-radius: 999px;
+  font-weight: 700;
+  background: #ffc074;           /* matches your orange pills */
+  color: #2d2d2d;
+  box-shadow: var(--shadow);
+}
+
+.pager .page-btn:hover { filter: brightness(.96); transform: translateY(-1px); }
+
+/* active/disabled states */
+.pager .is-active { background: var(--brand); color: #fff; }
+.pager .is-disabled { opacity: .45; pointer-events: none; }
+.pager .icon { width: 16px; height: 16px; display: block; }
+
+
+/* ===== Lesson details ===== */
+.lesson-wrap{ padding:1.5rem 1rem; }
+
+.lesson-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:1.25rem 1.25rem 1rem;
+  max-width:780px;
+}
+
+.lesson-header{
+  display:flex; align-items:center; gap:1rem; margin-bottom:1rem;
+}
+
+.lesson-avatar{
+  width:64px; height:64px; border-radius:50%;
+  display:grid; place-items:center;
+  background:linear-gradient(135deg, var(--brand) 0%, #2572b9 100%);
+  color:#fff; font-weight:800; font-size:1.35rem;
+  box-shadow:var(--shadow);
+}
+
+.lesson-title{ margin:0; font-size:1.35rem; color:#0f2a45; }
+.lesson-sub{ margin:.2rem 0 0; color:var(--muted); }
+
+.badge{
+  display:inline-block; padding:.25rem .55rem; border-radius:999px;
+  background:#eef5ff; color:#0f2a45; font-weight:700; font-size:.8rem;
+  border:1px solid var(--border);
+}
+
+.price-chip{
+  display:inline-block; margin-left:auto;
+  padding:.35rem .7rem; border-radius:999px;
+  background:#ffe1ba; color:#2b2b2b; font-weight:800;
+}
+
+.lesson-info{ display:grid; gap:.35rem; margin:.5rem 0 1rem; }
+.lesson-info .label{ color:var(--muted); font-weight:600; margin-right:.4rem; }
+
+.lesson-actions{ display:flex; flex-wrap:wrap; gap:.6rem; }
+.lesson-actions .main-card-link{ padding:.55rem .9rem; }
+
+
+.brand span {
+  color: #ffc078; /* accent highlights */
+}

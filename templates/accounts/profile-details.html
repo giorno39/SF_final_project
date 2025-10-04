@@ -1,20 +1,48 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <div class="details-container">
+<section class="container profile-wrap">
+  <article class="profile-card">
+    <header class="profile-header">
+      <div class="profile-avatar">
+        {{ object.get_full_name|default:object.email|slice:":1"|upper }}
+      </div>
+      <div>
+        <h1 class="profile-title">
+          {% if object.first_name or object.last_name %}
+            {{ object.get_full_name }}
+          {% else %}
+            {{ object.email }}
+          {% endif %}
+        </h1>
+        <p class="profile-sub">
+          <span class="badge">{{ object.user_type }}</span>
+        </p>
+      </div>
+    </header>
+
+    <div class="profile-info">
+      {% if object.first_name or object.last_name %}
+        <p><span class="label">Name:</span> {{ object.get_full_name }}</p>
+      {% endif %}
+      <p><span class="label">Email:</span> {{ object.email }}</p>
+      <p><span class="label">User type:</span> {{ object.user_type }}</p>
+
+      {% if avg_rate %}
+        <p><span class="label">Average rate:</span> {{ avg_rate }}</p>
+      {% endif %}
+    </div>
+
     {% if is_owner %}
+      <div class="profile-actions">
         <a class="main-card-link" href="{% url 'edit-user' pk=object.pk %}">Edit</a>
         <a class="main-card-link" href="{% url 'delete-user' pk=object.pk %}">Delete</a>
-        <p><a class="main-card-link" href="{% url 'change-password' %}">Change Password</a></p>
+        <a class="main-card-link" href="{% url 'change-password' %}">Change Password</a>
+        {% if avg_rate %}
+          <a class="main-card-link" href="{% url 'teacher-trophy' teacher=object.pk %}">All trophies</a>
+        {% endif %}
+      </div>
     {% endif %}
-    {% if object.fist_name or object.last_name %}
-    <p class="term-paper-card-p">Name: {{ object.get_full_name }}</p>
-    {% endif %}
-    <p class="term-paper-card-p">Email: {{ object.email }}</p>
-    <p class="term-paper-card-p">User type: {{ object.user_type }}</p>
-    {% if avg_rate %}
-    <p class="term-paper-card-p">Average rate: {{ avg_rate }}</p>
-        <a class="main-card-link" href="{% url 'teacher-trophy' teacher=object.pk %}">All trophies</a>
-    {% endif %}
-</div>
+  </article>
+</section>
 {% endblock %}

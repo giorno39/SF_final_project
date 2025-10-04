@@ -1,33 +1,83 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-                <form class="search-form" method="get" action="{% url 'lesson-index' %}">
-                {{ search_form }}
-                <button>
-                    search
-                </button>
-                {% csrf_token %}
-            </form>
-    <div>Lessons:</div>
+<section class="container lessons-wrap">
+
+  <!-- Search -->
+  <form class="search-form" method="get" action="{% url 'lesson-index' %}">
+    <div class="search-bar">
+      {{ search_form }}
+      <button class="btn" type="submit">search</button>
+    </div>
+    {% csrf_token %}
+  </form>
+
+  <!-- List -->
+  <div class="lessons-grid">
     {% for object in object_list %}
-
-        <div class="term-paper-card">
-            <p class="term-paper-card-p">Title: {{ object.title }}</p>
-
-            <a class="main-card-link" href="{% url 'lesson-details' pk=object.pk %}">Details</a>
-        </div>
+      <div class="term-paper-card">
+        <p class="term-paper-card-p"><strong>Title:</strong> {{ object.title }}</p>
+        <a class="main-card-link" href="{% url 'lesson-details' pk=object.pk %}">Details</a>
+      </div>
+    {% empty %}
+      <p class="term-paper-card-p">No lessons found.</p>
     {% endfor %}
+  </div>
 
-   <a class="main-card-link" href="?page=1">1...  </a>
-    {% if page_obj.has_previous %}
-        <a class="main-card-link" href="?page={{ page_obj.previous_page_number }}"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#343a40}</style><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg></a>
-    {% endif %}
+  <!-- Pagination -->
+  {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="pager" aria-label="Pagination">
+      {% if page_obj.has_previous %}
+        <a class="page-btn" href="?page={{ page_obj.previous_page_number }}">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
+        </a>
+      {% else %}
+        <span class="page-btn is-disabled">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
+        </span>
+      {% endif %}
 
-    {{ page_obj.number }}
+      {# First page #}
+      {% if page_obj.number > 2 %}
+        <a class="page-btn" href="?page=1">1</a>
+      {% endif %}
 
-    {% if page_obj.has_next %}
-        <a class="main-card-link" href="?page={{ page_obj.next_page_number }}"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#343a40}</style><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg></a>
-    {% endif %}
-    <a class="main-card-link" href="?page={{ page_obj.paginator.num_pages }}">  ... {{ page_obj.paginator.num_pages }}</a>
+      {# Left ellipsis #}
+      {% if page_obj.number > 3 %}
+        <span class="page-btn is-disabled">…</span>
+      {% endif %}
 
+      {# Window around current page: (n-1, n, n+1) #}
+      {% for n in page_obj.paginator.page_range %}
+        {% if n >= page_obj.number|add:'-1' and n <= page_obj.number|add:'1' %}
+          {% if n == page_obj.number %}
+            <span class="page-btn is-active">{{ n }}</span>
+          {% else %}
+            <a class="page-btn" href="?page={{ n }}">{{ n }}</a>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      {# Right ellipsis #}
+      {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+        <span class="page-btn is-disabled">…</span>
+      {% endif %}
+
+      {# Last page #}
+      {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
+        <a class="page-btn" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+      {% endif %}
+
+      {% if page_obj.has_next %}
+        <a class="page-btn" href="?page={{ page_obj.next_page_number }}">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
+        </a>
+      {% else %}
+        <span class="page-btn is-disabled">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
+        </span>
+      {% endif %}
+    </nav>
+  {% endif %}
+</section>
 {% endblock %}

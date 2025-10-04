@@ -1,0 +1,17 @@
+/* sticky footer layout hooks */
+html, body { height: 100%; }
+.site { min-height: 100vh; display: flex; flex-direction: column; }
+.site-main { flex: 1; }
+
+/* footer look & feel */
+.site-footer{
+  margin-top: 2rem;
+  background: var(--brand);
+  border-top: 4px solid var(--accent);
+  color: #eaf2fb;
+}
+.footer-inner{
+  display:flex; align-items:center; justify-content:center;
+  padding: 0.9rem 0;
+}
+.site-footer small span{ color: var(--accent); font-weight: 800; }

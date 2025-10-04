@@ -1,18 +1,36 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+<section class="container lesson-wrap">
+  <article class="lesson-card">
+    <header class="lesson-header">
+      <div class="lesson-avatar">
+        {{ object.title|slice:":1"|upper }}
+      </div>
+      <div>
+        <h1 class="lesson-title">{{ object.title }}</h1>
+        <p class="lesson-sub">
+          <span class="badge">{{ object.subject }}</span>
+        </p>
+      </div>
+      <span class="price-chip">{{ object.price }} / hr</span>
+    </header>
 
-        <div class="details-container">
+    <div class="lesson-info">
+      <p><span class="label">Title:</span> {{ object.title }}</p>
+      <p><span class="label">Subject:</span> {{ object.subject }}</p>
+      <p><span class="label">Price per hour:</span> {{ object.price }}</p>
+      <p>
+        <a class="main-card-link" href="{% url 'details-user' pk=object.teacher_id %}">Teacher</a>
+      </p>
+    </div>
 
     {% if is_owner %}
+      <div class="lesson-actions">
         <a class="main-card-link" href="{% url 'lesson-edit' pk=object.pk %}">Edit</a>
         <a class="main-card-link" href="{% url 'lesson-delete' pk=object.pk %}">Delete</a>
+      </div>
     {% endif %}
-    <p class="term-paper-card-p">Title: {{ object.title }}</p>
-    <p class="term-paper-card-p">Subject: {{ object.subject }}</p>
-    <p class="term-paper-card-p">Price per hour: {{ object.price }}</p>
-    <p><a class="main-card-link" href="{% url 'details-user' pk=object.teacher_id %}">Teacher</a></p>
-
-        </div>
-
+  </article>
+</section>
 {% endblock %}
