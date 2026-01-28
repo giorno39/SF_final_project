@@ -25,9 +25,9 @@ class SignUpView(views.CreateView):
     template_name = 'accounts/profile-register.html'
     success_url = reverse_lazy('index')
 
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        login(request, self.object)
+    def form_valid(self, form):
+        response = super().form_valid(form)  # creates self.object
+        login(self.request, self.object)     # now it's a real user
         return response
 
 
@@ -66,21 +66,14 @@ class ProfileDetails(LoginRequiredMixin, views.DetailView):
 
 class ProfileEdit(LoginRequiredMixin, views.UpdateView):
     model = UserModel
-    class_form = UserEditForm
-    fields = ('first_name', 'last_name', 'email')
+    form_class = UserEditForm
     template_name = 'accounts/profile-edit.html'
 
-    def get(self, request, *args, **kwargs):
-        result = super().get(request, *args, **kwargs)
-        if self.request.user != self.object:
-            return redirect('details-user', pk=self.object.pk)
-
-        return result
+    def get_object(self, queryset=None):
+        return self.request.user
 
     def get_success_url(self):
-        return reverse_lazy('details-user', kwargs={
-            'pk': self.object.pk
-        })
+        return reverse_lazy('details-user', kwargs={'pk': self.object.pk})
 
 
 class ProfileDelete(LoginRequiredMixin, views.DeleteView):
