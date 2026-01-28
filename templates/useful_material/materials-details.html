@@ -1,24 +1,48 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<div class="details-container">
-    {% if is_owner %}
+<section class="container lesson-wrap">
+  <article class="lesson-card">
+    <header class="lesson-header">
+      <div class="lesson-avatar">
+        {{ object.title|slice:":1"|upper }}
+      </div>
+
+      <div>
+        <h1 class="lesson-title">{{ object.title }}</h1>
+        <p class="lesson-sub">
+          <span class="badge">{{ object.field }}</span>
+        </p>
+      </div>
+    </header>
+
+    <div class="lesson-info">
+      <p><span class="label">Title:</span> {{ object.title }}</p>
+      <p><span class="label">Field:</span> {{ object.field }}</p>
+    </div>
+
+    <div class="lesson-actions">
+      {% if object.content %}
+        <a class="main-card-link" href="{% url 'materials-download' pk=object.pk %}">
+          Download File
+        </a>
+      {% endif %}
+
+      {% if object.references %}
+        <a class="main-card-link" href="{{ object.references }}">
+          References
+        </a>
+      {% endif %}
+
+      <a class="main-card-link" href="{% url 'details-user' pk=object.uploaded_by_id %}">
+        Uploaded by
+      </a>
+
+      {% if is_owner %}
         <a class="main-card-link" href="{% url 'materials-edit' pk=object.pk %}">Edit</a>
         <a class="main-card-link" href="{% url 'materials-delete' pk=object.pk %}">Delete</a>
-    {% endif %}
-    <p class="term-paper-card-p">{{ object.title }}</p>
-    <p class="term-paper-card-p">{{ object.field }}</p>
-
-    {% if object.content %}
-    <a class="main-card-link" href="{% url 'materials-download' pk=object.pk %}">Download File</a>
-    {% endif %}
-    {% if object.references %}
-        <div></div>
-    <a class="main-card-link" href="{{ object.references }}">References</a>
-    {% endif %}
-
-    <a class="main-card-link" href="{% url 'details-user' pk=object.uploaded_by_id %}">Uploaded by</a>
-
-</div>
-
+      {% endif %}
+    </div>
+  </article>
+</section>
 {% endblock %}
