@@ -1,6 +1,6 @@
 from enum import Enum
 
-from django.contrib import admin
+from django.conf import settings
 from django.contrib.auth import models as auth_models
 from django.contrib.auth.models import UserManager
 from django.core import validators
@@ -48,6 +48,38 @@ class AppUser(auth_models.AbstractUser):
         return f'{self.user_type};{self.username}'
 
 
+class Specialization(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ("name",)
+
+    def __str__(self):
+        return self.name
 
 
+class TeacherProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="teacher_profile",
+    )
+    specializations = models.ManyToManyField(
+        Specialization,
+        blank=True,
+        related_name="teachers",
+    )
 
+    def __str__(self):
+        return f"TeacherProfile<{self.user.username}>"
+
+
+class StudentProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="student_profile",
+    )
+
+    def __str__(self):
+        return f"StudentProfile<{self.user.username}>"

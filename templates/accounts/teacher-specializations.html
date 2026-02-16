@@ -1,0 +1,103 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<section class="container lesson-wrap">
+  <article class="lesson-card">
+
+    <header class="lesson-header">
+      <div class="lesson-avatar">★</div>
+      <div>
+        <h1 class="lesson-title">Select your specializations</h1>
+        <p class="lesson-sub">
+          <span class="badge">Teacher profile</span>
+        </p>
+      </div>
+    </header>
+
+    <form class="auth-form specializations-form" method="post">
+      {% csrf_token %}
+
+      <!-- Search -->
+      <div class="field">
+        <label for="specSearch">Search</label>
+        <input id="specSearch" type="text" placeholder="Type to filter specializations..." class="input">
+      </div>
+
+      <!-- Validation errors -->
+      {% if form.specializations.errors %}
+        <div class="field-error">
+          {{ form.specializations.errors.0 }}
+        </div>
+      {% endif %}
+
+      <!-- Specializations Grid -->
+      <div id="id_specializations" class="specializations-grid">
+        {% for checkbox in form.specializations %}
+          <label class="spec-option">
+            {{ checkbox.tag }}
+            <span class="spec-label">{{ checkbox.choice_label }}</span>
+          </label>
+        {% endfor %}
+      </div>
+
+      <div class="lesson-actions">
+        <button type="submit" class="btn">Save</button>
+      </div>
+
+    </form>
+
+  </article>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("specSearch");
+    const container = document.getElementById("id_specializations");
+    if (!input || !container) return;
+
+    const options = Array.from(container.querySelectorAll("label.spec-option"));
+
+    input.addEventListener("input", () => {
+      const q = input.value.toLowerCase().trim();
+
+      options.forEach(opt => {
+        const text = opt.querySelector(".spec-label")?.textContent.toLowerCase() || "";
+        opt.classList.toggle("is-hidden", q !== "" && !text.includes(q));
+      });
+    });
+  });
+</script>
+
+<style>
+/* Layout */
+#id_specializations.specializations-grid > label.spec-option{
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:flex-start;
+  gap:.75rem;
+  text-align:left;
+}
+
+/* Filtering */
+#id_specializations.specializations-grid > label.spec-option.is-hidden{
+  display:none !important;
+}
+
+/* Checkbox (keep strong overrides) */
+#id_specializations.specializations-grid > label.spec-option > input[type="checkbox"]{
+  float:none !important;
+  position:static !important;
+  margin:0 !important;
+  width:18px !important;
+  height:18px !important;
+  flex:0 0 18px !important;
+}
+
+/* Text */
+#id_specializations.specializations-grid > label.spec-option > .spec-label{
+  flex:0 1 auto;
+}
+</style>
+
+{% endblock %}

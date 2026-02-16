@@ -1,6 +1,8 @@
 from django.contrib.auth import forms as auth_forms, get_user_model
 from django import forms
 
+from final_project.accounts.models import TeacherProfile
+
 UserModel = get_user_model()
 
 
@@ -43,3 +45,20 @@ class UserEditForm(auth_forms.UserChangeForm):
             )
 
         return email
+
+from django import forms
+from .models import TeacherProfile
+
+class TeacherSpecializationsForm(forms.ModelForm):
+    class Meta:
+        model = TeacherProfile
+        fields = ("specializations",)
+        widgets = {
+            "specializations": forms.CheckboxSelectMultiple(),
+        }
+
+    def clean_specializations(self):
+        specs = self.cleaned_data.get("specializations")
+        if not specs or specs.count() == 0:
+            raise forms.ValidationError("Please select at least one specialization.")
+        return specs

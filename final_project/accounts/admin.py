@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from django.contrib import admin
 from django.contrib.auth import admin as auth_admin, get_user_model
+from .models import Specialization, TeacherProfile, StudentProfile
 
 from final_project.accounts.forms import UserEditForm, UserCreateForm
 
@@ -80,3 +80,19 @@ class UserAdmin(auth_admin.UserAdmin):
 
     has_first_name.short_description = 'FIRST NAME'
     has_first_name.admin_order_field = 'first_name'
+
+    @admin.register(Specialization)
+    class SpecializationAdmin(admin.ModelAdmin):
+        list_display = ("name",)
+        search_fields = ("name",)
+
+    @admin.register(TeacherProfile)
+    class TeacherProfileAdmin(admin.ModelAdmin):
+        list_display = ("user",)
+        search_fields = ("user__username", "user__email")
+        filter_horizontal = ("specializations",)
+
+    @admin.register(StudentProfile)
+    class StudentProfileAdmin(admin.ModelAdmin):
+        list_display = ("user",)
+        search_fields = ("user__username", "user__email")

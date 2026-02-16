@@ -19,7 +19,7 @@ INSTALLED_APPS = [
 
     'rangefilter',
 
-    'final_project.accounts',
+    'final_project.accounts.apps.AccountsConfig',
     'final_project.common',
     'final_project.term_papers',
     'final_project.trophies',
