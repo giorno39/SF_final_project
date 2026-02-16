@@ -16,6 +16,7 @@
 
     <form class="auth-form specializations-form" method="post">
       {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
 
       <!-- Search -->
       <div class="field">

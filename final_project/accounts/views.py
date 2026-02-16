@@ -59,16 +59,26 @@ class ProfileDetails(LoginRequiredMixin, views.DetailView):
         context = super().get_context_data(**kwargs)
 
         context['is_owner'] = self.request.user == self.object
+
         if self.object.user_type == 'teacher':
+            # avg_rate logic (your existing code)
             trophies = Trophy.objects.filter(completed_by=self.object.pk).all()
             if trophies:
                 avg_rate = mean([trophy.rate for trophy in list(trophies)])
-
                 context['avg_rate'] = avg_rate
             else:
                 context['avg_rate'] = None
 
+            # NEW: specializations
+            # Safer than assuming the profile always exists
+            teacher_profile = getattr(self.object, "teacher_profile", None)
+            context["specializations"] = (
+                teacher_profile.specializations.all()
+                if teacher_profile else []
+            )
+
         return context
+
 
 
 class ProfileEdit(LoginRequiredMixin, views.UpdateView):
@@ -113,4 +123,8 @@ class TeacherSpecializationsView(LoginRequiredMixin, views.UpdateView):
         return profile
 
     def get_success_url(self):
-        return reverse_lazy("index")
+        return (
+                self.request.POST.get("next")
+                or self.request.GET.get("next")
+                or reverse_lazy("index")
+        )
