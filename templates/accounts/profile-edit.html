@@ -10,7 +10,7 @@
                 <button type="submit">Edit</button>
                 {% csrf_token %}
             </form>
-            <a href={% url 'register-user' %}>Don't have an account</a>
+            <a href="{% url 'register-user' %}">Don't have an account</a>
         </div>
 
 {% endblock %}

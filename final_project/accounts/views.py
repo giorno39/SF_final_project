@@ -8,8 +8,10 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
-from final_project.accounts.forms import UserCreateForm, UserEditForm
+from final_project.accounts.forms import UserCreateForm, UserEditForm, TeacherSpecializationsForm
 from django.contrib import messages
+
+from final_project.accounts.models import TypesOfUsers, TeacherProfile
 from final_project.trophies.models import Trophy
 
 UserModel = get_user_model()
@@ -27,7 +29,12 @@ class SignUpView(views.CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)  # creates self.object
-        login(self.request, self.object)     # now it's a real user
+        login(self.request, self.object)
+
+        # If teacher -> redirect to onboarding page for specializations
+        if self.object.user_type == TypesOfUsers.teacher.value:
+            return redirect('teacher-specializations')
+
         return response
 
 
@@ -52,16 +59,26 @@ class ProfileDetails(LoginRequiredMixin, views.DetailView):
         context = super().get_context_data(**kwargs)
 
         context['is_owner'] = self.request.user == self.object
+
         if self.object.user_type == 'teacher':
+            # avg_rate logic (your existing code)
             trophies = Trophy.objects.filter(completed_by=self.object.pk).all()
             if trophies:
                 avg_rate = mean([trophy.rate for trophy in list(trophies)])
-
                 context['avg_rate'] = avg_rate
             else:
                 context['avg_rate'] = None
 
+            # NEW: specializations
+            # Safer than assuming the profile always exists
+            teacher_profile = getattr(self.object, "teacher_profile", None)
+            context["specializations"] = (
+                teacher_profile.specializations.all()
+                if teacher_profile else []
+            )
+
         return context
+
 
 
 class ProfileEdit(LoginRequiredMixin, views.UpdateView):
@@ -87,3 +104,27 @@ class ProfileDelete(LoginRequiredMixin, views.DeleteView):
             return redirect('details-user', pk=self.object.pk)
 
         return result
+
+
+class TeacherSpecializationsView(LoginRequiredMixin, views.UpdateView):
+    model = TeacherProfile
+    form_class = TeacherSpecializationsForm
+    template_name = "accounts/teacher-specializations.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        # Only teachers can access this page
+        if request.user.user_type != TypesOfUsers.teacher.value:
+            return redirect("index")
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        # Ensure profile exists (signals should create it, but this is safe)
+        profile, _ = TeacherProfile.objects.get_or_create(user=self.request.user)
+        return profile
+
+    def get_success_url(self):
+        return (
+                self.request.POST.get("next")
+                or self.request.GET.get("next")
+                or reverse_lazy("index")
+        )

@@ -28,6 +28,19 @@
       <p><span class="label">Email:</span> {{ object.email }}</p>
       <p><span class="label">User type:</span> {{ object.user_type }}</p>
 
+      {% if object.user_type == 'teacher' %}
+      <p>
+        <span class="label">Specializations:</span>
+        {% if specializations %}
+          {% for s in specializations %}
+            <span class="badge">{{ s.name }}</span>
+          {% endfor %}
+        {% else %}
+          <span class="muted">No specializations selected yet.</span>
+        {% endif %}
+      </p>
+      {% endif %}
+
       {% if avg_rate %}
         <p><span class="label">Average rate:</span> {{ avg_rate }}</p>
       {% endif %}
@@ -38,6 +51,12 @@
         <a class="main-card-link" href="{% url 'edit-user' pk=object.pk %}">Edit</a>
         <a class="main-card-link" href="{% url 'delete-user' pk=object.pk %}">Delete</a>
         <a class="main-card-link" href="{% url 'change-password' %}">Change Password</a>
+        {% if object.user_type == 'teacher' %}
+          <a class="main-card-link"
+             href="{% url 'teacher-specializations' %}?next={% url 'details-user' pk=object.pk %}">
+            Edit Specializations
+          </a>
+        {% endif %}
         {% if avg_rate %}
           <a class="main-card-link" href="{% url 'teacher-trophy' teacher=object.pk %}">All trophies</a>
         {% endif %}
