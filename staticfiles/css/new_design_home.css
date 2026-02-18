@@ -162,6 +162,7 @@ footer .container{padding:1rem; text-align:center}
 .site-nav ul {
     list-style: none;
     display: flex;
+    align-items: center;
     gap: .5rem;
 }
 
@@ -192,6 +193,30 @@ footer .container{padding:1rem; text-align:center}
 /* optional: add a tiny pill-only version (no label) */
 .site-nav .icon-pill{
   padding:.45rem;                  /* perfect circle when only an icon */
+}
+
+/* Profile button with username + role */
+.site-nav .profile-btn{
+  padding:.35rem .75rem .35rem .5rem;
+  gap:.45rem;
+}
+.profile-btn-text{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  line-height:1.15;
+}
+.profile-btn-name{
+  font-size:.85rem;
+  font-weight:600;
+  color:#fff;
+}
+.profile-btn-role{
+  font-size:.65rem;
+  font-weight:400;
+  color:#fff;
+  opacity:.55;
+  text-transform:capitalize;
 }
 
 /* a helper for accessibility text if you want it */
@@ -347,7 +372,7 @@ footer .container{padding:1rem; text-align:center}
 .lesson-info{ display:grid; gap:.35rem; margin:.5rem 0 1rem; }
 .lesson-info .label{ color:var(--muted); font-weight:600; margin-right:.4rem; }
 
-.lesson-actions{ display:flex; flex-wrap:wrap; gap:.6rem; }
+.lesson-actions{ display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; }
 .lesson-actions .main-card-link{ padding:.55rem .9rem; }
 
 

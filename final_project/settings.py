@@ -10,6 +10,7 @@ DEBUG = 'TRUE'
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -17,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'channels',
     'rangefilter',
 
     'final_project.accounts.apps.AccountsConfig',
@@ -26,8 +28,8 @@ INSTALLED_APPS = [
     'final_project.lessons',
     'final_project.completed_papers',
     'final_project.useful_materials',
-    'final_project.administration'
-
+    'final_project.administration',
+    'final_project.chat',
 ]
 
 MIDDLEWARE = [
@@ -60,6 +62,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'final_project.wsgi.application'
+
+ASGI_APPLICATION = 'final_project.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -110,7 +123,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     BASE_DIR / 'staticfiles',
@@ -128,3 +141,11 @@ AUTH_USER_MODEL = 'accounts.AppUser'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = 'final_project/mediafiles/term_papers'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'krisi.dimov@gmail.com'
+EMAIL_HOST_PASSWORD = 'ftef kmew vcbx fytv'
+DEFAULT_FROM_EMAIL = 'krisi.dimov@gmail.com'
