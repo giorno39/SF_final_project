@@ -1,0 +1,77 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Chat — BrainBuddyHive{% endblock %}
+
+{% block content %}
+<section class="chat-wrap">
+  <header class="chat-header">
+    <a class="chat-back-link" href="{% url 'chat-inbox' %}" aria-label="Back to inbox">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 320 512">
+        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/>
+      </svg>
+    </a>
+    <div class="chat-header-avatar">
+      {% if other_user %}
+        {{ other_user.first_name|default:other_user.username|slice:":1"|upper }}
+      {% else %}
+        ?
+      {% endif %}
+    </div>
+    <div class="chat-header-info">
+      <h2 class="chat-header-name">
+        {% if other_user %}
+          {{ other_user.get_full_name|default:other_user.username }}
+        {% else %}
+          Unknown
+        {% endif %}
+      </h2>
+    </div>
+    {% if conversation.term_paper %}
+      <div class="chat-paper-card">
+        <span class="chat-paper-card-title">{{ conversation.term_paper.title }}</span>
+        <div class="chat-paper-card-actions">
+          <a class="chat-paper-btn" href="{% url 'term-paper-details' pk=conversation.term_paper.pk %}">View Paper</a>
+          <a class="chat-paper-btn chat-paper-btn--dl" href="{% url 'term-paper-file-open' pk=conversation.term_paper.pk %}">Download</a>
+        </div>
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="chat-messages" id="chatMessages">
+    {% for msg in chat_messages %}
+      <div class="chat-bubble {% if msg.sender == request.user %}chat-bubble--own{% elif msg.sender is None %}chat-bubble--system{% else %}chat-bubble--other{% endif %}">
+        {% if msg.sender and msg.sender != request.user %}
+          <span class="chat-bubble-sender">{{ msg.sender.get_full_name|default:msg.sender.username }}</span>
+        {% endif %}
+        <p class="chat-bubble-content">{{ msg.content }}</p>
+        <span class="chat-bubble-time">{{ msg.timestamp|date:"M d, H:i" }}</span>
+      </div>
+    {% empty %}
+      <div class="chat-empty">
+        <p>No messages yet. Say hello!</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <form class="chat-input-bar" id="chatForm" autocomplete="off">
+    <input type="text"
+           id="chatInput"
+           class="chat-input"
+           placeholder="Type a message..."
+           maxlength="2000"
+           required />
+    <button type="submit" class="chat-send-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 512 512">
+        <path d="M476.59 227.05l-.16-.07L49.35 49.84A23.56 23.56 0 0027.14 52 24.65 24.65 0 0016 73.56v131.31c0 12.27 8.69 22.72 20.7 24.91l175.82 31.51-175.82 31.51A25.21 25.21 0 0016 317.13v131.31a24.65 24.65 0 0011.14 21.56 23.56 23.56 0 0022.21 2.16L476.43 295a24.8 24.8 0 000-44.86z"/>
+      </svg>
+    </button>
+  </form>
+</section>
+
+<script>
+  const CONVERSATION_ID = {{ conversation.pk }};
+  const CURRENT_USER_ID = {{ request.user.pk }};
+</script>
+<script src="{% static 'js/chat.js' %}"></script>
+{% endblock %}

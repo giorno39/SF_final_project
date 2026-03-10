@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -142,6 +143,10 @@ def open_file(request, pk):
 
 @login_required
 def take_term_paper(request, pk):
+    from asgiref.sync import async_to_sync
+    from channels.layers import get_channel_layer
+    from final_project.chat.models import Conversation, Message
+
     c_user = get_user_by_id(request.user.pk)
 
     if c_user.user_type == 'student':
@@ -153,6 +158,55 @@ def take_term_paper(request, pk):
 
     term_paper.taken_by_id = request.user.pk
     term_paper.save()
+
+    teacher_name = request.user.get_full_name() or request.user.username
+
+    send_mail(
+        subject=f'Your term paper "{term_paper.title}" has been taken!',
+        message=(
+            f'Hello {term_paper.user.get_full_name()},\n\n'
+            f'Your term paper "{term_paper.title}" has been taken by '
+            f'{teacher_name} ({request.user.email}).\n\n'
+            f'You can now discuss the details in the chat.\n\n'
+            f'Best regards,\nThe Platform Team'
+        ),
+        from_email=None,
+        recipient_list=[term_paper.user.email],
+        fail_silently=True,
+    )
+
+    conversation = Conversation.objects.create(term_paper=term_paper)
+    conversation.participants.add(request.user, term_paper.user)
+
+    auto_text = f"Hi! I've taken your paper \"{term_paper.title}\". Let's discuss the details!"
+
+    message = Message.objects.create(
+        conversation=conversation,
+        sender=request.user,
+        content=auto_text,
+    )
+
+    student = term_paper.user
+    unread_count = Message.objects.filter(
+        conversation__participants=student,
+        is_read=False,
+    ).exclude(sender=student).count()
+
+    try:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'notifications_{student.pk}',
+            {
+                'type': 'new_message',
+                'conversation_id': conversation.pk,
+                'sender_name': teacher_name,
+                'preview': auto_text[:80],
+                'unread_count': unread_count,
+            },
+        )
+    except Exception:
+        pass
+
     return redirect('term-paper-details', pk=pk)
 
 

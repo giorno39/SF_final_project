@@ -26,6 +26,6 @@ urlpatterns = [
     path('lesson/', include('final_project.lessons.urls')),
     path('completed-papers/', include('final_project.completed_papers.urls')),
     path('useful-materials/', include('final_project.useful_materials.urls')),
-    path('custom-admin/', include('final_project.administration.urls'))
-
+    path('custom-admin/', include('final_project.administration.urls')),
+    path('chat/', include('final_project.chat.urls')),
 ]

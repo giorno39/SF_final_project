@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Inbox — BrainBuddyHive{% endblock %}
+
+{% block content %}
+<section class="inbox-wrap">
+  <h1 class="inbox-title">Inbox</h1>
+
+  {% if conversations_data %}
+    <div class="inbox-list">
+      {% for item in conversations_data %}
+        <a class="inbox-card {% if item.unread_count %}inbox-card--unread{% endif %}"
+           href="{% url 'chat-conversation' pk=item.conversation.pk %}">
+
+          <div class="inbox-avatar">
+            {% if item.other_user %}
+              {{ item.other_user.first_name|default:item.other_user.username|slice:":1"|upper }}
+            {% else %}
+              ?
+            {% endif %}
+          </div>
+
+          <div class="inbox-body">
+            <div class="inbox-top-row">
+              <span class="inbox-name">
+                {% if item.other_user %}
+                  {{ item.other_user.get_full_name|default:item.other_user.username }}
+                {% else %}
+                  Unknown
+                {% endif %}
+              </span>
+              {% if item.last_message %}
+                <span class="inbox-time">{{ item.last_message.timestamp|timesince }} ago</span>
+              {% endif %}
+            </div>
+
+            {% if item.conversation.term_paper %}
+              <span class="inbox-paper-tag">{{ item.conversation.term_paper.title }}</span>
+            {% endif %}
+
+            <p class="inbox-preview">
+              {% if item.last_message %}
+                {{ item.last_message.content|truncatechars:80 }}
+              {% else %}
+                No messages yet
+              {% endif %}
+            </p>
+          </div>
+
+          {% if item.unread_count %}
+            <span class="inbox-unread-badge">{{ item.unread_count }}</span>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="inbox-empty">
+      <p>No conversations yet.</p>
+      <p class="muted">When a teacher takes your paper or you message someone, it will appear here.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
