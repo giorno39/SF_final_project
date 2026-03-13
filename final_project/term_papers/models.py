@@ -1,10 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.core import validators
 from django.db import models
-
-from final_project.core.validators import file_size_validator
-
-# Create your models here.
+from final_project.accounts.models import Specialization
+from final_project.core.validators import file_size_validator  # adjust import if needed
 
 UserModel = get_user_model()
 
@@ -12,7 +10,6 @@ UserModel = get_user_model()
 class TermPaper(models.Model):
     TERM_PAPER_MAX_LEN = 50
     TERM_PAPER_MIN_LEN = 2
-    SUBJECT_MAX_LEN = 50
     UNIVERSITY_MAX_LEN = 50
 
     title = models.CharField(
@@ -22,10 +19,10 @@ class TermPaper(models.Model):
         blank=False,
     )
 
-    subject = models.CharField(
-        max_length=SUBJECT_MAX_LEN,
-        null=False,
+    specializations = models.ManyToManyField(
+        Specialization,
         blank=False,
+        related_name="term_papers",
     )
 
     university = models.CharField(
@@ -81,9 +78,3 @@ class TermPaper(models.Model):
         blank=True,
         default=None,
     )
-
-
-
-
-
-

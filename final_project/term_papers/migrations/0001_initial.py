@@ -9,6 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('accounts', '0002_specialization_teacherprofile_studentprofile'),
     ]
 
     operations = [
@@ -17,7 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=50, validators=[django.core.validators.MinLengthValidator])),
-                ('subject', models.CharField(max_length=50)),
+                ('specializations', models.ManyToManyField(related_name='term_papers', to='accounts.specialization')),
                 ('university', models.CharField(max_length=50)),
                 ('death_line', models.DateField()),
                 ('price_cap', models.PositiveIntegerField()),

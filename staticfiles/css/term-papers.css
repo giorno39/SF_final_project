@@ -1,0 +1,97 @@
+.spec-picker-wrap {
+    margin-bottom: 1rem;
+}
+
+.spec-picker-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.spec-picker {
+    position: relative;
+}
+
+.spec-selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.7rem;
+}
+
+.spec-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+    background: #6ea8e5;
+    color: #1f2d5c;
+    font-weight: 500;
+}
+
+.spec-tag-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(58, 86, 165, 0.35);
+    color: #1f2d5c;
+    cursor: pointer;
+    font-size: 0.95rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.spec-search-input {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border: 1px solid #d6dbe3;
+    border-radius: 1.25rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.spec-search-input:focus {
+    border-color: #6ea8e5;
+}
+
+.spec-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    left: 0;
+    right: 0;
+    max-height: 240px;
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid #d6dbe3;
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    z-index: 20;
+    padding: 0.4rem;
+}
+
+.spec-dropdown.show {
+    display: block;
+}
+
+.spec-option {
+    padding: 0.8rem 0.95rem;
+    border-radius: 0.9rem;
+    cursor: pointer;
+}
+
+.spec-option:hover {
+    background: #f3f7fc;
+}
+
+.spec-hidden-inputs {
+    display: none;
+}
