@@ -95,3 +95,194 @@
 .spec-hidden-inputs {
     display: none;
 }
+
+.term-paper-specs-row {
+    margin: 0.8rem 0;
+}
+
+.term-paper-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 0.45rem;
+}
+
+.term-paper-spec-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    background: #e6e8ec;
+    color: #4b5563;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.term-paper-spec-empty {
+    color: #7b8190;
+    font-size: 0.95rem;
+}
+
+.paper-card-enhanced {
+    width: 100%;
+    max-width: 520px;
+    padding: 1.2rem 1.2rem 1rem;
+}
+
+.paper-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.paper-card-title {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    color: #163b72;
+    font-weight: 700;
+}
+
+.paper-card-university {
+    margin: 0.35rem 0 0;
+    color: #6b7280;
+    font-size: 0.98rem;
+    font-weight: 500;
+}
+
+.paper-card-price {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 0.5rem 0.8rem;
+    border-radius: 999px;
+    background: #eef5ff;
+    color: #1f5fae;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.paper-card-meta {
+    display: grid;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+}
+
+.paper-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: 1rem;
+    background: #f7f8fb;
+}
+
+.paper-meta-label {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #6b7280;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.paper-meta-row .paper-meta-label {
+    margin-bottom: 0;
+}
+
+.paper-meta-value {
+    color: #132f57;
+    font-weight: 600;
+    text-align: right;
+}
+
+.paper-card-specs-block {
+    margin-bottom: 1rem;
+}
+
+.paper-card-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+
+.paper-spec-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    background: #e8ebf0;
+    color: #4b5563;
+    font-size: 0.94rem;
+    font-weight: 600;
+}
+
+.paper-spec-empty {
+    color: #7b8190;
+    font-size: 0.95rem;
+}
+
+.paper-card-description {
+    margin-bottom: 1rem;
+}
+
+.paper-description-text {
+    margin: 0;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    background: #f7f8fb;
+    color: #22324d;
+    line-height: 1.5;
+}
+
+.paper-card-compact {
+    width: 100%;
+    max-width: 520px;
+    padding: 1.2rem 1.2rem 1rem;
+}
+
+.paper-file-field {
+    margin-bottom: 1.2rem;
+}
+
+.paper-file-label {
+    display: block;
+    margin-bottom: 0.55rem;
+    font-weight: 700;
+}
+
+.paper-file-current-name {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #d6dbe3;
+    border-radius: 0.95rem;
+    background: #f8fafc;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.paper-file-upload-box {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #d6dbe3;
+    border-radius: 0.95rem;
+    background: #f8fafc;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.paper-file-upload-box input[type="file"] {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}

@@ -1,0 +1,22 @@
+.search-empty-state {
+    width: 100%;
+    max-width: 520px;
+    padding: 1.3rem 1.4rem;
+    border: 1px dashed #cfd7e3;
+    border-radius: 1.35rem;
+    background: #f8fafc;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+}
+
+.search-empty-state-title {
+    margin: 0 0 0.45rem;
+    color: #163b72;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.search-empty-state-text {
+    margin: 0;
+    color: #667085;
+    line-height: 1.5;
+}
