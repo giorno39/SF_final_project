@@ -25,7 +25,7 @@ class UserCreateForm(auth_forms.UserCreationForm):
         return email
 
 
-class UserEditForm(auth_forms.UserChangeForm):
+class UserEditForm(forms.ModelForm):
     class Meta:
         model = UserModel
         fields = ('first_name', 'last_name', 'email')
@@ -35,7 +35,6 @@ class UserEditForm(auth_forms.UserChangeForm):
 
         qs = UserModel.objects.filter(email__iexact=email)
 
-        # exclude the current user
         if self.instance.pk:
             qs = qs.exclude(pk=self.instance.pk)
 
