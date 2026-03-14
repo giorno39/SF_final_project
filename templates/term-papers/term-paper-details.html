@@ -23,6 +23,18 @@
       <p><span class="label">University:</span> {{ object.university }}</p>
       <p><span class="label">Death Line:</span> {{ object.death_line }}</p>
       <p><span class="label">Price Cap:</span> {{ object.price_cap }}</p>
+
+      <div class="term-paper-specs-row">
+        <span class="label">Specializations:</span>
+        <div class="term-paper-specs">
+          {% for spec in object.specializations.all %}
+            <span class="term-paper-spec-pill">{{ spec.name }}</span>
+          {% empty %}
+            <span class="term-paper-spec-empty">No specializations selected.</span>
+          {% endfor %}
+        </div>
+      </div>
+
       <p><span class="label">Description:</span> {{ object.description }}</p>
     </div>
 

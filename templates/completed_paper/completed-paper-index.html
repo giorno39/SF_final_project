@@ -3,28 +3,66 @@
 {% block content %}
 <section class="container lessons-wrap">
 
-  <!-- Search -->
-  <form class="search-form" method="get" action="{% url 'completed_paper-index' %}">
+  <form class="search-form search-form-stacked" method="get" action="{% url 'completed_paper-index' %}">
+    <label class="search-form-label" for="{{ search_form.completed_title.id_for_label }}">
+      Completed title
+    </label>
+
     <div class="search-bar">
-      {{ search_form }}
+      {{ search_form.completed_title }}
       <button class="btn" type="submit">search</button>
     </div>
     {% csrf_token %}
   </form>
 
-  <!-- List -->
   <div class="lessons-grid">
     {% for object in object_list %}
-      <div class="term-paper-card">
-        <p class="term-paper-card-p"><strong>Title:</strong> {{ object.title }}</p>
-        <a class="main-card-link" href="{% url 'completed-paper-details' pk=object.pk %}">Details</a>
-      </div>
+      <article class="term-paper-card paper-card-enhanced paper-card-compact">
+        <header class="paper-card-header">
+          <div>
+            <h2 class="paper-card-title">{{ object.title }}</h2>
+            <p class="paper-card-university">{{ object.university }}</p>
+          </div>
+        </header>
+
+        <div class="paper-card-specs-block">
+          <span class="paper-meta-label">Specializations</span>
+          <div class="paper-card-specs">
+            {% for spec in object.specializations.all %}
+              <span class="paper-spec-pill">{{ spec.name }}</span>
+            {% empty %}
+              <span class="paper-spec-empty">No specializations</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="paper-card-meta">
+          <div class="paper-meta-row">
+            <span class="paper-meta-label">Completed by</span>
+            <span class="paper-meta-value">
+              {% if object.completed_by.first_name or object.completed_by.last_name %}
+                {{ object.completed_by.first_name }} {{ object.completed_by.last_name }}
+              {% else %}
+                {{ object.completed_by.username }}
+              {% endif %}
+            </span>
+          </div>
+        </div>
+
+        <div class="lesson-actions">
+          <a class="main-card-link" href="{% url 'completed-paper-details' pk=object.pk %}">Details</a>
+        </div>
+      </article>
     {% empty %}
-      <p class="term-paper-card-p">No completed papers found.</p>
+      <div class="search-empty-state">
+        <h3 class="search-empty-state-title">No completed papers found</h3>
+        <p class="search-empty-state-text">
+          Try another title or clear the search to see all completed papers.
+        </p>
+      </div>
     {% endfor %}
   </div>
 
-  <!-- Pagination -->
   {% if page_obj.paginator.num_pages > 1 %}
     <nav class="pager" aria-label="Pagination">
       {% if page_obj.has_previous %}
@@ -37,17 +75,14 @@
         </span>
       {% endif %}
 
-      {# First page #}
       {% if page_obj.number > 2 %}
         <a class="page-btn" href="?page=1">1</a>
       {% endif %}
 
-      {# Left ellipsis #}
       {% if page_obj.number > 3 %}
         <span class="page-btn is-disabled">…</span>
       {% endif %}
 
-      {# Window around current page: (n-1, n, n+1) #}
       {% for n in page_obj.paginator.page_range %}
         {% if n >= page_obj.number|add:'-1' and n <= page_obj.number|add:'1' %}
           {% if n == page_obj.number %}
@@ -58,12 +93,10 @@
         {% endif %}
       {% endfor %}
 
-      {# Right ellipsis #}
       {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
         <span class="page-btn is-disabled">…</span>
       {% endif %}
 
-      {# Last page #}
       {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
         <a class="page-btn" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
       {% endif %}

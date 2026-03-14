@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
@@ -216,6 +217,11 @@ class CompletePaper(views.UpdateView):
     fields = ('content',)
     is_updatable = None
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['content'].widget = forms.FileInput()
+        return form
+
     def get_success_url(self):
         return reverse_lazy('teacher-papers')
 
@@ -227,7 +233,6 @@ class CompletePaper(views.UpdateView):
 
             CompletedPaper.objects.create(
                 title=self.object.title,
-                subject=self.object.subject,
                 university=self.object.university,
                 content=self.object.content,
                 completed_by=self.object.taken_by,

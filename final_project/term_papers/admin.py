@@ -4,23 +4,22 @@ from django.contrib import admin
 from final_project.term_papers.models import TermPaper
 
 
-# Register your models here.
-
 @admin.register(TermPaper)
 class TermPaperAdmin(admin.ModelAdmin):
-    list_display = ('title', 'subject', 'price_cap', 'user', 'taken_by', 'death_line')
+    list_display = ('title', 'get_specializations', 'price_cap', 'user', 'taken_by', 'death_line')
     list_display_links = ('title', 'price_cap')
 
     list_filter = [
-            (
-                'price_cap', rangefilter.filters.NumericRangeFilterBuilder()
-            ),
-            (
-                'death_line', rangefilter.filters.DateRangeFilterBuilder()
-            )
-        ]
+        (
+            'price_cap', rangefilter.filters.NumericRangeFilterBuilder()
+        ),
+        (
+            'death_line', rangefilter.filters.DateRangeFilterBuilder()
+        ),
+        'specializations',
+    ]
 
-    ordering = ['death_line', 'price_cap',]
+    ordering = ['death_line', 'price_cap']
 
     fieldsets = (
         (
@@ -28,7 +27,7 @@ class TermPaperAdmin(admin.ModelAdmin):
             {
                 'fields': (
                     'title',
-                    'subject',
+                    'specializations',
                     'university',
                     'death_line',
                 ),
@@ -62,3 +61,8 @@ class TermPaperAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+    def get_specializations(self, obj):
+        return ", ".join(spec.name for spec in obj.specializations.all())
+
+    get_specializations.short_description = 'Specializations'
