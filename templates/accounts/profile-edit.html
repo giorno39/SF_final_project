@@ -1,16 +1,42 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+<div class="auth-form-container">
+    <form class="auth-form" method="post" action="{% url 'edit-user' pk=object.pk %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
 
-    <div class="auth-form-container">
- <form class="auth-form" method="post" action="{% url 'edit-user' pk=object.pk %}">
+        <p>
+            {{ form.first_name.label_tag }}
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <span class="error">{{ form.first_name.errors.0 }}</span>
+            {% endif %}
+        </p>
 
-                {{ form.as_p }}
-                <input type="hidden" name="next" value="{{ next }}">
-                <button type="submit">Edit</button>
-                {% csrf_token %}
-            </form>
-            <a href="{% url 'register-user' %}">Don't have an account</a>
-        </div>
+        <p>
+            {{ form.last_name.label_tag }}
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <span class="error">{{ form.last_name.errors.0 }}</span>
+            {% endif %}
+        </p>
 
+        <p>
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {% if form.email.errors %}
+                <span class="error">{{ form.email.errors.0 }}</span>
+            {% endif %}
+        </p>
+
+        <button type="submit">Edit</button>
+    </form>
+
+    <div class="profile-password-link-wrap">
+        <a class="profile-password-link" href="{% url 'change-password' %}">
+            Change password
+        </a>
+    </div>
+</div>
 {% endblock %}

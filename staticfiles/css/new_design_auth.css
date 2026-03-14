@@ -291,3 +291,45 @@ input[type="file"]::-ms-browse{
 
 .spec-option[hidden]{ display:none !important; }
 
+.profile-password-link-wrap {
+    margin-top: 14px;
+    padding-top: 6px;
+}
+
+.profile-password-link {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 500;
+    color: #163b6d;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.profile-password-link:hover {
+    color: #2563a9;
+    transform: translateX(2px);
+}
+
+.profile-password-link:focus {
+    outline: none;
+    color: #2563a9;
+}
+
+.profile-password-link:focus-visible {
+    outline: 2px solid #2563a9;
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+.profile-password-link {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: #4b5563;
+    transition: color 0.2s ease;
+}
+
+.profile-password-link:hover {
+    color: #1d4f91;
+}

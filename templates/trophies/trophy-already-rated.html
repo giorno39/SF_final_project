@@ -1,7 +1,21 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+<section class="container trophy-status-wrap">
+  <article class="trophy-status-card">
 
-    Already Rated
+    <div class="trophy-status-icon">★</div>
 
+    <h1 class="trophy-status-title">Already rated</h1>
+
+    <p class="trophy-status-text">
+      This completed task has already been rated, so you cannot submit another rating.
+    </p>
+
+    <div class="trophy-status-actions">
+      <a class="main-card-link" href="javascript:history.back()">Go back</a>
+    </div>
+
+  </article>
+</section>
 {% endblock %}
