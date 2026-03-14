@@ -1,0 +1,97 @@
+/* ===== TROPHIES ===== */
+
+.trophies-wrap{
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.trophy-card{
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-light);
+}
+
+.trophy-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:.5rem;
+}
+
+.trophy-rate{
+  background:#fff3cd;
+  color:#8a5a00;
+  padding:.3rem .75rem;
+  border-radius:999px;
+  font-weight:700;
+}
+
+.trophy-date{
+  font-size:.9rem;
+  color:var(--muted);
+}
+
+.trophy-project{
+  font-size:1rem;
+}
+
+.trophy-label{
+  font-weight:600;
+  color:var(--muted);
+  margin-right:.25rem;
+}
+
+/* ===== TROPHY STATUS / ALREADY RATED ===== */
+
+.trophy-status-wrap{
+  padding: 1.5rem 1rem;
+}
+
+.trophy-status-card{
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.trophy-status-icon{
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--brand) 0%, #2572b9 100%);
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 800;
+  box-shadow: var(--shadow);
+}
+
+.trophy-status-title{
+  margin: 0 0 .75rem;
+  font-size: 1.8rem;
+  color: #0f2a45;
+}
+
+.trophy-status-text{
+  margin: 0 auto 1.25rem;
+  max-width: 520px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.trophy-status-actions{
+  display: flex;
+  justify-content: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
