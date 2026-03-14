@@ -3,9 +3,13 @@
 {% block content %}
 <section class="container lessons-wrap">
 
-  <form class="search-form" method="get" action="{% url 'completed_paper-index' %}">
+  <form class="search-form search-form-stacked" method="get" action="{% url 'completed_paper-index' %}">
+    <label class="search-form-label" for="{{ search_form.completed_title.id_for_label }}">
+      Completed title
+    </label>
+
     <div class="search-bar">
-      {{ search_form }}
+      {{ search_form.completed_title }}
       <button class="btn" type="submit">search</button>
     </div>
     {% csrf_token %}
@@ -99,7 +103,7 @@
 
       {% if page_obj.has_next %}
         <a class="page-btn" href="?page={{ page_obj.next_page_number }}">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4 9.4-9.4-24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
         </a>
       {% else %}
         <span class="page-btn is-disabled">

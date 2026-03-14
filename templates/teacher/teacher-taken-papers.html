@@ -3,9 +3,13 @@
 {% block content %}
 <section class="container lessons-wrap">
 
-  <form class="search-form" method="get" action="{% url 'teacher-papers' %}">
+  <form class="search-form search-form-stacked" method="get" action="{% url 'teacher-papers' %}">
+    <label class="search-form-label" for="{{ search_form.paper_title.id_for_label }}">
+      Paper title
+    </label>
+
     <div class="search-bar">
-      {{ search_form }}
+      {{ search_form.paper_title }}
       <button class="btn" type="submit">search</button>
     </div>
     {% csrf_token %}
