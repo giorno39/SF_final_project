@@ -1,20 +1,24 @@
 from datetime import datetime
 
 from django import forms
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views import generic as views
 import os
 
 from final_project import settings
+from final_project.accounts.models import TeacherProfile
 from final_project.completed_papers.models import CompletedPaper
 from final_project.core.funcs import get_user_by_id
+from final_project.chat.models import Conversation, Message
 from final_project.term_papers.forms import TermPaperCreateForm, TermPaperSearchForm
-from final_project.term_papers.models import TermPaper
+from final_project.term_papers.models import TermPaper, TermPaperRequest
 
 UserModel = get_user_model()
 
@@ -65,8 +69,8 @@ class TermPaperCreateView(views.CreateView):
     template_name = 'term-papers/term-paper-add.html'
 
     def get_success_url(self):
-        return reverse_lazy('term-paper-details', kwargs={
-            'pk': self.object.pk
+        return reverse_lazy('term-paper-request-teacher', kwargs={
+            'pk': self.object.pk,
         })
 
     def get_form(self, *args, **kwargs):
@@ -267,3 +271,250 @@ class CompletePaper(views.UpdateView):
         self.is_updatable = True
 
         return super().form_valid(form)
+
+class TermPaperRequestTeacherListView(views.DetailView):
+    model = TermPaper
+    template_name = 'term-papers/term-paper-request-teacher.html'
+    context_object_name = 'term_paper'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if request.user != self.object.user:
+            return redirect('term-paper-details', pk=self.object.pk)
+
+        if self.object.taken_by:
+            return redirect('term-paper-details', pk=self.object.pk)
+
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        requested_teacher_ids = self.object.requests.filter(
+            status=TermPaperRequest.StatusChoices.PENDING,
+        ).values_list('teacher_id', flat=True)
+
+        matching_teacher_profiles = TeacherProfile.objects.filter(
+            specializations__in=self.object.specializations.all(),
+        ).select_related('user').prefetch_related('specializations').distinct()
+
+        other_teacher_profiles = TeacherProfile.objects.exclude(
+            pk__in=matching_teacher_profiles.values_list('pk', flat=True),
+        ).select_related('user').prefetch_related('specializations')
+
+        context['matching_teacher_profiles'] = matching_teacher_profiles
+        context['other_teacher_profiles'] = other_teacher_profiles
+        context['requested_teacher_ids'] = set(requested_teacher_ids)
+
+        return context
+
+
+@login_required
+def send_term_paper_request(request, pk, teacher_pk):
+    term_paper = TermPaper.objects.filter(pk=pk).get()
+
+    if request.user != term_paper.user:
+        return redirect('term-paper-details', pk=pk)
+
+    if term_paper.taken_by:
+        messages.error(request, 'This term paper has already been taken.')
+        return redirect('term-paper-details', pk=pk)
+
+    teacher = UserModel.objects.filter(
+        pk=teacher_pk,
+        user_type='teacher',
+    ).first()
+
+    if not teacher:
+        messages.error(request, 'Selected teacher does not exist.')
+        return redirect('term-paper-request-teacher', pk=pk)
+
+    existing_pending_request = TermPaperRequest.objects.filter(
+        term_paper=term_paper,
+        status=TermPaperRequest.StatusChoices.PENDING,
+    ).exists()
+
+    if existing_pending_request:
+        messages.error(request, 'You already have a pending request for this term paper.')
+        return redirect('term-paper-request-teacher', pk=pk)
+
+    term_paper_request, created = TermPaperRequest.objects.get_or_create(
+        term_paper=term_paper,
+        teacher=teacher,
+        defaults={
+            'student': request.user,
+            'status': TermPaperRequest.StatusChoices.PENDING,
+        }
+    )
+
+    if not created:
+        if term_paper_request.status == TermPaperRequest.StatusChoices.PENDING:
+            messages.error(request, 'You have already requested this teacher.')
+            return redirect('term-paper-request-teacher', pk=pk)
+
+        term_paper_request.student = request.user
+        term_paper_request.status = TermPaperRequest.StatusChoices.PENDING
+        term_paper_request.responded_at = None
+        term_paper_request.save()
+
+    conversation = Conversation.objects.filter(
+        term_paper=term_paper,
+        participants=request.user,
+    ).filter(
+        participants=teacher,
+    ).first()
+
+    if not conversation:
+        conversation = Conversation.objects.create(term_paper=term_paper)
+        conversation.participants.add(request.user, teacher)
+
+    auto_text = (
+        f'Hello! I would like to request your help with my term paper '
+        f'"{term_paper.title}". Please let me know whether you accept or decline.'
+    )
+
+    Message.objects.create(
+        conversation=conversation,
+        sender=request.user,
+        content=auto_text,
+    )
+
+    messages.success(request, 'Your request was sent successfully.')
+    return redirect('chat-conversation', pk=conversation.pk)
+
+class TeacherTermPaperRequestsListView(views.ListView):
+    model = TermPaperRequest
+    template_name = 'teacher/teacher-term-paper-requests.html'
+    context_object_name = 'requests_list'
+
+    def get_queryset(self):
+        if self.request.user.user_type != 'teacher':
+            return TermPaperRequest.objects.none()
+
+        return (
+            TermPaperRequest.objects
+            .filter(
+                teacher=self.request.user,
+                status=TermPaperRequest.StatusChoices.PENDING,
+                term_paper__taken_by__isnull=True,
+            )
+            .select_related('student', 'teacher', 'term_paper')
+            .order_by('-created_at')
+        )
+
+@login_required
+def accept_term_paper_request(request, request_pk):
+    if request.user.user_type != 'teacher':
+        return redirect('index')
+
+    term_paper_request = (
+        TermPaperRequest.objects
+        .select_related('term_paper', 'student', 'teacher')
+        .filter(pk=request_pk, teacher=request.user)
+        .first()
+    )
+
+    if not term_paper_request:
+        messages.error(request, 'Request not found.')
+        return redirect('teacher-term-paper-requests')
+
+    if term_paper_request.status != TermPaperRequest.StatusChoices.PENDING:
+        messages.error(request, 'This request has already been processed.')
+        return redirect('teacher-term-paper-requests')
+
+    term_paper = term_paper_request.term_paper
+
+    if term_paper.taken_by:
+        term_paper_request.status = TermPaperRequest.StatusChoices.DECLINED
+        term_paper_request.responded_at = timezone.now()
+        term_paper_request.save()
+
+        messages.error(request, 'This term paper has already been taken.')
+        return redirect('teacher-term-paper-requests')
+
+    term_paper.taken_by = request.user
+    term_paper.save()
+
+    term_paper_request.status = TermPaperRequest.StatusChoices.ACCEPTED
+    term_paper_request.responded_at = timezone.now()
+    term_paper_request.save()
+
+    TermPaperRequest.objects.filter(
+        term_paper=term_paper,
+        status=TermPaperRequest.StatusChoices.PENDING,
+    ).exclude(pk=term_paper_request.pk).update(
+        status=TermPaperRequest.StatusChoices.DECLINED,
+        responded_at=timezone.now(),
+    )
+
+    conversation = Conversation.objects.filter(
+        term_paper=term_paper,
+        participants=request.user,
+    ).filter(
+        participants=term_paper.user,
+    ).first()
+
+    if not conversation:
+        conversation = Conversation.objects.create(term_paper=term_paper)
+        conversation.participants.add(request.user, term_paper.user)
+
+    Message.objects.create(
+        conversation=conversation,
+        sender=None,
+        content=(
+            f'{request.user.get_full_name() or request.user.username} accepted the request '
+            f'for "{term_paper.title}".'
+        ),
+    )
+
+    messages.success(request, 'You accepted the request.')
+    return redirect('chat-conversation', pk=conversation.pk)
+
+@login_required
+def decline_term_paper_request(request, request_pk):
+    if request.user.user_type != 'teacher':
+        return redirect('index')
+
+    term_paper_request = (
+        TermPaperRequest.objects
+        .select_related('term_paper', 'student', 'teacher')
+        .filter(pk=request_pk, teacher=request.user)
+        .first()
+    )
+
+    if not term_paper_request:
+        messages.error(request, 'Request not found.')
+        return redirect('teacher-term-paper-requests')
+
+    if term_paper_request.status != TermPaperRequest.StatusChoices.PENDING:
+        messages.error(request, 'This request has already been processed.')
+        return redirect('teacher-term-paper-requests')
+
+    term_paper_request.status = TermPaperRequest.StatusChoices.DECLINED
+    term_paper_request.responded_at = timezone.now()
+    term_paper_request.save()
+
+    conversation = Conversation.objects.filter(
+        term_paper=term_paper_request.term_paper,
+        participants=request.user,
+    ).filter(
+        participants=term_paper_request.student,
+    ).first()
+
+    if not conversation:
+        conversation = Conversation.objects.create(term_paper=term_paper_request.term_paper)
+        conversation.participants.add(request.user, term_paper_request.student)
+
+    Message.objects.create(
+        conversation=conversation,
+        sender=None,
+        content=(
+            f'{request.user.get_full_name() or request.user.username} declined the request '
+            f'for "{term_paper_request.term_paper.title}".'
+        ),
+    )
+
+    messages.success(request, 'You declined the request.')
+    return redirect('teacher-term-paper-requests')

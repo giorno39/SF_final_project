@@ -1,5 +1,5 @@
 {% load static %}
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -34,6 +34,7 @@
               <li><a class="btn" href="{% url 'student-papers' %}">My papers</a></li>
             {% else %}
               <li><a class="btn" href="{% url 'teacher-papers' %}">Taken Papers</a></li>
+              <li><a class="btn" href="{% url 'teacher-term-paper-requests' %}">Requests</a></li>
               <li><a class="btn" href="{% url 'lesson-add' %}">Add lesson</a></li>
               <li><a class="btn" href="{% url 'own-lesson-index' %}">My lessons</a></li>
             {% endif %}

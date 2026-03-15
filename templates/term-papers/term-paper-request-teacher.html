@@ -1,0 +1,99 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<section class="container lessons-wrap">
+  <div class="lesson-card">
+    <header class="lesson-header">
+      <div class="lesson-avatar">✉</div>
+      <div>
+        <h1 class="lesson-title">Request a teacher</h1>
+        <p class="lesson-sub">
+          Choose a teacher for: <strong>{{ term_paper.title }}</strong>
+        </p>
+      </div>
+    </header>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p class="field-error">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    {% if matching_teacher_profiles %}
+      <h2 class="lesson-title" style="margin-top: 1rem;">Matching specializations</h2>
+      <div class="lessons-grid">
+        {% for profile in matching_teacher_profiles %}
+          <div class="term-paper-card">
+            <p class="term-paper-card-p">
+              <strong>Name:</strong> {{ profile.user.get_full_name|default:profile.user.username }}
+            </p>
+
+            <p class="term-paper-card-p">
+              <strong>Email:</strong> {{ profile.user.email }}
+            </p>
+
+            <p class="term-paper-card-p">
+              <strong>Specializations:</strong>
+              {% for spec in profile.specializations.all %}
+                {{ spec.name }}{% if not forloop.last %}, {% endif %}
+              {% empty %}
+                No specializations yet
+              {% endfor %}
+            </p>
+
+            {% if profile.user.pk in requested_teacher_ids %}
+              <span class="badge">Pending request</span>
+            {% else %}
+              <form method="post" action="{% url 'send-term-paper-request' pk=term_paper.pk teacher_pk=profile.user.pk %}">
+                {% csrf_token %}
+                <button class="main-card-link" type="submit">Request help</button>
+              </form>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if other_teacher_profiles %}
+      <h2 class="lesson-title" style="margin-top: 2rem;">Other teachers</h2>
+      <div class="lessons-grid">
+        {% for profile in other_teacher_profiles %}
+          <div class="term-paper-card">
+            <p class="term-paper-card-p">
+              <strong>Name:</strong> {{ profile.user.get_full_name|default:profile.user.username }}
+            </p>
+
+            <p class="term-paper-card-p">
+              <strong>Email:</strong> {{ profile.user.email }}
+            </p>
+
+            <p class="term-paper-card-p">
+              <strong>Specializations:</strong>
+              {% for spec in profile.specializations.all %}
+                {{ spec.name }}{% if not forloop.last %}, {% endif %}
+              {% empty %}
+                No specializations yet
+              {% endfor %}
+            </p>
+
+            {% if profile.user.pk in requested_teacher_ids %}
+              <span class="badge">Pending request</span>
+            {% else %}
+              <form method="post" action="{% url 'send-term-paper-request' pk=term_paper.pk teacher_pk=profile.user.pk %}">
+                {% csrf_token %}
+                <button class="main-card-link" type="submit">Request help</button>
+              </form>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if not matching_teacher_profiles and not other_teacher_profiles %}
+      <div class="inbox-empty">
+        <p>No teachers available yet.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

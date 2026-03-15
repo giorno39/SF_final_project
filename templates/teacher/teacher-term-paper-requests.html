@@ -1,0 +1,72 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Teacher Requests{% endblock %}
+
+{% block content %}
+<section class="container lessons-wrap">
+  <div class="lesson-card">
+    <header class="lesson-header">
+      <div class="lesson-avatar">📩</div>
+      <div>
+        <h1 class="lesson-title">Paper requests</h1>
+        <p class="lesson-sub">Requests from students asking for your help.</p>
+      </div>
+    </header>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p class="field-error">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    {% if requests_list %}
+      <div class="lessons-grid">
+        {% for req in requests_list %}
+          <div class="term-paper-card">
+            <p class="term-paper-card-p">
+              <strong>Paper:</strong> {{ req.term_paper.title }}
+            </p>
+            <p class="term-paper-card-p">
+              <strong>Student:</strong> {{ req.student.get_full_name|default:req.student.username }}
+            </p>
+            <p class="term-paper-card-p">
+              <strong>University:</strong> {{ req.term_paper.university }}
+            </p>
+            <p class="term-paper-card-p">
+              <strong>Deadline:</strong> {{ req.term_paper.death_line }}
+            </p>
+            <p class="term-paper-card-p">
+              <strong>Budget:</strong> {{ req.term_paper.price_cap }}
+            </p>
+
+            {% if req.term_paper.description %}
+              <p class="term-paper-card-p">
+                <strong>Description:</strong> {{ req.term_paper.description }}
+              </p>
+            {% endif %}
+
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:1rem;">
+              <a class="main-card-link" href="{% url 'term-paper-details' pk=req.term_paper.pk %}">View Paper</a>
+              <a class="main-card-link" href="{% url 'chat-inbox' %}">Inbox</a>
+
+              <form method="post" action="{% url 'accept-term-paper-request' request_pk=req.pk %}">
+                {% csrf_token %}
+                <button class="main-card-link" type="submit">Accept</button>
+              </form>
+
+              <form method="post" action="{% url 'decline-term-paper-request' request_pk=req.pk %}">
+                {% csrf_token %}
+                <button class="main-card-link" type="submit">Decline</button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="inbox-empty">
+        <p>No pending requests.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

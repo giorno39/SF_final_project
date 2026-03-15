@@ -78,3 +78,58 @@ class TermPaper(models.Model):
         blank=True,
         default=None,
     )
+
+class TermPaperRequest(models.Model):
+    class StatusChoices(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        ACCEPTED = 'accepted', 'Accepted'
+        DECLINED = 'declined', 'Declined'
+        CANCELED = 'canceled', 'Canceled'
+
+    term_paper = models.ForeignKey(
+        TermPaper,
+        on_delete=models.CASCADE,
+        related_name='requests',
+    )
+
+    student = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE,
+        related_name='sent_term_paper_requests',
+    )
+
+    teacher = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE,
+        related_name='received_term_paper_requests',
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=StatusChoices.choices,
+        default=StatusChoices.PENDING,
+    )
+
+    message = models.TextField(
+        blank=True,
+        null=True,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    responded_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['term_paper', 'teacher'],
+                name='unique_teacher_request_per_term_paper',
+            ),
+        ]
+
+    def __str__(self):
+        return f'{self.term_paper} | {self.student} -> {self.teacher} | {self.status}'
