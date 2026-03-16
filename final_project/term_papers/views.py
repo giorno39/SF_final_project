@@ -1,4 +1,6 @@
 from datetime import datetime
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from django import forms
 from django.contrib import messages
@@ -34,9 +36,18 @@ class TermPaperIndexView(views.ListView):
         if search_form.is_valid():
             search_pattern = search_form.cleaned_data['paper_title']
 
-        queryset = TermPaper.objects \
-            .filter(taken_by=None, completed=False, death_line__gt=datetime.today()) \
-            .all()
+        queryset = (
+            TermPaper.objects
+            .filter(
+                taken_by=None,
+                completed=False,
+                death_line__gt=datetime.today(),
+            )
+            .exclude(
+                requests__status=TermPaperRequest.StatusChoices.PENDING,
+            )
+            .distinct()
+        )
 
         if search_pattern:
             queryset = queryset.filter(title__icontains=search_pattern)
@@ -57,8 +68,19 @@ class TermPaperDetailsView(views.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        pending_request = self.object.requests.filter(
+            status=TermPaperRequest.StatusChoices.PENDING,
+        ).exists()
+
+        declined_request = self.object.requests.filter(
+            status=TermPaperRequest.StatusChoices.DECLINED,
+        ).exists()
+
         context['is_owner'] = self.request.user.pk == self.object.user_id
         context['is_taken'] = self.object.taken_by
+        context['has_pending_request'] = pending_request
+        context['has_declined_request'] = declined_request
 
         return context
 
@@ -160,6 +182,14 @@ def take_term_paper(request, pk):
     term_paper = TermPaper.objects \
         .filter(pk=pk) \
         .get()
+
+    has_pending_request = term_paper.requests.filter(
+        status=TermPaperRequest.StatusChoices.PENDING,
+    ).exists()
+
+    if has_pending_request:
+        messages.error(request, 'This term paper already has a pending teacher request.')
+        return redirect('term-paper-details', pk=pk)
 
     term_paper.taken_by_id = request.user.pk
     term_paper.save()
@@ -460,14 +490,37 @@ def accept_term_paper_request(request, request_pk):
         conversation = Conversation.objects.create(term_paper=term_paper)
         conversation.participants.add(request.user, term_paper.user)
 
-    Message.objects.create(
+    auto_text = (
+        f'{request.user.get_full_name() or request.user.username} accepted the request '
+        f'for "{term_paper.title}".'
+    )
+
+    message = Message.objects.create(
         conversation=conversation,
         sender=None,
-        content=(
-            f'{request.user.get_full_name() or request.user.username} accepted the request '
-            f'for "{term_paper.title}".'
-        ),
+        content=auto_text,
     )
+
+    student = term_paper.user
+    unread_count = Message.objects.filter(
+        conversation__participants=student,
+        is_read=False,
+    ).exclude(sender=student).count()
+
+    try:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'notifications_{student.pk}',
+            {
+                'type': 'new_message',
+                'conversation_id': conversation.pk,
+                'sender_name': request.user.get_full_name() or request.user.username,
+                'preview': auto_text[:80],
+                'unread_count': unread_count,
+            },
+        )
+    except Exception:
+        pass
 
     messages.success(request, 'You accepted the request.')
     return redirect('chat-conversation', pk=conversation.pk)
@@ -507,14 +560,37 @@ def decline_term_paper_request(request, request_pk):
         conversation = Conversation.objects.create(term_paper=term_paper_request.term_paper)
         conversation.participants.add(request.user, term_paper_request.student)
 
-    Message.objects.create(
+    auto_text = (
+        f'{request.user.get_full_name() or request.user.username} declined the request '
+        f'for "{term_paper_request.term_paper.title}".'
+    )
+
+    message = Message.objects.create(
         conversation=conversation,
         sender=None,
-        content=(
-            f'{request.user.get_full_name() or request.user.username} declined the request '
-            f'for "{term_paper_request.term_paper.title}".'
-        ),
+        content=auto_text,
     )
+
+    student = term_paper_request.student
+    unread_count = Message.objects.filter(
+        conversation__participants=student,
+        is_read=False,
+    ).exclude(sender=student).count()
+
+    try:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'notifications_{student.pk}',
+            {
+                'type': 'new_message',
+                'conversation_id': conversation.pk,
+                'sender_name': request.user.get_full_name() or request.user.username,
+                'preview': auto_text[:80],
+                'unread_count': unread_count,
+            },
+        )
+    except Exception:
+        pass
 
     messages.success(request, 'You declined the request.')
     return redirect('teacher-term-paper-requests')

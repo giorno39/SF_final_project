@@ -56,6 +56,16 @@
       {% endif %}
 
       {% if is_owner %}
+        {% if not is_taken and not has_pending_request %}
+          <a class="main-card-link" href="{% url 'term-paper-request-teacher' pk=object.pk %}">
+            {% if has_declined_request %}
+              Request again
+            {% else %}
+              Request teacher
+            {% endif %}
+          </a>
+        {% endif %}
+
         <a class="main-card-link" href="{% url 'term-paper-edit' pk=object.pk %}">Edit</a>
         <a class="main-card-link" href="{% url 'term-paper-delete' pk=object.pk %}">Delete</a>
       {% endif %}
