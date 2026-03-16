@@ -405,11 +405,31 @@ def send_term_paper_request(request, pk, teacher_pk):
         f'"{term_paper.title}". Please let me know whether you accept or decline.'
     )
 
-    Message.objects.create(
+    message = Message.objects.create(
         conversation=conversation,
         sender=request.user,
         content=auto_text,
     )
+
+    unread_count = Message.objects.filter(
+        conversation__participants=teacher,
+        is_read=False,
+    ).exclude(sender=teacher).count()
+
+    try:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'notifications_{teacher.pk}',
+            {
+                'type': 'new_message',
+                'conversation_id': conversation.pk,
+                'sender_name': request.user.get_full_name() or request.user.username,
+                'preview': auto_text[:80],
+                'unread_count': unread_count,
+            },
+        )
+    except Exception:
+        pass
 
     messages.success(request, 'Your request was sent successfully.')
     return redirect('chat-conversation', pk=conversation.pk)
@@ -497,7 +517,7 @@ def accept_term_paper_request(request, request_pk):
 
     message = Message.objects.create(
         conversation=conversation,
-        sender=None,
+        sender=request.user,
         content=auto_text,
     )
 
@@ -567,7 +587,7 @@ def decline_term_paper_request(request, request_pk):
 
     message = Message.objects.create(
         conversation=conversation,
-        sender=None,
+        sender=request.user,
         content=auto_text,
     )
 

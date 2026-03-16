@@ -41,14 +41,18 @@
     <div class="lesson-actions">
       <a class="main-card-link" href="{% url 'term-paper-file-open' pk=object.pk %}">Download File</a>
 
-      {% if is_taken and object.completed == False %}
-        <span class="badge">Already taken</span>
-        <a class="main-card-link" href="{% url 'details-user' pk=object.taken_by_id %}">Taken by</a>
-      {% else %}
-        {% if request.user.user_type == 'teacher' %}
+    {% if is_taken and object.completed == False %}
+      <span class="badge">Already taken</span>
+      <a class="main-card-link" href="{% url 'details-user' pk=object.taken_by_id %}">Taken by</a>
+    {% else %}
+      {% if request.user.user_type == 'teacher' %}
+        {% if not has_pending_request %}
           <a class="main-card-link" href="{% url 'term-paper-take' pk=object.pk %}">Take term paper</a>
+        {% else %}
+          <span class="badge">Currently requested</span>
         {% endif %}
       {% endif %}
+    {% endif %}
 
       {% if object.completed %}
         <span class="badge">Completed</span>

@@ -45,19 +45,34 @@
               </p>
             {% endif %}
 
-            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:1rem;">
-              <a class="main-card-link" href="{% url 'term-paper-details' pk=req.term_paper.pk %}">View Paper</a>
-              <a class="main-card-link" href="{% url 'chat-inbox' %}">Inbox</a>
+            <div class="request-card-actions">
+              <div class="request-card-actions-row">
+                <a class="request-card-link request-card-link--secondary"
+                   href="{% url 'term-paper-details' pk=req.term_paper.pk %}">
+                  View Paper
+                </a>
 
-              <form method="post" action="{% url 'accept-term-paper-request' request_pk=req.pk %}">
-                {% csrf_token %}
-                <button class="main-card-link" type="submit">Accept</button>
-              </form>
+                <a class="request-card-link request-card-link--secondary"
+                   href="{% url 'chat-inbox' %}">
+                  Inbox
+                </a>
+              </div>
 
-              <form method="post" action="{% url 'decline-term-paper-request' request_pk=req.pk %}">
-                {% csrf_token %}
-                <button class="main-card-link" type="submit">Decline</button>
-              </form>
+              <div class="request-card-actions-row">
+                <form class="request-card-form" method="post" action="{% url 'accept-term-paper-request' request_pk=req.pk %}">
+                  {% csrf_token %}
+                  <button class="request-card-button request-card-button--accept" type="submit">
+                    Accept
+                  </button>
+                </form>
+
+                <form class="request-card-form" method="post" action="{% url 'decline-term-paper-request' request_pk=req.pk %}">
+                  {% csrf_token %}
+                  <button class="request-card-button request-card-button--decline" type="submit">
+                    Decline
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         {% endfor %}
