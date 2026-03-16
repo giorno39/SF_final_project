@@ -120,11 +120,30 @@ footer{
 }
 footer .container{padding:1rem; text-align:center}
 
-/* ===== Scrollbar (WebKit) ===== */
-::-webkit-scrollbar{width:10px}
-::-webkit-scrollbar-track{background:var(--brand)}
-::-webkit-scrollbar-thumb{background:var(--accent)}
-::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+/* ===== Scrollbar ===== */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--brand) #eef3f8;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eef3f8;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--brand) 0%, var(--accent) 100%);
+  border-radius: 999px;
+  border: 2px solid #eef3f8;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--brand-600) 0%, #f3b46b 100%);
+}
 
 /* ===== Flash messages (if you use Django messages) ===== */
 .flash{margin:1rem 0}
