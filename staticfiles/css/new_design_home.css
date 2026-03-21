@@ -116,7 +116,15 @@ p{margin:0 0 .8rem}
   background:rgba(24,100,171,.09);
   border-bottom:3px solid var(--brand);
   box-sizing:border-box;
-  transition:left .32s cubic-bezier(0.4,0,0.2,1), width .32s cubic-bezier(0.4,0,0.2,1);
+  opacity:1;
+  visibility:visible;
+  transition:left .32s cubic-bezier(0.4,0,0.2,1), width .32s cubic-bezier(0.4,0,0.2,1), opacity .2s ease;
+}
+/* No primary tab is current (e.g. chat, profile): hide bar even if JS is cached */
+.site-nav-primary-inner:not(:has(.site-nav-link.is-active, .site-nav-link[aria-current="page"])) .site-nav-active-indicator{
+  opacity:0;
+  visibility:hidden;
+  width:0;
 }
 @media (prefers-reduced-motion: reduce){
   .site-nav-active-indicator{
