@@ -4,4 +4,6 @@ from final_project.trophies.models import Trophy
 
 
 class TrophySearchForm(forms.Form):
-    trophy_owner = forms.IntegerField()
+    trophy_owner = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'placeholder': 'Teacher user ID'}),
+    )

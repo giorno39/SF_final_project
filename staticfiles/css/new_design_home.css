@@ -2,7 +2,7 @@
 :root{
   --brand: #1864ab;     /* blue */
   --brand-600:#155893;
-  --accent:#ffc078;     /* orange */
+  --accent:#e6b422;     /* gold (HIVE wordmark, footer accent) */
   --bg:#f7fafc;         /* page background */
   --card:#ffffff;
   --text:#1f2937;
@@ -31,6 +31,267 @@ p{margin:0 0 .8rem}
 .container{width:100%; max-width:var(--maxw); margin:0 auto; padding:0 1rem}
 .grid{display:grid; gap:1rem}
 
+/* ===== Site header (BRAINBUDDY HIVE) ===== */
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  box-shadow:0 1px 0 rgba(0,0,0,.04);
+}
+.header-inner{
+  display:flex;
+  align-items:stretch;
+  gap:.5rem .75rem;
+  padding:0;
+  min-height:3.5rem;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+}
+.header-inner::-webkit-scrollbar{
+  height:4px;
+}
+.header-inner::-webkit-scrollbar-thumb{
+  background:var(--border);
+  border-radius:999px;
+}
+.site-header .brand{
+  flex:0 0 auto;
+  align-self:center;
+  max-width:42vw;
+  padding:.55rem 0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.site-nav-drawer{
+  flex:1 1 auto;
+  min-width:0;
+  display:flex;
+  align-items:stretch;
+  gap:.65rem;
+  flex-wrap:nowrap;
+}
+.site-nav-drawer--guest{
+  justify-content:flex-end;
+  align-items:center;
+}
+.header-nav-center{
+  flex:1 1 auto;
+  display:flex;
+  justify-content:center;
+  align-self:stretch;
+  min-width:0;
+}
+.site-nav-primary{
+  flex:0 1 auto;
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+  height:100%;
+}
+.site-nav-primary-inner{
+  position:relative;
+  height:100%;
+  width:max-content;
+  max-width:100%;
+}
+.site-nav-active-indicator{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  width:0;
+  z-index:0;
+  pointer-events:none;
+  background:rgba(24,100,171,.09);
+  border-bottom:3px solid var(--brand);
+  box-sizing:border-box;
+  transition:left .32s cubic-bezier(0.4,0,0.2,1), width .32s cubic-bezier(0.4,0,0.2,1);
+}
+@media (prefers-reduced-motion: reduce){
+  .site-nav-active-indicator{
+    transition:none;
+  }
+}
+.site-header a:hover{
+  opacity:1;
+}
+.header-actions{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  align-self:center;
+}
+.site-nav-drawer .header-actions{
+  margin:0;
+}
+.site-nav ul{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  align-items:center;
+  flex-wrap:nowrap;
+  gap:.15rem .35rem;
+}
+.site-nav-primary-inner > ul{
+  position:relative;
+  z-index:1;
+  align-items:stretch;
+  height:100%;
+  gap:0;
+}
+.site-nav-primary-inner > ul > li{
+  display:flex;
+  align-items:stretch;
+}
+.site-nav-link{
+  display:inline-block;
+  padding:.5rem .5rem .45rem;
+  font-weight:600;
+  font-size:.92rem;
+  white-space:nowrap;
+  color:var(--muted);
+  border-bottom:3px solid transparent;
+  margin-bottom:-1px;
+  border-radius:6px 6px 0 0;
+  transition:color .15s ease, border-color .15s ease, background .15s ease;
+}
+.site-nav-primary-inner .site-nav-link{
+  display:inline-flex;
+  align-items:center;
+  height:100%;
+  padding:0 .75rem;
+  margin:0;
+  border-bottom:none;
+  border-radius:0;
+  position:relative;
+  z-index:1;
+  opacity:1;
+  transition:color .2s ease, background .2s ease;
+}
+.site-nav-primary-inner .site-nav-link:hover{
+  color:var(--text);
+  background:rgba(0,0,0,.04);
+}
+.site-nav-primary-inner .site-nav-link.is-active,
+.site-nav-primary-inner .site-nav-link[aria-current="page"]{
+  color:var(--brand);
+  background:transparent;
+}
+.site-nav-link:hover{
+  color:var(--text);
+  background:#f3f4f6;
+}
+.site-nav-icons .site-nav-link:hover{
+  background:transparent;
+}
+.site-nav-link.is-active,
+.site-nav-link[aria-current="page"]{
+  color:var(--brand);
+  border-bottom-color:var(--brand);
+  background:transparent;
+}
+.site-nav-icons .site-nav-link{
+  display:inline-flex;
+  align-items:center;
+  padding:.5rem .65rem .45rem;
+  border-radius:6px 6px 0 0;
+  margin-bottom:-1px;
+}
+.site-nav-icons .site-nav-link.is-active,
+.site-nav-icons .site-nav-link[aria-current="page"]{
+  border-bottom-color:var(--brand);
+}
+.site-nav-link--cta{
+  background:var(--brand);
+  color:#fff !important;
+  border-bottom-color:transparent;
+  border-radius:10px;
+  padding:.45rem .85rem;
+  margin-bottom:0;
+}
+.site-nav-link--cta:hover{
+  background:var(--brand-600);
+  color:#fff !important;
+}
+.site-nav-link--cta.is-active{
+  border-bottom-color:transparent;
+  box-shadow:inset 0 0 0 2px var(--accent);
+}
+.header-icon-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.35rem;
+  padding:.4rem;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--brand);
+  line-height:1;
+  transition:background .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.header-icon-btn:hover{
+  background:#f0f7ff;
+  border-color:var(--brand);
+  color:var(--brand-600);
+}
+.header-icon-btn.is-active,
+.header-icon-btn[aria-current="page"]{
+  background:#eef5ff;
+  border-color:var(--brand);
+  color:var(--brand);
+  box-shadow:0 0 0 1px rgba(24,100,171,.2);
+}
+.header-icon-btn svg{
+  width:18px;
+  height:18px;
+  display:block;
+  fill:currentColor;
+}
+.header-icon-btn.icon-pill{
+  padding:.45rem;
+}
+.site-nav-icons .profile-btn{
+  border-radius:999px;
+  padding:.35rem .65rem .35rem .4rem;
+}
+.profile-btn .profile-btn-text{
+  flex-direction:column;
+  align-items:flex-start;
+  line-height:1.15;
+}
+.profile-btn .profile-btn-name{
+  font-size:.75rem;
+  font-weight:600;
+  color:var(--text);
+}
+.profile-btn .profile-btn-role{
+  font-size:.72rem;
+  font-weight:600;
+  color:var(--muted);
+  text-transform:capitalize;
+}
+.profile-btn svg{
+  flex-shrink:0;
+}
+
+@media (max-width: 900px){
+  .site-nav-link{
+    font-size:.8rem;
+    padding:.45rem .4rem .4rem;
+  }
+  .header-icon-btn svg{
+    width:16px;
+    height:16px;
+  }
+}
+
 /* ===== Header & Nav ===== */
 .main-header{
   position:sticky; top:0; z-index:10;
@@ -41,7 +302,6 @@ p{margin:0 0 .8rem}
   color:#fff; font-weight:800; letter-spacing:.2px;
 }
 .main-header h1{font-size:1.25rem; margin:0}
-.header-inner{display:flex; align-items:center; justify-content:space-between; padding:.9rem 0}
 
 /* top nav */
 .navigation{
@@ -92,6 +352,11 @@ p{margin:0 0 .8rem}
 input, select, textarea{
   width:100%; padding:.65rem .8rem; border:1px solid var(--border); border-radius:12px;
   background:#fff; color:var(--text);
+}
+input::placeholder,
+textarea::placeholder{
+  color:#9ca3af;
+  opacity:1;
 }
 label{display:block; font-weight:600; margin:.4rem 0 .25rem}
 
@@ -175,67 +440,7 @@ html {
   font-size: 1.4rem;
   letter-spacing: .5px;
   text-transform: uppercase;
-  color: #1864ab; /* brand blue for main text */
-}
-
-.site-nav ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-}
-
-/* Icon buttons in the top nav (profile + logout) */
-.site-nav .icon-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:.4rem;
-  padding:.45rem .75rem;           /* same feel as .btn */
-  border-radius:999px;
-  background:var(--brand);
-  color:#fff;
-  font-weight:600;
-  line-height:1;
-  box-shadow:var(--shadow);
-  transition:transform .12s ease, background .12s ease;
-}
-.site-nav .icon-btn:hover{ background:var(--brand-600); transform:translateY(-1px); }
-
-/* unify svg look with buttons */
-.site-nav .icon-btn svg{
-  width:18px; height:18px;         /* consistent sizing */
-  display:block;
-  fill:#fff !important;            /* override inline gray */
-}
-
-/* optional: add a tiny pill-only version (no label) */
-.site-nav .icon-pill{
-  padding:.45rem;                  /* perfect circle when only an icon */
-}
-
-/* Profile button with username + role */
-.site-nav .profile-btn{
-  padding:.35rem .75rem .35rem .5rem;
-  gap:.45rem;
-}
-.profile-btn-text{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  line-height:1.15;
-}
-.profile-btn-name{
-  font-size:.85rem;
-  font-weight:600;
-  color:#fff;
-}
-.profile-btn-role{
-  font-size:.65rem;
-  font-weight:400;
-  color:#fff;
-  opacity:.55;
-  text-transform:capitalize;
+  color: var(--brand);
 }
 
 /* a helper for accessibility text if you want it */
@@ -336,7 +541,7 @@ html {
   padding: 0 .85rem;
   border-radius: 999px;
   font-weight: 700;
-  background: #ffc074;           /* matches your orange pills */
+  background: var(--accent);
   color: #2d2d2d;
   box-shadow: var(--shadow);
 }
@@ -396,5 +601,5 @@ html {
 
 
 .brand span {
-  color: #ffc078; /* accent highlights */
+  color: var(--accent);
 }

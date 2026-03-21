@@ -4,10 +4,11 @@
 {% block content %}
 
     <div class="auth-form-container">
+    <h2>Edit lesson</h2>
     <form class="auth-form" method="post" action="{% url 'lesson-edit' pk=object.pk %}" enctype="multipart/form-data">
             {{ form.as_p }}
             {% csrf_token %}
-        <button>Edit</button>
+        <button type="submit">Save changes</button>
     </form>
 </div>
 

@@ -4,7 +4,7 @@
 :root{
   --brand:#1864ab;
   --brand-600:#155893;
-  --accent:#ffc078;
+  --accent:#e6b422;
   --border:#e5e7eb;
   --text:#1f2937;
   --muted:#6b7280;
@@ -17,22 +17,38 @@
 /* ===== Auth layout ===== */
 .auth-form-container{
   width:100%;
-  max-width:420px;
-  margin:3rem auto;
+  max-width:520px;
+  margin:2.5rem auto;
   background:var(--card);
   border:1px solid var(--border);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
-  padding:1.25rem 1.25rem 1rem;
+  padding:1.75rem 1.75rem 1.35rem;
 }
 
+.auth-form-container h1,
 .auth-form-container h2{
-  margin:0 0 .5rem;
-  font-size:1.4rem;
-  color:var(--text);
+  margin:0 0 1rem;
+  font-size:1.5rem;
+  font-weight:800;
+  letter-spacing:-.02em;
+  color:#0f2a45;
 }
 
 .auth-form p{ margin:0 0 .9rem; }
+
+.auth-form-footer-link{
+  margin:1rem 0 0;
+  text-align:center;
+  font-size:.9rem;
+}
+.auth-form-footer-link a{
+  color:var(--brand);
+  font-weight:600;
+}
+.auth-form-footer-link a:hover{
+  text-decoration:underline;
+}
 .auth-form label{
   display:block;
   font-weight:600;
@@ -50,9 +66,28 @@
   background:#fff;
   font:inherit;
   color:var(--text);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.auth-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="submit"]):focus,
+.auth-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="submit"]):focus-visible,
+.auth-form select:focus,
+.auth-form select:focus-visible,
+.auth-form textarea:focus,
+.auth-form textarea:focus-visible{
+  outline:none;
+  border-color:var(--brand);
+  box-shadow:0 0 0 3px rgba(24,100,171,.2);
 }
 
 .auth-form textarea{ min-height:120px; resize:vertical; }
+
+.auth-form input::placeholder,
+.auth-form textarea::placeholder,
+.auth-form-container input::placeholder,
+.auth-form-container textarea::placeholder{
+  color:#9ca3af;
+  opacity:1;
+}
 
 /* ===== Checkbox / radio reset (avoid inheriting full-width input styling) ===== */
 .auth-form input[type="checkbox"],
@@ -73,22 +108,31 @@
 .auth-form ul{ list-style:none; padding-left:0; margin:0; }
 .auth-form li{ margin:.35rem 0; }
 
-/* ===== Buttons inside auth forms (kept here for pages that don't use global .btn) ===== */
+/* ===== Primary actions in card forms (override global pill buttons) ===== */
 .auth-form input[type="submit"],
-.auth-form-container input[type="submit"]{
+.auth-form-container input[type="submit"],
+.auth-form button[type="submit"],
+.auth-form-container button[type="submit"]{
   appearance:none;
+  display:block;
+  width:100%;
+  margin-top:.35rem;
   border:0;
-  border-radius:999px;
+  border-radius:10px;
   cursor:pointer;
   background:var(--brand);
   color:#fff;
   font-weight:600;
-  padding:.6rem 1rem;
+  font-size:1rem;
+  padding:.75rem 1rem;
   box-shadow:var(--shadow);
 }
 .auth-form input[type="submit"]:hover,
-.auth-form-container input[type="submit"]:hover{
-  filter:brightness(.95);
+.auth-form-container input[type="submit"]:hover,
+.auth-form button[type="submit"]:hover,
+.auth-form-container button[type="submit"]:hover{
+  background:var(--brand-600);
+  filter:none;
 }
 
 .auth-actions{

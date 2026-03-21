@@ -3,6 +3,7 @@
 
 {% block content %}
 <div class="auth-form-container">
+    <h2>Add term paper</h2>
     <form class="auth-form" method="post" action="{% url 'term-paper-add' %}" enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -95,7 +96,7 @@
             {% endif %}
         </p>
 
-        <button type="submit">Add</button>
+        <button type="submit">Add term paper</button>
     </form>
 </div>
 <script src="{% static 'js/specialization-picker.js' %}"></script>

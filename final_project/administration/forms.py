@@ -10,6 +10,26 @@ from final_project.trophies.models import Trophy
 UserModel = get_user_model()
 
 
+def apply_input_placeholders(form):
+    """Set placeholder on text-like widgets when not already set."""
+    for name, field in form.fields.items():
+        w = field.widget
+        if isinstance(w, (forms.TextInput, forms.EmailInput, forms.URLInput)):
+            if 'placeholder' not in w.attrs:
+                label = field.label or name.replace('_', ' ').title()
+                w.attrs['placeholder'] = f'Enter {label}'
+        elif isinstance(w, forms.NumberInput):
+            if 'placeholder' not in w.attrs:
+                w.attrs['placeholder'] = field.label or '0'
+        elif isinstance(w, forms.PasswordInput):
+            if 'placeholder' not in w.attrs:
+                label = field.label or name.replace('_', ' ').title()
+                w.attrs['placeholder'] = label
+        elif isinstance(w, forms.Textarea):
+            if 'placeholder' not in w.attrs and field.label:
+                w.attrs['placeholder'] = field.label
+
+
 class AdminUserCreateForm(auth_forms.UserCreationForm):
     class Meta:
         model = UserModel
@@ -18,11 +38,16 @@ class AdminUserCreateForm(auth_forms.UserCreationForm):
             'username': auth_forms.UsernameField,
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        apply_input_placeholders(self)
+
 
 class AdminLessonCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['teacher'].queryset = AppUser.objects.filter(user_type='teacher')
+        apply_input_placeholders(self)
 
     class Meta:
         model = Lesson
@@ -34,6 +59,7 @@ class AdminTermPaperCreateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['user'].queryset = AppUser.objects.filter(user_type='student')
         self.fields['taken_by'].queryset = AppUser.objects.filter(user_type='teacher')
+        apply_input_placeholders(self)
 
     class Meta:
         model = TermPaper
@@ -44,6 +70,7 @@ class AdminCompletedPaperCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['completed_by'].queryset = AppUser.objects.filter(user_type='teacher')
+        apply_input_placeholders(self)
 
     class Meta:
         model = CompletedPaper
@@ -54,6 +81,7 @@ class AdminTrophyCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['completed_by'].queryset = AppUser.objects.filter(user_type='teacher')
+        apply_input_placeholders(self)
 
     class Meta:
         model = Trophy

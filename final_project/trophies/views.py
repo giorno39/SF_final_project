@@ -21,6 +21,7 @@ class CreateTrophyView(views.CreateView):
 
         form.instance.project = term_paper.title
         form.instance.completed_by = term_paper.taken_by
+        form.fields['rate'].widget.attrs.setdefault('placeholder', '0 – 5')
 
         return form
 

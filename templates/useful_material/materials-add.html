@@ -2,6 +2,7 @@
 
 {% block content %}
 <div class="auth-form-container">
+  <h2>Add New Material</h2>
   <form class="auth-form" method="post" action="{% url 'materials-add' %}" enctype="multipart/form-data">
       {% csrf_token %}
 
@@ -38,7 +39,7 @@
         {{ form.references }}
       </p>
 
-      <button type="submit" class="btn">Add</button>
+      <button type="submit">Add Material</button>
   </form>
 </div>
 
