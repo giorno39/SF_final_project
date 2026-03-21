@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core import validators
 from django.db import models
 
-# Create your models here.
+from final_project.core.validators import file_size_validator
 
 UserModel = get_user_model()
 
@@ -30,6 +30,14 @@ class Lesson(models.Model):
     price = models.PositiveIntegerField(
         null=False,
         blank=False
+    )
+
+    cover_image = models.ImageField(
+        upload_to='lesson_covers/',
+        null=True,
+        blank=True,
+        validators=(file_size_validator,),
+        help_text='Optional cover image (max 2 MB).',
     )
 
     teacher = models.ForeignKey(

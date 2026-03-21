@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" role="img" aria-label="Default lesson cover">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5b7ec4"/>
+      <stop offset="100%" style="stop-color:#1e3a5f"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <g fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3">
+    <rect x="280" y="140" width="240" height="180" rx="12"/>
+    <path d="M320 280 L400 200 L480 280"/>
+    <circle cx="400" cy="230" r="28"/>
+  </g>
+  <text x="400" y="380" text-anchor="middle" fill="rgba(255,255,255,.85)" font-family="system-ui,sans-serif" font-size="28" font-weight="600">Lesson</text>
+</svg>

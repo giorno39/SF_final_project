@@ -31,13 +31,12 @@
   text-decoration: none;
   white-space: nowrap;
   box-sizing: border-box;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: background-color 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
 }
 
 .request-card-link:hover,
 .request-card-button:hover {
-  transform: translateY(-1px);
-  opacity: 0.96;
+  opacity: 0.92;
 }
 
 .request-card-link--secondary {
@@ -58,8 +57,13 @@
 }
 
 .request-card-button--accept {
-  background-color: #2f80ed;
+  background-color: var(--brand, #1864ab);
   color: #ffffff;
+}
+
+.request-card-button--accept:hover {
+  background-color: var(--brand-600, #155893);
+  opacity: 1;
 }
 
 .request-card-button--decline {

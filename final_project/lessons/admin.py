@@ -24,6 +24,7 @@ class LessonAdmin(admin.ModelAdmin):
                 'fields': (
                     'title',
                     'subject',
+                    'cover_image',
                 ),
             }),
         (

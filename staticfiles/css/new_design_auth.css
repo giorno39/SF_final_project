@@ -4,7 +4,9 @@
 :root{
   --brand:#1864ab;
   --brand-600:#155893;
+  --brand-700:#124a80;
   --accent:#e6b422;
+  --accent-flat:#c5a028;
   --border:#e5e7eb;
   --text:#1f2937;
   --muted:#6b7280;
@@ -12,6 +14,9 @@
   --shadow:0 8px 24px rgba(0,0,0,.08);
   --shadow-light:0 2px 4px rgba(0,0,0,.05);
   --radius:16px;
+  --btn-radius:999px;
+  --btn-font-weight:600;
+  --btn-transition:background-color .15s ease, border-color .15s ease, color .15s ease;
 }
 
 /* ===== Auth layout ===== */
@@ -118,14 +123,16 @@
   width:100%;
   margin-top:.35rem;
   border:0;
-  border-radius:10px;
+  border-radius:var(--btn-radius);
   cursor:pointer;
-  background:var(--brand);
   color:#fff;
-  font-weight:600;
+  font-weight:var(--btn-font-weight);
   font-size:1rem;
-  padding:.75rem 1rem;
-  box-shadow:var(--shadow);
+  letter-spacing:.02em;
+  padding:.8rem 1.15rem;
+  background:var(--brand);
+  box-shadow:none;
+  transition:var(--btn-transition);
 }
 .auth-form input[type="submit"]:hover,
 .auth-form-container input[type="submit"]:hover,
@@ -133,6 +140,19 @@
 .auth-form-container button[type="submit"]:hover{
   background:var(--brand-600);
   filter:none;
+}
+.auth-form input[type="submit"]:active,
+.auth-form-container input[type="submit"]:active,
+.auth-form button[type="submit"]:active,
+.auth-form-container button[type="submit"]:active{
+  background:var(--brand-700);
+}
+.auth-form input[type="submit"]:focus-visible,
+.auth-form-container input[type="submit"]:focus-visible,
+.auth-form button[type="submit"]:focus-visible,
+.auth-form-container button[type="submit"]:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 3px rgba(24,100,171,.35);
 }
 
 .auth-actions{
@@ -146,21 +166,32 @@
 .auth-actions .btn-primary{
   background:var(--brand);
   color:#fff;
-  padding:.6rem 1rem;
-  border-radius:999px;
+  padding:.62rem 1.2rem;
+  border-radius:var(--btn-radius);
   border:0;
   cursor:pointer;
+  font-weight:var(--btn-font-weight);
+  box-shadow:none;
+  transition:var(--btn-transition);
 }
-.auth-actions .btn-primary:hover{ filter:brightness(.95); }
+.auth-actions .btn-primary:hover{
+  background:var(--brand-600);
+  filter:none;
+}
 
 .auth-actions .btn-secondary{
-  background:var(--accent);
-  color:var(--text);
-  padding:.6rem 1rem;
-  border-radius:999px;
+  background:var(--accent-flat);
+  color:#fff;
+  padding:.62rem 1.2rem;
+  border-radius:var(--btn-radius);
   border:0;
   cursor:pointer;
-  font-weight:600;
+  font-weight:var(--btn-font-weight);
+  box-shadow:none;
+  transition:var(--btn-transition);
+}
+.auth-actions .btn-secondary:hover{
+  background:#b69124;
 }
 
 /* ===== Auth links in nav (login/register etc.) ===== */
@@ -174,14 +205,23 @@
 .auth-links li{ margin:0; padding:0; }
 
 .auth-links .btn{
-  padding:.45rem 1rem;
-  border-radius:999px;
+  padding:.5rem 1.1rem;
+  border-radius:var(--btn-radius);
   background:var(--brand);
   color:#fff;
-  font-weight:600;
-  box-shadow:0 4px 10px rgba(0,0,0,.1);
+  font-weight:var(--btn-font-weight);
+  letter-spacing:.02em;
+  box-shadow:none;
+  text-decoration:none;
+  transition:var(--btn-transition);
 }
-.auth-links .btn:hover{ background:var(--brand-600); }
+.auth-links .btn:hover{
+  background:var(--brand-600);
+}
+.auth-links .btn:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 3px rgba(24,100,171,.35);
+}
 
 /* ===== File input (native "Choose file" styling) ===== */
 .auth-form input[type="file"]{
@@ -202,18 +242,18 @@
 .auth-form input[type="file"]::-webkit-file-upload-button{
   margin-right:.75rem;
   border:0;
-  border-radius:999px;
-  padding:.45rem 1rem;
+  border-radius:var(--btn-radius);
+  padding:.5rem 1rem;
   background:var(--brand);
   color:#fff;
-  font-weight:600;
+  font-weight:var(--btn-font-weight);
   cursor:pointer;
-  transition:background .15s ease, transform .12s ease;
+  box-shadow:none;
+  transition:var(--btn-transition);
 }
 .auth-form input[type="file"]::file-selector-button:hover,
 .auth-form input[type="file"]::-webkit-file-upload-button:hover{
   background:var(--brand-600);
-  transform:translateY(-1px);
 }
 .auth-form input[type="file"]:focus{
   outline:3px solid rgba(30,99,165,.25);
@@ -223,11 +263,11 @@
 /* Optional legacy fallback */
 input[type="file"]::-ms-browse{
   border:0;
-  border-radius:999px;
-  padding:.45rem 1rem;
+  border-radius:var(--btn-radius);
+  padding:.5rem 1rem;
   background:var(--brand);
   color:#fff;
-  font-weight:600;
+  font-weight:var(--btn-font-weight);
   cursor:pointer;
 }
 
@@ -255,16 +295,16 @@ input[type="file"]::-ms-browse{
 .custom-file-label{
   background:var(--brand);
   color:#fff;
-  font-weight:600;
-  border-radius:999px;
-  padding:.45rem 1.1rem;
+  font-weight:var(--btn-font-weight);
+  border-radius:var(--btn-radius);
+  padding:.5rem 1.15rem;
   white-space:nowrap;
   cursor:pointer;
-  transition:background .2s ease, transform .2s ease;
+  box-shadow:none;
+  transition:var(--btn-transition);
 }
 .custom-file-label:hover{
   background:var(--brand-600);
-  transform:translateY(-1px);
 }
 .custom-file-name{
   flex:1;
