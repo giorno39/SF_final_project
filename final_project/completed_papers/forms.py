@@ -7,4 +7,5 @@ class CompletedPaperSearchForm(forms.Form):
     completed_title = forms.CharField(
         max_length=CompletedPaper.TERM_PAPER_MAX_LEN,
         required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Search completed papers…'}),
     )

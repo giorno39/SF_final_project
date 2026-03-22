@@ -8,7 +8,13 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
-from final_project.accounts.forms import UserCreateForm, UserEditForm, TeacherSpecializationsForm
+from final_project.accounts.forms import (
+    LoginForm,
+    PasswordChangeStyledForm,
+    UserCreateForm,
+    UserEditForm,
+    TeacherSpecializationsForm,
+)
 from django.contrib import messages
 
 from final_project.accounts.models import TypesOfUsers, TeacherProfile
@@ -19,6 +25,7 @@ UserModel = get_user_model()
 
 class SignInView(auth_views.LoginView):
     template_name = 'accounts/profile-login.html'
+    authentication_form = LoginForm
 
 
 class SignUpView(views.CreateView):
@@ -45,6 +52,7 @@ class SignOutView(auth_views.LogoutView):
 class ChangePasswordView(auth_views.PasswordChangeView):
     success_url = reverse_lazy('login-user')
     template_name = 'accounts/change-password.html'
+    form_class = PasswordChangeStyledForm
 
     def form_valid(self, form):
         messages.success(self.request, 'Your password was successfully updated.')

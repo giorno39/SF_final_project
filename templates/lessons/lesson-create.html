@@ -2,10 +2,11 @@
 
 {% block content %}
 <div class="auth-form-container">
+    <h2>Add Lesson</h2>
     <form class="auth-form" method="post" action="{% url 'lesson-add' %}" enctype="multipart/form-data">
             {{ form.as_p }}
             {% csrf_token %}
-        <button>Add</button>
+        <button type="submit">Add Lesson</button>
     </form>
 </div>
 {% endblock %}

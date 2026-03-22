@@ -10,8 +10,21 @@ from django.utils.decorators import method_decorator
 
 from django.views import generic as views
 
-from final_project.administration.forms import AdminUserCreateForm, AdminLessonCreateForm, AdminTermPaperCreateForm, \
-    AdminCompletedPaperCreateForm, AdminTrophyCreateForm
+from final_project.administration.forms import (
+    AdminUserCreateForm,
+    AdminLessonCreateForm,
+    AdminTermPaperCreateForm,
+    AdminCompletedPaperCreateForm,
+    AdminTrophyCreateForm,
+    apply_input_placeholders,
+)
+
+
+class ApplyFormPlaceholdersMixin:
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        apply_input_placeholders(form)
+        return form
 from final_project.completed_papers.forms import CompletedPaperSearchForm
 from final_project.completed_papers.models import CompletedPaper
 from final_project.core.decorators import allow_groups
@@ -228,7 +241,7 @@ class AdminCreateUserView(views.CreateView):
 
 
 @method_decorator(allow_groups(groups=['None']), name='dispatch')
-class AdminCreateGroupView(views.CreateView):
+class AdminCreateGroupView(ApplyFormPlaceholdersMixin, views.CreateView):
     model = Group
     success_url = reverse_lazy('admin-index')
     template_name = 'administration/groups/add-group.html'
@@ -280,7 +293,7 @@ class AdminCreateMaterialsView(views.CreateView):
 
 # CHAGE ADMIN VIEWS
 @method_decorator(allow_groups(groups=['None']), name='dispatch')
-class AdminEditUserView(views.UpdateView):
+class AdminEditUserView(ApplyFormPlaceholdersMixin, views.UpdateView):
     model = UserModel
     template_name = 'administration/users/change-user.html'
     fields = ('last_login', 'is_superuser', 'groups', 'user_permissions', 'username', 'is_staff', 'is_active',
@@ -305,7 +318,7 @@ class AdminEditPaperView(views.UpdateView):
 
 
 @method_decorator(allow_groups(groups=['None']), name='dispatch')
-class AdminEditLessonView(views.UpdateView):
+class AdminEditLessonView(ApplyFormPlaceholdersMixin, views.UpdateView):
     model = Lesson
     fields = '__all__'
     template_name = 'administration/lessons/change-lesson.html'
@@ -330,7 +343,7 @@ class AdminEditCompletedView(views.UpdateView):
 
 
 @method_decorator(allow_groups(groups=['None']), name='dispatch')
-class AdminEditTrophyView(views.UpdateView):
+class AdminEditTrophyView(ApplyFormPlaceholdersMixin, views.UpdateView):
     model = Trophy
     fields = '__all__'
     template_name = 'administration/trophies/change-trophy.html'
@@ -354,7 +367,7 @@ class AdminEditMaterialView(views.UpdateView):
 
 
 @method_decorator(allow_groups(groups=['None']), name='dispatch')
-class AdminEditGroupView(views.UpdateView):
+class AdminEditGroupView(ApplyFormPlaceholdersMixin, views.UpdateView):
     model = Group
     fields = '__all__'
     template_name = 'administration/groups/change-group.html'

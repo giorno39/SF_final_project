@@ -1,9 +1,34 @@
-from django.contrib.auth import forms as auth_forms, get_user_model
 from django import forms
+from django.contrib.auth import forms as auth_forms, get_user_model
 
 from final_project.accounts.models import TeacherProfile
 
 UserModel = get_user_model()
+
+
+class LoginForm(auth_forms.AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.setdefault(
+            'placeholder', 'Enter your username',
+        )
+        self.fields['password'].widget.attrs.setdefault(
+            'placeholder', 'Enter your password',
+        )
+
+
+class PasswordChangeStyledForm(auth_forms.PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['old_password'].widget.attrs.setdefault(
+            'placeholder', 'Current password',
+        )
+        self.fields['new_password1'].widget.attrs.setdefault(
+            'placeholder', 'New password',
+        )
+        self.fields['new_password2'].widget.attrs.setdefault(
+            'placeholder', 'Confirm new password',
+        )
 
 
 class UserCreateForm(auth_forms.UserCreationForm):
@@ -13,6 +38,23 @@ class UserCreateForm(auth_forms.UserCreationForm):
         field_classes = {
             'username': auth_forms.UsernameField,
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.setdefault(
+            'placeholder', 'Choose a username',
+        )
+        self.fields['email'].widget.attrs.setdefault(
+            'placeholder', 'name@example.com',
+        )
+        if 'password1' in self.fields:
+            self.fields['password1'].widget.attrs.setdefault(
+                'placeholder', 'Create a password',
+            )
+        if 'password2' in self.fields:
+            self.fields['password2'].widget.attrs.setdefault(
+                'placeholder', 'Confirm password',
+            )
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -29,6 +71,11 @@ class UserEditForm(forms.ModelForm):
     class Meta:
         model = UserModel
         fields = ('first_name', 'last_name', 'email')
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'First name'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Last name'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'name@example.com'}),
+        }
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -45,8 +92,6 @@ class UserEditForm(forms.ModelForm):
 
         return email
 
-from django import forms
-from .models import TeacherProfile
 
 class TeacherSpecializationsForm(forms.ModelForm):
     class Meta:

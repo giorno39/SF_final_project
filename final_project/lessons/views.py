@@ -1,9 +1,16 @@
+from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
-from final_project.lessons.forms import CreateLessonForm, LessonSearchForm
+from final_project.lessons.forms import CreateLessonForm, LessonEditForm, LessonSearchForm
 from final_project.lessons.models import Lesson
+
+
+def _lesson_feed_querystring(request):
+    q = request.GET.copy()
+    q.pop('page', None)
+    return q.urlencode()
 
 
 class CreateLessonView(views.CreateView):
@@ -23,7 +30,7 @@ class CreateLessonView(views.CreateView):
 class LessonIndexView(views.ListView):
     model = Lesson
     template_name = 'lessons/lesson-index.html'
-    paginate_by = 4
+    paginate_by = 6
 
     def get_queryset(self):
         search_form = LessonSearchForm(self.request.GET)
@@ -34,7 +41,10 @@ class LessonIndexView(views.ListView):
         lessons = Lesson.objects.all()
 
         if search_pattern:
-            lessons = lessons.filter(title__icontains=search_pattern)
+            lessons = lessons.filter(
+                Q(title__icontains=search_pattern)
+                | Q(subject__icontains=search_pattern),
+            )
 
         return lessons
 
@@ -42,6 +52,8 @@ class LessonIndexView(views.ListView):
         context = super().get_context_data(**kwargs)
 
         context['search_form'] = LessonSearchForm(self.request.GET)
+        context['lesson_feed_title'] = 'Lesson Discovery Feed'
+        context['get_params'] = _lesson_feed_querystring(self.request)
 
         return context
 
@@ -61,7 +73,7 @@ class LessonDetailsView(views.DetailView):
 class LessonEditView(views.UpdateView):
     model = Lesson
     template_name = 'lessons/lesson-edit.html'
-    fields = ('title', 'price')
+    form_class = LessonEditForm
 
     def get_success_url(self):
         return reverse_lazy('lesson-details', kwargs={
@@ -84,13 +96,20 @@ class LessonEditView(views.UpdateView):
 class OwnLessonView(views.ListView):
     model = Lesson
     template_name = 'lessons/lesson-index.html'
-    paginate_by = 4
+    paginate_by = 6
 
     def get_queryset(self, *args, **kwargs):
-        queryset = Lesson.objects \
-            .filter(teacher=self.request.user) \
-            .all()
+        search_form = LessonSearchForm(self.request.GET)
+        search_pattern = None
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data['lesson_title']
 
+        queryset = Lesson.objects.filter(teacher=self.request.user)
+        if search_pattern:
+            queryset = queryset.filter(
+                Q(title__icontains=search_pattern)
+                | Q(subject__icontains=search_pattern),
+            )
         return queryset
 
     def get(self, request, *args, **kwargs):
@@ -105,6 +124,8 @@ class OwnLessonView(views.ListView):
         context = super().get_context_data(**kwargs)
 
         context['search_form'] = LessonSearchForm(self.request.GET)
+        context['lesson_feed_title'] = 'My lessons'
+        context['get_params'] = _lesson_feed_querystring(self.request)
 
         return context
 

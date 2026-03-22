@@ -2,6 +2,7 @@
 
 {% block content %}
 <div class="auth-form-container">
+    <h2>Edit profile</h2>
     <form class="auth-form" method="post" action="{% url 'edit-user' pk=object.pk %}">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}">
@@ -30,7 +31,7 @@
             {% endif %}
         </p>
 
-        <button type="submit">Edit</button>
+        <button type="submit">Save changes</button>
     </form>
 
     <div class="profile-password-link-wrap">

@@ -1,3 +1,5 @@
+from datetime import date
+
 from django import forms
 
 from final_project.term_papers.models import TermPaper
@@ -17,10 +19,13 @@ class TermPaperCreateForm(forms.ModelForm):
         )
 
         widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Term paper title'}),
+            'university': forms.TextInput(attrs={'placeholder': 'University or institution'}),
+            'price_cap': forms.NumberInput(attrs={'placeholder': 'Maximum budget (e.g. 100)', 'min': 0}),
+            'description': forms.Textarea(attrs={'placeholder': 'Describe what you need…', 'rows': 4}),
             'death_line': forms.SelectDateWidget(
-                attrs={
-                    'placeholder': 'death_line',
-                }
+                years=range(date.today().year, date.today().year + 8),
+                empty_label=('Year', 'Month', 'Day'),
             ),
             'specializations': forms.CheckboxSelectMultiple(),
         }
@@ -36,4 +41,5 @@ class TermPaperSearchForm(forms.Form):
     paper_title = forms.CharField(
         max_length=TermPaper.TERM_PAPER_MAX_LEN,
         required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Search term papers…'}),
     )
