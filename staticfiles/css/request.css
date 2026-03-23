@@ -93,3 +93,9 @@
   color: #842029;
   border: 1px solid #efb5bc;
 }
+
+.badge-status-canceled {
+  background: #e2e3e5;
+  color: #41464b;
+  border: 1px solid #c9cbcf;
+}
