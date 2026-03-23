@@ -26,6 +26,14 @@
 
           {% if object.completed %}
             <span class="badge">Completed</span>
+          {% else %}
+            {% with latest_request=object.requests.first %}
+              {% if latest_request %}
+                <span class="badge badge-status badge-status-{{ latest_request.status }}">
+                  {{ latest_request.get_status_display }}
+                </span>
+              {% endif %}
+            {% endwith %}
           {% endif %}
         </header>
 
