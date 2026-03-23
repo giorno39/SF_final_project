@@ -742,6 +742,15 @@ def unassign_term_paper(request, pk):
     except Exception:
         pass
 
+    TermPaperRequest.objects.filter(
+        term_paper=term_paper,
+        teacher=request.user,
+        status=TermPaperRequest.StatusChoices.ACCEPTED,
+    ).update(
+        status=TermPaperRequest.StatusChoices.CANCELED,
+        responded_at=timezone.now(),
+    )
+
     term_paper.taken_by = None
     term_paper.save()
 
