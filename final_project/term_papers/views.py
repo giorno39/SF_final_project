@@ -229,6 +229,18 @@ def take_term_paper(request, pk):
 
     try:
         channel_layer = get_channel_layer()
+
+        async_to_sync(channel_layer.group_send)(
+            f'chat_{conversation.pk}',
+            {
+                'type': 'chat_message',
+                'sender_id': request.user.pk,
+                'sender_name': teacher_name,
+                'content': auto_text,
+                'timestamp': message.timestamp.strftime('%H:%M'),
+            }
+        )
+
         async_to_sync(channel_layer.group_send)(
             f'notifications_{student.pk}',
             {
@@ -418,6 +430,18 @@ def send_term_paper_request(request, pk, teacher_pk):
 
     try:
         channel_layer = get_channel_layer()
+
+        async_to_sync(channel_layer.group_send)(
+            f'chat_{conversation.pk}',
+            {
+                'type': 'chat_message',
+                'sender_id': request.user.pk,
+                'sender_name': request.user.get_full_name() or request.user.username,
+                'content': auto_text,
+                'timestamp': message.timestamp.strftime('%H:%M'),
+            }
+        )
+
         async_to_sync(channel_layer.group_send)(
             f'notifications_{teacher.pk}',
             {
@@ -529,6 +553,18 @@ def accept_term_paper_request(request, request_pk):
 
     try:
         channel_layer = get_channel_layer()
+
+        async_to_sync(channel_layer.group_send)(
+            f'chat_{conversation.pk}',
+            {
+                'type': 'chat_message',
+                'sender_id': request.user.pk,
+                'sender_name': request.user.get_full_name() or request.user.username,
+                'content': auto_text,
+                'timestamp': message.timestamp.strftime('%H:%M'),
+            }
+        )
+
         async_to_sync(channel_layer.group_send)(
             f'notifications_{student.pk}',
             {
@@ -544,6 +580,7 @@ def accept_term_paper_request(request, request_pk):
 
     messages.success(request, 'You accepted the request.')
     return redirect('chat-conversation', pk=conversation.pk)
+
 
 @login_required
 def decline_term_paper_request(request, request_pk):
@@ -599,6 +636,18 @@ def decline_term_paper_request(request, request_pk):
 
     try:
         channel_layer = get_channel_layer()
+
+        async_to_sync(channel_layer.group_send)(
+            f'chat_{conversation.pk}',
+            {
+                'type': 'chat_message',
+                'sender_id': request.user.pk,
+                'sender_name': request.user.get_full_name() or request.user.username,
+                'content': auto_text,
+                'timestamp': message.timestamp.strftime('%H:%M'),
+            }
+        )
+
         async_to_sync(channel_layer.group_send)(
             f'notifications_{student.pk}',
             {
@@ -614,3 +663,105 @@ def decline_term_paper_request(request, request_pk):
 
     messages.success(request, 'You declined the request.')
     return redirect('teacher-term-paper-requests')
+
+@login_required
+def unassign_term_paper(request, pk):
+    from asgiref.sync import async_to_sync
+    from channels.layers import get_channel_layer
+    from final_project.chat.models import Conversation, Message
+
+    if request.user.user_type != 'teacher':
+        return redirect('index')
+
+    term_paper = TermPaper.objects.filter(pk=pk).select_related('user', 'taken_by').first()
+
+    if not term_paper:
+        messages.error(request, 'Term paper not found.')
+        return redirect('teacher-papers')
+
+    if term_paper.taken_by != request.user:
+        messages.error(request, 'You cannot unassigned this term paper.')
+        return redirect('teacher-papers')
+
+    if term_paper.completed:
+        messages.error(request, 'Completed papers cannot be unassigned')
+        return redirect('teacher-papers')
+
+    conversation = Conversation.objects.filter(
+        term_paper=term_paper,
+        participants=request.user,
+    ).filter(
+        participants=term_paper.user,
+    ).first()
+
+    if not conversation:
+        conversation = Conversation.objects.create(term_paper=term_paper)
+        conversation.participants.add(request.user, term_paper.user)
+
+    auto_text = (
+        f'{request.user.get_full_name() or request.user.username} is no longer '
+        f'taking the term paper "{term_paper.title}". It is now available again.'
+    )
+
+    message = Message.objects.create(
+        conversation=conversation,
+        sender=request.user,
+        content=auto_text,
+    )
+
+    student = term_paper.user
+    unread_count = Message.objects.filter(
+        conversation__participants=student,
+        is_read=False,
+    ).exclude(sender=student).count()
+
+    try:
+        channel_layer = get_channel_layer()
+
+        async_to_sync(channel_layer.group_send)(
+            f'chat_{conversation.pk}',
+            {
+                'type': 'chat_message',
+                'sender_id': request.user.pk,
+                'sender_name': request.user.get_full_name() or request.user.username,
+                'content': auto_text,
+                'timestamp': message.timestamp.strftime('%H:%M'),
+            }
+        )
+
+        async_to_sync(channel_layer.group_send)(
+            f'notifications_{student.pk}',
+            {
+                'type': 'new_message',
+                'conversation_id': conversation.pk,
+                'sender_name': request.user.get_full_name() or request.user.username,
+                'preview': auto_text[:80],
+                'unread_count': unread_count,
+            },
+        )
+    except Exception:
+        pass
+
+    TermPaperRequest.objects.filter(
+        term_paper=term_paper,
+        teacher=request.user,
+        status=TermPaperRequest.StatusChoices.ACCEPTED,
+    ).update(
+        status=TermPaperRequest.StatusChoices.CANCELED,
+        responded_at=timezone.now(),
+    )
+
+    TermPaperRequest.objects.filter(
+        term_paper=term_paper,
+        teacher=request.user,
+        status=TermPaperRequest.StatusChoices.ACCEPTED,
+    ).update(
+        status=TermPaperRequest.StatusChoices.CANCELED,
+        responded_at=timezone.now(),
+    )
+
+    term_paper.taken_by = None
+    term_paper.save()
+
+    messages.success(request, 'You unassigned yourself from the term paper. It is now available again.')
+    return redirect('teacher-papers')
