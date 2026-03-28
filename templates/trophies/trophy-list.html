@@ -21,6 +21,15 @@
         {{ object.project }}
       </div>
 
+      <div class="trophy-comment">
+        <span class="trophy-label">Comment:</span>
+        {% if object.comment %}
+          <p class="trophy-comment-text">{{ object.comment }}</p>
+        {% else %}
+          <p class="trophy-comment-empty">No written feedback yet.</p>
+        {% endif %}
+      </div>
+
     </article>
   {% endfor %}
 

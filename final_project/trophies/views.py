@@ -10,7 +10,7 @@ from final_project.trophies.models import Trophy
 class CreateTrophyView(views.CreateView):
     model = Trophy
     template_name = 'trophies/trophy-add.html'
-    fields = ('rate',)
+    fields = ('rate', 'comment')
     success_url = reverse_lazy('student-papers')
 
     def get_form(self, *args, **kwargs):
@@ -22,6 +22,10 @@ class CreateTrophyView(views.CreateView):
         form.instance.project = term_paper.title
         form.instance.completed_by = term_paper.taken_by
         form.fields['rate'].widget.attrs.setdefault('placeholder', '0 – 5')
+        form.fields['comment'].widget.attrs.update({
+            'placeholder': 'Describe the teacher’s communication, quality of work, and whether the paper was delivered on time. This helps us improve future recommendations.',
+            'rows': 5,
+        })
 
         return form
 
