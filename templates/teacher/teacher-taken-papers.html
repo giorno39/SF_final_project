@@ -56,10 +56,10 @@
             {{ object.description|default:"No description provided." }}
           </p>
         </div>
-          <div class="lesson-actions">
-            <a class="main-card-link" href="{% url 'term-paper-file-open' pk=object.pk %}">Open File</a>
-            <a class="main-card-link" href="{% url 'term-paper-complete' pk=object.pk %}">Complete paper</a>
-            <a class="main-card-link" href="{% url 'term-paper-untake' pk=object.pk %}">Unassign</a>
+          <div class="lesson-actions paper-actions">
+            <a class="main-card-link paper-action-btn" href="{% url 'term-paper-file-open' pk=object.pk %}">Open File</a>
+            <a class="main-card-link paper-action-btn" href="{% url 'term-paper-untake' pk=object.pk %}">Unassign</a>
+            <a class="main-card-link paper-action-btn paper-action-btn--primary" href="{% url 'term-paper-complete' pk=object.pk %}">Complete paper</a>
           </div>
       </article>
     {% empty %}
