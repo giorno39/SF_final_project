@@ -71,3 +71,31 @@
   color: #0c2d57;
   border: 1px solid #cfd8e3;
 }
+
+.badge-status {
+  text-transform: capitalize;
+}
+
+.badge-status-pending {
+  background: #fff3cd;
+  color: #8a6d1d;
+  border: 1px solid #f3df8a;
+}
+
+.badge-status-accepted {
+  background: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #a9d5bf;
+}
+
+.badge-status-declined {
+  background: #f8d7da;
+  color: #842029;
+  border: 1px solid #efb5bc;
+}
+
+.badge-status-canceled {
+  background: #e2e3e5;
+  color: #41464b;
+  border: 1px solid #c9cbcf;
+}
