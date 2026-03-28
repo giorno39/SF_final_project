@@ -277,12 +277,13 @@ class CompletePaper(views.UpdateView):
         if self.is_updatable:
             self.object.completed = True
 
-            CompletedPaper.objects.create(
+            completed_paper = CompletedPaper.objects.create(
                 title=self.object.title,
                 university=self.object.university,
                 content=self.object.content,
                 completed_by=self.object.taken_by,
             )
+            completed_paper.specializations.set(self.object.specializations.all())
 
             self.object.save()
 

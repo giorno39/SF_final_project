@@ -1,15 +1,13 @@
 from django.contrib import admin
-
 from final_project.completed_papers.models import CompletedPaper
 
 
-# Register your models here.
 @admin.register(CompletedPaper)
 class CompletedPaperAdmin(admin.ModelAdmin):
-    list_display = ['title', 'subject', 'university', 'has_author']
-    list_display_links = ['subject', 'has_author', 'university', 'title', ]
-    ordering = ['university', 'subject', ]
-    list_filter = ['university', ]
+    list_display = ['title', 'university', 'has_author']
+    list_display_links = ['has_author', 'university', 'title']
+    ordering = ['university']
+    list_filter = ['university']
 
     fieldsets = (
         (
@@ -17,7 +15,6 @@ class CompletedPaperAdmin(admin.ModelAdmin):
             {
                 'fields': (
                     'title',
-                    'subject',
                 ),
             }),
         (
@@ -46,12 +43,8 @@ class CompletedPaperAdmin(admin.ModelAdmin):
         ),
     )
 
-    admin.display(empty_value='-')
-
+    @admin.display(description='AUTHOR', ordering='completed_by', empty_value='-')
     def has_author(self, obj):
         if not obj.completed_by:
             return '-'
         return obj.completed_by
-
-    has_author.short_description = 'AUTHOR'
-    has_author.admin_order_field = 'completed_by'

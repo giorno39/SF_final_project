@@ -1,5 +1,4 @@
 from django.http import FileResponse
-
 from django.views import generic as views
 import os
 
@@ -19,7 +18,11 @@ class CompletedPapersIndexView(views.ListView):
         if search_form.is_valid():
             search_pattern = search_form.cleaned_data['completed_title']
 
-        completed_papers = CompletedPaper.objects.all()
+        completed_papers = (
+            CompletedPaper.objects
+            .select_related('completed_by')
+            .prefetch_related('specializations')
+        )
 
         if search_pattern:
             completed_papers = completed_papers.filter(title__icontains=search_pattern)
@@ -28,9 +31,7 @@ class CompletedPapersIndexView(views.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context['search_form'] = CompletedPaperSearchForm(self.request.GET)
-
         return context
 
 
