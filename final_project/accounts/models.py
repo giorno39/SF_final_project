@@ -70,6 +70,31 @@ class TeacherProfile(models.Model):
         related_name="teachers",
     )
 
+    trust_score = models.PositiveIntegerField(
+        default=50,
+    )
+    unassignments_count = models.PositiveIntegerField(
+        default=0,
+    )
+    late_unassignments_count = models.PositiveIntegerField(
+        default=0,
+    )
+    completed_on_time_count = models.PositiveIntegerField(
+        default=0,
+    )
+    completed_early_count = models.PositiveIntegerField(
+        default=0,
+    )
+
+    MIN_TRUST_SCORE = 0
+    MAX_TRUST_SCORE = 100
+
+    def decrease_trust(self, points):
+        self.trust_score = max(self.MIN_TRUST_SCORE, self.trust_score - points)
+
+    def increase_trust(self, points):
+        self.trust_score = min(self.MAX_TRUST_SCORE, self.trust_score + points)
+
     def __str__(self):
         return f"TeacherProfile<{self.user.username}>"
 

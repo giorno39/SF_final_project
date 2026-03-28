@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 
@@ -24,6 +24,41 @@ from final_project.term_papers.models import TermPaper, TermPaperRequest
 
 UserModel = get_user_model()
 
+def get_or_create_teacher_profile(user):
+    teacher_profile, _ = TeacherProfile.objects.get_or_create(user=user)
+    return teacher_profile
+
+
+def get_unassign_penalty_points(term_paper):
+    today = timezone.now().date()
+    days_until_deadline = (term_paper.death_line - today).days
+
+    if days_until_deadline < 0:
+        return 4
+    if days_until_deadline <= 7:
+        return 3
+    if days_until_deadline <= 14:
+        return 2
+    return 1
+
+
+def is_late_unassignment(term_paper):
+    today = timezone.now().date()
+    days_until_deadline = (term_paper.death_line - today).days
+    return days_until_deadline <= 7
+
+
+def get_completion_reward_points(term_paper):
+    today = timezone.now().date()
+    days_before_deadline = (term_paper.death_line - today).days
+
+    if days_before_deadline >= 14:
+        return 3
+    if days_before_deadline >= 7:
+        return 2
+    if days_before_deadline >= 0:
+        return 1
+    return 0
 
 class TermPaperIndexView(views.ListView):
     model = TermPaper
@@ -284,6 +319,20 @@ class CompletePaper(views.UpdateView):
                 completed_by=self.object.taken_by,
             )
             completed_paper.specializations.set(self.object.specializations.all())
+
+            teacher = self.object.taken_by
+            if teacher:
+                teacher_profile = get_or_create_teacher_profile(teacher)
+                reward_points = get_completion_reward_points(self.object)
+
+                if self.object.death_line >= timezone.now().date():
+                    teacher_profile.completed_on_time_count += 1
+
+                if (self.object.death_line - timezone.now().date()).days >= 7:
+                    teacher_profile.completed_early_count += 1
+
+                teacher_profile.increase_trust(reward_points)
+                teacher_profile.save()
 
             self.object.save()
 
@@ -688,6 +737,16 @@ def unassign_term_paper(request, pk):
         messages.error(request, 'Completed papers cannot be unassigned')
         return redirect('teacher-papers')
 
+    teacher_profile = get_or_create_teacher_profile(request.user)
+    penalty_points = get_unassign_penalty_points(term_paper)
+
+    teacher_profile.unassignments_count += 1
+    if is_late_unassignment(term_paper):
+        teacher_profile.late_unassignments_count += 1
+
+    teacher_profile.decrease_trust(penalty_points)
+    teacher_profile.save()
+
     conversation = Conversation.objects.filter(
         term_paper=term_paper,
         participants=request.user,
@@ -742,15 +801,6 @@ def unassign_term_paper(request, pk):
         )
     except Exception:
         pass
-
-    TermPaperRequest.objects.filter(
-        term_paper=term_paper,
-        teacher=request.user,
-        status=TermPaperRequest.StatusChoices.ACCEPTED,
-    ).update(
-        status=TermPaperRequest.StatusChoices.CANCELED,
-        responded_at=timezone.now(),
-    )
 
     TermPaperRequest.objects.filter(
         term_paper=term_paper,
