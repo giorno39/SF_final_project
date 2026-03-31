@@ -32,6 +32,11 @@ class CompletedPaper(models.Model):
         blank=False,
     )
 
+    description = models.TextField(
+        null=True,
+        blank=True,
+    )
+
     content = models.FileField(
         null=False,
         blank=False,

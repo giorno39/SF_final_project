@@ -315,6 +315,7 @@ class CompletePaper(views.UpdateView):
             completed_paper = CompletedPaper.objects.create(
                 title=self.object.title,
                 university=self.object.university,
+                description=self.object.description,
                 content=self.object.content,
                 completed_by=self.object.taken_by,
             )
