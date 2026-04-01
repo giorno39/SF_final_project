@@ -8,6 +8,7 @@ UserModel = get_user_model()
 class Trophy(models.Model):
     class Meta:
         verbose_name_plural = 'Trophies'
+
     PROJECT_MAX_LEN = 50
     PROJECT_MIN_LEN = 2
 
@@ -16,7 +17,6 @@ class Trophy(models.Model):
         blank=True,
         default=0,
         validators=(validators.MinValueValidator(0), validators.MaxValueValidator(5))
-
     )
 
     project = models.CharField(
@@ -24,6 +24,12 @@ class Trophy(models.Model):
         validators=(validators.MinLengthValidator(PROJECT_MIN_LEN),),
         null=True,
         blank=True,
+    )
+
+    comment = models.TextField(
+        null=True,
+        blank=True,
+        validators=(validators.MaxLengthValidator(155),),
     )
 
     completed_by = models.ForeignKey(

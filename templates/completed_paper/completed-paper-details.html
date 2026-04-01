@@ -26,6 +26,13 @@
           {% endfor %}
         </div>
       </div>
+
+      {% if object.description %}
+        <div class="term-paper-description-block">
+          <span class="label">Description:</span>
+          <p>{{ object.description }}</p>
+        </div>
+      {% endif %}
     </div>
 
     <div class="lesson-actions">
