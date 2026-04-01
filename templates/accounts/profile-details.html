@@ -42,7 +42,7 @@
       {% endif %}
 
       {% if avg_rate %}
-        <p><span class="label">Average rate:</span> {{ avg_rate }}</p>
+        <p><span class="label">Average rate:</span> {{ avg_rate|floatformat:1 }}</p>
       {% endif %}
     </div>
 
