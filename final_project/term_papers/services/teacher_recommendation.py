@@ -1,5 +1,5 @@
 from statistics import mean
-
+import json
 from django.contrib.auth import get_user_model
 from django.db.models import Avg, Count, Prefetch
 
@@ -135,13 +135,6 @@ def get_pre_ranked_teacher_candidates(term_paper, shortlist_size=8):
 
     candidates.sort(key=lambda x: x["base_score"], reverse=True)
     return candidates[:shortlist_size]
-
-
-from django.conf import settings
-
-import json
-
-from final_project.ai.client import get_openai_client
 
 
 def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
