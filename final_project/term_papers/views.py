@@ -21,6 +21,7 @@ from final_project.core.funcs import get_user_by_id
 from final_project.chat.models import Conversation, Message
 from final_project.term_papers.forms import TermPaperCreateForm, TermPaperSearchForm
 from final_project.term_papers.models import TermPaper, TermPaperRequest
+from final_project.term_papers.services.teacher_recommendation import rank_teachers_with_ai
 
 UserModel = get_user_model()
 
@@ -385,24 +386,29 @@ class TermPaperRequestTeacherListView(views.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        requested_teacher_ids = self.object.requests.filter(
-            status=TermPaperRequest.StatusChoices.PENDING,
-        ).values_list('teacher_id', flat=True)
+        requested_teacher_ids = set(
+            self.object.requests.filter(
+                status=TermPaperRequest.StatusChoices.PENDING,
+            ).values_list('teacher_id', flat=True)
+        )
 
-        matching_teacher_profiles = TeacherProfile.objects.filter(
-            specializations__in=self.object.specializations.all(),
-        ).select_related('user').prefetch_related('specializations').distinct()
+        ai_recommendations = []
+        ai_error = None
 
-        other_teacher_profiles = TeacherProfile.objects.exclude(
-            pk__in=matching_teacher_profiles.values_list('pk', flat=True),
-        ).select_related('user').prefetch_related('specializations')
+        try:
+            ai_recommendations = rank_teachers_with_ai(
+                term_paper=self.object,
+                shortlist_size=8,
+                result_size=3,
+            )
+        except Exception as exc:
+            ai_error = str(exc)
 
-        context['matching_teacher_profiles'] = matching_teacher_profiles
-        context['other_teacher_profiles'] = other_teacher_profiles
-        context['requested_teacher_ids'] = set(requested_teacher_ids)
+        context['requested_teacher_ids'] = requested_teacher_ids
+        context['ai_recommendations'] = ai_recommendations
+        context['ai_error'] = ai_error
 
         return context
-
 
 @login_required
 def send_term_paper_request(request, pk, teacher_pk):
