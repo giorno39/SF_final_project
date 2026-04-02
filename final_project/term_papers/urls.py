@@ -3,7 +3,7 @@ from django.urls import path
 from final_project.term_papers.views import TermPaperIndexView, TermPaperDetailsView, TermPaperCreateView, \
     TermPaperEditView, TermPaperDeleteView, open_file, take_term_paper, CompletePaper, \
     TermPaperRequestTeacherListView, send_term_paper_request, TeacherTermPaperRequestsListView, \
-    accept_term_paper_request, decline_term_paper_request, unassign_term_paper
+    accept_term_paper_request, decline_term_paper_request, unassign_term_paper, generate_term_paper_description
 
 urlpatterns = (
     path('', TermPaperIndexView.as_view(), name='term-paper-index'),
@@ -22,4 +22,5 @@ urlpatterns = (
     path('teacher/requests/', TeacherTermPaperRequestsListView.as_view(), name='teacher-term-paper-requests'),
     path('teacher/requests/<int:request_pk>/accept/', accept_term_paper_request, name='accept-term-paper-request'),
     path('teacher/requests/<int:request_pk>/decline/', decline_term_paper_request, name='decline-term-paper-request'),
+    path('generate-description/',generate_term_paper_description,name='generate-term-paper-description',),
 )
