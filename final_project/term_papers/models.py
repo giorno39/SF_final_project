@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core import validators
 from django.db import models
 from final_project.accounts.models import Specialization
-from final_project.core.validators import file_size_validator  # adjust import if needed
+from final_project.core.validators import file_size_validator, pdf_only_validator
 
 UserModel = get_user_model()
 
@@ -50,7 +50,7 @@ class TermPaper(models.Model):
         null=False,
         blank=False,
         upload_to='term_paper_files/',
-        validators=(file_size_validator,)
+        validators=(file_size_validator, pdf_only_validator)
     )
 
     completed = models.BooleanField(

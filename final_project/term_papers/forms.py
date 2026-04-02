@@ -22,7 +22,15 @@ class TermPaperCreateForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'placeholder': 'Term paper title'}),
             'university': forms.TextInput(attrs={'placeholder': 'University or institution'}),
             'price_cap': forms.NumberInput(attrs={'placeholder': 'Maximum budget (e.g. 100)', 'min': 0}),
-            'description': forms.Textarea(attrs={'placeholder': 'Describe what you need…', 'rows': 4}),
+            'description': forms.Textarea(attrs={
+                'placeholder': 'Describe what you need…',
+                'rows': 4,
+                'id': 'id_description',
+            }),
+            'content': forms.ClearableFileInput(attrs={
+                'id': 'id_content',
+                'accept': '.pdf,application/pdf',
+            }),
             'death_line': forms.SelectDateWidget(
                 years=range(date.today().year, date.today().year + 8),
                 empty_label=('Year', 'Month', 'Day'),

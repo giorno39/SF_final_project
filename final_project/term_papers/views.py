@@ -22,6 +22,11 @@ from final_project.chat.models import Conversation, Message
 from final_project.term_papers.forms import TermPaperCreateForm, TermPaperSearchForm
 from final_project.term_papers.models import TermPaper, TermPaperRequest
 from final_project.term_papers.services.teacher_recommendation import rank_teachers_with_ai
+from final_project.term_papers.services.term_paper_description import describe_term_paper_with_ai
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 UserModel = get_user_model()
 
@@ -823,3 +828,18 @@ def unassign_term_paper(request, pk):
 
     messages.success(request, 'You unassigned yourself from the term paper. It is now available again.')
     return redirect('teacher-papers')
+
+
+@login_required
+@require_POST
+def generate_term_paper_description(request):
+    uploaded_file = request.FILES.get("content")
+
+    if not uploaded_file:
+        return JsonResponse({"error": "Please upload a PDF first."}, status=400)
+
+    try:
+        description = describe_term_paper_with_ai(uploaded_file)
+        return JsonResponse({"description": description})
+    except Exception as exc:
+        return JsonResponse({"error": str(exc)}, status=500)

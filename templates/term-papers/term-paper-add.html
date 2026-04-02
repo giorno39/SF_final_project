@@ -96,8 +96,21 @@
             {% endif %}
         </p>
 
+        <p>
+            <button
+                type="button"
+                id="describeWithAiBtn"
+                data-url="{% url 'generate-term-paper-description' %}"
+            >
+                Describe with AI
+            </button>
+            <span id="aiDescribeStatus"></span>
+        </p>
+
         <button type="submit">Add term paper</button>
     </form>
 </div>
+
 <script src="{% static 'js/specialization-picker.js' %}"></script>
+<script src="{% static 'js/term-paper-description.js' %}"></script>
 {% endblock %}
