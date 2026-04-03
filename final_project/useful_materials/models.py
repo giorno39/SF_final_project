@@ -44,6 +44,10 @@ class Materials(models.Model):
         blank=True,
     )
 
+    reference_is_valid = models.BooleanField(default=False)
+    reference_validation_reason = models.TextField(blank=True, null=True)
+    reference_last_checked_at = models.DateTimeField(blank=True, null=True)
+
     def __str__(self):
         return self.title
 
