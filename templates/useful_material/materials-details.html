@@ -11,32 +11,50 @@
       <div>
         <h1 class="lesson-title">{{ object.title }}</h1>
         <p class="lesson-sub">
-          <span class="badge">{{ object.field }}</span>
+          {% for specialization in object.specializations.all %}
+            <span class="badge">{{ specialization.name }}</span>
+          {% empty %}
+            <span class="badge">No specialization</span>
+          {% endfor %}
         </p>
       </div>
     </header>
 
     <div class="lesson-info">
       <p><span class="label">Title:</span> {{ object.title }}</p>
-      <p><span class="label">Field:</span> {{ object.field }}</p>
+
+      <p>
+        <span class="label">Specializations:</span>
+        {% for specialization in object.specializations.all %}
+          {{ specialization.name }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+          No specialization selected
+        {% endfor %}
+      </p>
+
+      {% if object.references %}
+        <p><span class="label">Reference:</span> {{ object.references }}</p>
+      {% endif %}
     </div>
 
     <div class="lesson-actions">
       {% if object.content %}
         <a class="main-card-link" href="{% url 'materials-download' pk=object.pk %}">
-          Download File
+          Download PDF
         </a>
       {% endif %}
 
       {% if object.references %}
-        <a class="main-card-link" href="{{ object.references }}">
-          References
+        <a class="main-card-link" href="{{ object.references }}" target="_blank" rel="noopener noreferrer">
+          Open Reference
         </a>
       {% endif %}
 
-      <a class="main-card-link" href="{% url 'details-user' pk=object.uploaded_by_id %}">
-        Uploaded by
-      </a>
+      {% if object.uploaded_by_id %}
+        <a class="main-card-link" href="{% url 'details-user' pk=object.uploaded_by_id %}">
+          Uploaded by
+        </a>
+      {% endif %}
 
       {% if is_owner %}
         <a class="main-card-link" href="{% url 'materials-edit' pk=object.pk %}">Edit</a>
@@ -44,5 +62,58 @@
       {% endif %}
     </div>
   </article>
+
+  <section class="lesson-card" style="margin-top: 24px;">
+    <h2 class="lesson-title" style="font-size: 1.4rem;">Discussion</h2>
+
+    {% if user.is_authenticated %}
+      <p class="lesson-sub">
+        You have {{ remaining_comments }} comment{{ remaining_comments|pluralize }} remaining for the next 24 hours.
+      </p>
+
+      <form class="auth-form" method="post" action="{% url 'materials-comment-add' pk=object.pk %}">
+        {% csrf_token %}
+
+        <p>
+          {{ comment_form.content }}
+          {% if comment_form.content.errors %}
+            <span class="field-error">{{ comment_form.content.errors.0 }}</span>
+          {% endif %}
+        </p>
+
+        <button type="submit">Post comment</button>
+      </form>
+    {% else %}
+      <p class="lesson-sub">Log in to join the discussion.</p>
+    {% endif %}
+
+    <div style="margin-top: 24px;">
+      {% for comment in comments %}
+        <article class="term-paper-card" style="margin-bottom: 16px;">
+          <p class="term-paper-card-p">
+            <strong>
+              {% if comment.author.get_full_name %}
+                {{ comment.author.get_full_name }}
+              {% else %}
+                {{ comment.author.username }}
+              {% endif %}
+            </strong>
+          </p>
+
+          <p class="term-paper-card-p">{{ comment.content }}</p>
+          <p class="term-paper-card-p">
+            <small>{{ comment.created_at }}</small>
+          </p>
+        </article>
+      {% empty %}
+        <div class="search-empty-state">
+          <h3 class="search-empty-state-title">No discussion yet</h3>
+          <p class="search-empty-state-text">
+            Be the first to leave a comment for this material.
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
 </section>
 {% endblock %}

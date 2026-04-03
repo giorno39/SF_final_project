@@ -1,7 +1,7 @@
 from django.urls import path
 
 from final_project.useful_materials.views import MaterialsIndexView, MaterialCreateView, MaterialDetailsView, \
-    download_completed_paper, MaterialEditView, MaterialDeleteView
+    download_completed_paper, MaterialEditView, MaterialDeleteView, add_material_comment
 
 urlpatterns = (
     path('', MaterialsIndexView.as_view(), name='materials-index'),
@@ -10,5 +10,6 @@ urlpatterns = (
     path('download-file/<int:pk>', download_completed_paper, name='materials-download'),
     path('edit/<int:pk>', MaterialEditView.as_view(), name='materials-edit'),
     path('delete/<int:pk>', MaterialDeleteView.as_view(), name='materials-delete'),
+    path('<int:pk>/comment/', add_material_comment, name='materials-comment-add'),
 
 )

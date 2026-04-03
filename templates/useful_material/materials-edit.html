@@ -1,17 +1,109 @@
 {% extends 'base/base.html' %}
-
+{% load static %}
 
 {% block content %}
-
-    <div class="auth-form-container">
+<div class="auth-form-container">
     <h2>Edit material</h2>
+
     <form class="auth-form" method="post" action="{% url 'materials-edit' pk=object.pk %}" enctype="multipart/form-data">
-            {{ form.as_p }}
-            {% csrf_token %}
+        {% csrf_token %}
+
+        <p>
+            {{ form.title.label_tag }}
+            {{ form.title }}
+            {% if form.title.errors %}
+                <span class="field-error">{{ form.title.errors.0 }}</span>
+            {% endif %}
+        </p>
+
+        <div class="spec-picker-wrap">
+            <label class="spec-picker-label">Specializations:</label>
+
+            {% if form.specializations.errors %}
+                <span class="field-error">{{ form.specializations.errors.0 }}</span>
+            {% endif %}
+
+            <div class="spec-picker" id="specPicker">
+                <div class="spec-selected" id="specSelected"></div>
+
+                <input
+                    type="text"
+                    id="specSearch"
+                    class="spec-search-input"
+                    placeholder="Search specializations..."
+                    autocomplete="off"
+                >
+
+                <div class="spec-dropdown" id="specDropdown">
+                    {% for choice in form.specializations.field.queryset %}
+                        <div
+                            class="spec-option"
+                            data-value="{{ choice.pk }}"
+                            data-label="{{ choice.name|lower }}"
+                            data-text="{{ choice.name }}"
+                        >
+                            {{ choice.name }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="spec-hidden-inputs">
+                {% for checkbox in form.specializations %}
+                    <div class="spec-hidden-checkbox">
+                        {{ checkbox.tag }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            {{ form.content.label_tag }}
+            <div class="custom-file">
+                <span class="custom-file-label">Choose PDF</span>
+                <span class="custom-file-name" id="file-name">
+                    {% if object.content %}
+                        {{ object.content.name|cut:'materials_files/' }}
+                    {% else %}
+                        No file chosen
+                    {% endif %}
+                </span>
+                {{ form.content }}
+
+                <span class="help-text">Allowed format: PDF only • Max size: 2MB</span>
+
+                {% if form.content.errors %}
+                    <span class="field-error">{{ form.content.errors.0 }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <p>
+            {{ form.references.label_tag }}
+            {{ form.references }}
+            {% if form.references.errors %}
+                <span class="field-error">{{ form.references.errors.0 }}</span>
+            {% endif %}
+        </p>
+
         <button type="submit">Save changes</button>
     </form>
 </div>
 
+<script src="{% static 'js/specialization-picker.js' %}"></script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const fileInput = document.querySelector('input[type="file"]');
+    const fileName = document.getElementById('file-name');
 
+    if (fileInput && fileName) {
+      fileInput.addEventListener('change', () => {
+        fileName.textContent = fileInput.files.length > 0
+          ? fileInput.files[0].name
+          : 'No file chosen';
+      });
+    }
+  });
+</script>
 {% endblock %}
