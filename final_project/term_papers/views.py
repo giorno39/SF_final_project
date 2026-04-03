@@ -343,6 +343,61 @@ class CompletePaper(views.UpdateView):
 
             self.object.save()
 
+            conversation = Conversation.objects.filter(
+                term_paper=self.object,
+                participants=request.user,
+            ).filter(
+                participants=self.object.user,
+            ).first()
+
+            if not conversation:
+                conversation = Conversation.objects.create(term_paper=self.object)
+                conversation.participants.add(request.user, self.object.user)
+
+            auto_text = (
+                f'{request.user.get_full_name() or request.user.username} uploaded the completed '
+                f'version of "{self.object.title}".'
+            )
+
+            message = Message.objects.create(
+                conversation=conversation,
+                sender=request.user,
+                content=auto_text,
+            )
+
+            student = self.object.user
+            unread_count = Message.objects.filter(
+                conversation__participants=student,
+                is_read=False,
+            ).exclude(sender=student).count()
+
+            try:
+                channel_layer = get_channel_layer()
+
+                async_to_sync(channel_layer.group_send)(
+                    f'chat_{conversation.pk}',
+                    {
+                        'type': 'chat_message',
+                        'sender_id': request.user.pk,
+                        'sender_name': request.user.get_full_name() or request.user.username,
+                        'content': auto_text,
+                        'timestamp': message.timestamp.strftime('%H:%M'),
+                    }
+                )
+
+                async_to_sync(channel_layer.group_send)(
+                    f'notifications_{student.pk}',
+                    {
+                        'type': 'new_message',
+                        'conversation_id': conversation.pk,
+                        'sender_name': request.user.get_full_name() or request.user.username,
+                        'preview': auto_text[:80],
+                        'unread_count': unread_count,
+                    },
+                )
+            except Exception:
+                pass
+
         return result
 
     def get(self, *args, **kwargs):
