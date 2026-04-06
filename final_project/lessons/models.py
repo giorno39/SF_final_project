@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core import validators
 from django.db import models
 
+from final_project.accounts.models import Specialization
 from final_project.core.validators import file_size_validator
 
 UserModel = get_user_model()
@@ -20,11 +21,10 @@ class Lesson(models.Model):
         blank=False,
     )
 
-    subject = models.CharField(
-        max_length=SUBJECT_MAX_LEN,
-        validators=(validators.MinLengthValidator(SUBJECT_MIN_LEN),),
-        null=False,
+    specializations = models.ManyToManyField(
+        Specialization,
         blank=False,
+        related_name='lessons',
     )
 
     price = models.PositiveIntegerField(

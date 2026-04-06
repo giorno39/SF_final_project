@@ -35,18 +35,23 @@ class LessonIndexView(views.ListView):
     def get_queryset(self):
         search_form = LessonSearchForm(self.request.GET)
         search_pattern = None
-        if search_form.is_valid():
-            search_pattern = search_form.cleaned_data['lesson_title']
+        specialization = None
 
-        lessons = Lesson.objects.all()
+        lessons = Lesson.objects.all().prefetch_related('specializations')
+
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data.get('lesson_title')
+            specialization = search_form.cleaned_data.get('specialization')
 
         if search_pattern:
             lessons = lessons.filter(
                 Q(title__icontains=search_pattern)
-                | Q(subject__icontains=search_pattern),
             )
 
-        return lessons
+        if specialization:
+            lessons = lessons.filter(specializations=specialization)
+
+        return lessons.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -101,19 +106,29 @@ class OwnLessonView(views.ListView):
     def get_queryset(self, *args, **kwargs):
         search_form = LessonSearchForm(self.request.GET)
         search_pattern = None
-        if search_form.is_valid():
-            search_pattern = search_form.cleaned_data['lesson_title']
+        specialization = None
 
-        queryset = Lesson.objects.filter(teacher=self.request.user)
+        queryset = Lesson.objects.filter(
+            teacher=self.request.user
+        ).prefetch_related('specializations')
+
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data.get('lesson_title')
+            specialization = search_form.cleaned_data.get('specialization')
+
         if search_pattern:
             queryset = queryset.filter(
                 Q(title__icontains=search_pattern)
                 | Q(subject__icontains=search_pattern),
             )
-        return queryset
+
+        if specialization:
+            queryset = queryset.filter(specializations=specialization)
+
+        return queryset.distinct()
 
     def get(self, request, *args, **kwargs):
-        result = super().get(request, *args, *kwargs)
+        result = super().get(request, *args, **kwargs)
 
         if request.user.user_type == 'student':
             return redirect('index')

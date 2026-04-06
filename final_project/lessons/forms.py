@@ -1,5 +1,6 @@
 from django import forms
 
+from final_project.accounts.models import Specialization
 from final_project.lessons.models import Lesson
 
 
@@ -13,6 +14,7 @@ class CreateLessonForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Lesson title'}),
             'subject': forms.TextInput(attrs={'placeholder': 'e.g., Mathematics, Science…'}),
+            'specializations': forms.CheckboxSelectMultiple(),
             'price': forms.NumberInput(attrs={'placeholder': '0', 'min': 0}),
             'cover_image': forms.FileInput(
                 attrs={'accept': 'image/*', 'class': 'lesson-cover-input'},
@@ -23,13 +25,13 @@ class CreateLessonForm(forms.ModelForm):
 class LessonEditForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ('title', 'subject', 'price', 'cover_image')
+        fields = ('title', 'specializations', 'price', 'cover_image')
         labels = {
             'cover_image': 'Cover photo (optional)',
         }
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Lesson title'}),
-            'subject': forms.TextInput(attrs={'placeholder': 'Subject area'}),
+            'specializations': forms.CheckboxSelectMultiple(),
             'price': forms.NumberInput(attrs={'placeholder': '0', 'min': 0}),
             'cover_image': forms.FileInput(
                 attrs={'accept': 'image/*', 'class': 'lesson-cover-input'},
@@ -43,9 +45,14 @@ class LessonSearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'placeholder': 'Search lessons by title, subject, or keyword…',
-                'class': 'lesson-feed-search-input',
+                'placeholder': 'Search by title...',
                 'autocomplete': 'off',
             },
         ),
+    )
+
+    specialization = forms.ModelChoiceField(
+        queryset=Specialization.objects.all(),
+        required=False,
+        empty_label='All specializations',
     )
