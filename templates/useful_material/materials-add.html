@@ -1,53 +1,96 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="auth-form-container">
-  <h2>Add New Material</h2>
-  <form class="auth-form" method="post" action="{% url 'materials-add' %}" enctype="multipart/form-data">
-      {% csrf_token %}
+    <h2>Add New Material</h2>
 
-      <p>
-        {{ form.title.label_tag }}
-        {{ form.title }}
-      </p>
+    <form class="auth-form" method="post" action="{% url 'materials-add' %}" enctype="multipart/form-data">
+        {% csrf_token %}
 
-      <p>
-        {{ form.field.label_tag }}
-        {{ form.field }}
-      </p>
+        <p>
+            {{ form.title.label_tag }}
+            {{ form.title }}
+            {% if form.title.errors %}
+                <span class="field-error">{{ form.title.errors.0 }}</span>
+            {% endif %}
+        </p>
 
-      <div>
-        {{ form.content.label_tag }}
-        <div class="custom-file">
-          <span class="custom-file-label">Choose file</span>
-          <span class="custom-file-name" id="file-name">No file chosen</span>
-          {{ form.content }}
+        <div class="spec-picker-wrap">
+            <label class="spec-picker-label">Specializations:</label>
 
-{#        TODO Check if the validator is being used here and if this actually works, by throwing an error the validator needs to also check about file types#}
-            <!-- helper text, always visible -->
-        <span class="help-text">Allowed formats: PDF, DOCX, ZIP • Max size: 2MB</span>
+            {% if form.specializations.errors %}
+                <span class="field-error">{{ form.specializations.errors.0 }}</span>
+            {% endif %}
 
-              <!-- show error only if validation fails -->
-          {% if form.content.errors %}
-              <span class="field-error">{{ form.content.errors.0 }}</span>
-          {% endif %}
+            <div class="spec-picker" id="specPicker">
+                <div class="spec-selected" id="specSelected"></div>
+
+                <input
+                    type="text"
+                    id="specSearch"
+                    class="spec-search-input"
+                    placeholder="Search specializations..."
+                    autocomplete="off"
+                >
+
+                <div class="spec-dropdown" id="specDropdown">
+                    {% for choice in form.specializations.field.queryset %}
+                        <div
+                            class="spec-option"
+                            data-value="{{ choice.pk }}"
+                            data-label="{{ choice.name|lower }}"
+                            data-text="{{ choice.name }}"
+                        >
+                            {{ choice.name }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="spec-hidden-inputs">
+                {% for checkbox in form.specializations %}
+                    <div class="spec-hidden-checkbox">
+                        {{ checkbox.tag }}
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-      </div>
 
-      <p>
-        {{ form.references.label_tag }}
-        {{ form.references }}
-      </p>
+        <div>
+            {{ form.content.label_tag }}
+            <div class="custom-file">
+                <span class="custom-file-label">Choose PDF</span>
+                <span class="custom-file-name" id="file-name">No file chosen</span>
+                {{ form.content }}
 
-      <button type="submit">Add Material</button>
-  </form>
+                <span class="help-text">Allowed format: PDF only • Max size: 2MB</span>
+
+                {% if form.content.errors %}
+                    <span class="field-error">{{ form.content.errors.0 }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <p>
+            {{ form.references.label_tag }}
+            {{ form.references }}
+            {% if form.references.errors %}
+                <span class="field-error">{{ form.references.errors.0 }}</span>
+            {% endif %}
+        </p>
+
+        <button type="submit">Add Material</button>
+    </form>
 </div>
 
+<script src="{% static 'js/specialization-picker.js' %}"></script>
+
 <script>
-  // JS for showing selected file name
   document.addEventListener("DOMContentLoaded", function() {
     const fileInput = document.querySelector('input[type="file"]');
     const fileName = document.getElementById('file-name');
+
     if (fileInput && fileName) {
       fileInput.addEventListener('change', () => {
         fileName.textContent = fileInput.files.length > 0

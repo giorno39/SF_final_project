@@ -3,32 +3,48 @@
 {% block content %}
 <section class="container lessons-wrap">
 
-  <!-- Search -->
   <form class="search-form" method="get" action="{% url 'materials-index' %}">
     <div class="search-bar">
-      {{ search_form }}
-      <button class="btn" type="submit">search</button>
+      {{ search_form.material_title }}
+      {{ search_form.specialization }}
+      <button class="btn" type="submit">Search</button>
     </div>
-    {% csrf_token %}
   </form>
 
-  <!-- List -->
   <div class="lessons-grid">
     {% for object in object_list %}
       <div class="term-paper-card">
         <p class="term-paper-card-p"><strong>Title:</strong> {{ object.title }}</p>
+
+        <p class="term-paper-card-p">
+          <strong>Specializations:</strong>
+          {% for specialization in object.specializations.all %}
+            <span class="badge">{{ specialization.name }}</span>{% if not forloop.last %} {% endif %}
+          {% empty %}
+            <span>No specialization</span>
+          {% endfor %}
+        </p>
+
+        {% if object.content %}
+          <p class="term-paper-card-p"><strong>File:</strong> PDF uploaded</p>
+        {% endif %}
+
         <a class="main-card-link" href="{% url 'materials-details' pk=object.pk %}">Details</a>
       </div>
-    {% empty %}
-      <p class="term-paper-card-p">No materials found.</p>
-    {% endfor %}
+{% empty %}
+  <div class="search-empty-state">
+    <h3 class="search-empty-state-title">No materials found</h3>
+    <p class="search-empty-state-text">
+      Try a different title or specialization, or clear the filters and browse all materials.
+    </p>
+  </div>
+{% endfor %}
   </div>
 
-  <!-- Pagination -->
   {% if page_obj.paginator.num_pages > 1 %}
     <nav class="pager" aria-label="Pagination">
       {% if page_obj.has_previous %}
-        <a class="page-btn" href="?page={{ page_obj.previous_page_number }}">
+        <a class="page-btn" href="?material_title={{ request.GET.material_title }}&specialization={{ request.GET.specialization }}&page={{ page_obj.previous_page_number }}">
           <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
         </a>
       {% else %}
@@ -37,44 +53,39 @@
         </span>
       {% endif %}
 
-      {# First page #}
       {% if page_obj.number > 2 %}
-        <a class="page-btn" href="?page=1">1</a>
+        <a class="page-btn" href="?material_title={{ request.GET.material_title }}&specialization={{ request.GET.specialization }}&page=1">1</a>
       {% endif %}
 
-      {# Left ellipsis #}
       {% if page_obj.number > 3 %}
         <span class="page-btn is-disabled">…</span>
       {% endif %}
 
-      {# Window around current page: (n-1, n, n+1) #}
       {% for n in page_obj.paginator.page_range %}
         {% if n >= page_obj.number|add:'-1' and n <= page_obj.number|add:'1' %}
           {% if n == page_obj.number %}
             <span class="page-btn is-active">{{ n }}</span>
           {% else %}
-            <a class="page-btn" href="?page={{ n }}">{{ n }}</a>
+            <a class="page-btn" href="?material_title={{ request.GET.material_title }}&specialization={{ request.GET.specialization }}&page={{ n }}">{{ n }}</a>
           {% endif %}
         {% endif %}
       {% endfor %}
 
-      {# Right ellipsis #}
       {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
         <span class="page-btn is-disabled">…</span>
       {% endif %}
 
-      {# Last page #}
       {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
-        <a class="page-btn" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        <a class="page-btn" href="?material_title={{ request.GET.material_title }}&specialization={{ request.GET.specialization }}&page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
       {% endif %}
 
       {% if page_obj.has_next %}
-        <a class="page-btn" href="?page={{ page_obj.next_page_number }}">
+        <a class="page-btn" href="?material_title={{ request.GET.material_title }}&specialization={{ request.GET.specialization }}&page={{ page_obj.next_page_number }}">
           <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
         </a>
       {% else %}
         <span class="page-btn is-disabled">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4-9.4 0-33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
         </span>
       {% endif %}
     </nav>
