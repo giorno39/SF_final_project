@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count, Max
+from django.db.models import Max
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View, generic as views
 
@@ -62,17 +62,23 @@ class StartLessonConversationView(LoginRequiredMixin, View):
         if request.user == other_user:
             return redirect('lesson-details', pk=lesson.pk)
 
-        conversation = (
+        existing_conversation = None
+
+        candidate_conversations = (
             Conversation.objects
-            .filter(lesson=lesson, participants=request.user)
-            .filter(participants=other_user)
-            .annotate(num_participants=Count('participants'))
-            .filter(num_participants=2)
-            .first()
+            .filter(term_paper__isnull=True, participants=request.user)
+            .prefetch_related('participants')
+            .distinct()
         )
 
-        if not conversation:
-            conversation = Conversation.objects.create(lesson=lesson)
-            conversation.participants.add(request.user, other_user)
+        for conversation in candidate_conversations:
+            participant_ids = set(conversation.participants.values_list('id', flat=True))
+            if participant_ids == {request.user.id, other_user.id}:
+                existing_conversation = conversation
+                break
 
-        return redirect('chat-conversation', pk=conversation.pk)
+        if existing_conversation is None:
+            existing_conversation = Conversation.objects.create()
+            existing_conversation.participants.add(request.user, other_user)
+
+        return redirect('chat-conversation', pk=existing_conversation.pk)
