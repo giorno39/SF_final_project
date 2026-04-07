@@ -6,12 +6,10 @@ from django.views import generic as views
 from final_project.lessons.forms import CreateLessonForm, LessonEditForm, LessonSearchForm
 from final_project.lessons.models import Lesson
 
-
 def _lesson_feed_querystring(request):
     q = request.GET.copy()
     q.pop('page', None)
     return q.urlencode()
-
 
 class CreateLessonView(views.CreateView):
     model = Lesson
@@ -24,6 +22,12 @@ class CreateLessonView(views.CreateView):
 
         form.instance.teacher = self.request.user
 
+        teacher_profile = getattr(self.request.user, 'teacher_profile', None)
+        if teacher_profile:
+            form.fields['specializations'].queryset = teacher_profile.specializations.all()
+        else:
+            form.fields['specializations'].queryset = form.fields['specializations'].queryset.none()
+
         return form
 
 
@@ -35,26 +39,29 @@ class LessonIndexView(views.ListView):
     def get_queryset(self):
         search_form = LessonSearchForm(self.request.GET)
         search_pattern = None
-        if search_form.is_valid():
-            search_pattern = search_form.cleaned_data['lesson_title']
+        specialization = None
 
-        lessons = Lesson.objects.all()
+        lessons = Lesson.objects.all().prefetch_related('specializations')
+
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data.get('lesson_title')
+            specialization = search_form.cleaned_data.get('specialization')
 
         if search_pattern:
             lessons = lessons.filter(
                 Q(title__icontains=search_pattern)
-                | Q(subject__icontains=search_pattern),
             )
 
-        return lessons
+        if specialization:
+            lessons = lessons.filter(specializations=specialization)
+
+        return lessons.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context['search_form'] = LessonSearchForm(self.request.GET)
         context['lesson_feed_title'] = 'Lesson Discovery Feed'
         context['get_params'] = _lesson_feed_querystring(self.request)
-
         return context
 
 
@@ -64,9 +71,7 @@ class LessonDetailsView(views.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context['is_owner'] = self.request.user == self.object.teacher
-
         return context
 
 
@@ -74,6 +79,17 @@ class LessonEditView(views.UpdateView):
     model = Lesson
     template_name = 'lessons/lesson-edit.html'
     form_class = LessonEditForm
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+
+        teacher_profile = getattr(self.request.user, 'teacher_profile', None)
+        if teacher_profile:
+            form.fields['specializations'].queryset = teacher_profile.specializations.all()
+        else:
+            form.fields['specializations'].queryset = form.fields['specializations'].queryset.none()
+
+        return form
 
     def get_success_url(self):
         return reverse_lazy('lesson-details', kwargs={
@@ -87,7 +103,6 @@ class LessonEditView(views.UpdateView):
             result = reverse_lazy('lesson-details', kwargs={
                 'pk': self.object.pk,
             })
-
             return redirect(result)
 
         return result
@@ -101,19 +116,28 @@ class OwnLessonView(views.ListView):
     def get_queryset(self, *args, **kwargs):
         search_form = LessonSearchForm(self.request.GET)
         search_pattern = None
-        if search_form.is_valid():
-            search_pattern = search_form.cleaned_data['lesson_title']
+        specialization = None
 
-        queryset = Lesson.objects.filter(teacher=self.request.user)
+        queryset = Lesson.objects.filter(
+            teacher=self.request.user
+        ).prefetch_related('specializations')
+
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data.get('lesson_title')
+            specialization = search_form.cleaned_data.get('specialization')
+
         if search_pattern:
             queryset = queryset.filter(
                 Q(title__icontains=search_pattern)
-                | Q(subject__icontains=search_pattern),
             )
-        return queryset
+
+        if specialization:
+            queryset = queryset.filter(specializations=specialization)
+
+        return queryset.distinct()
 
     def get(self, request, *args, **kwargs):
-        result = super().get(request, *args, *kwargs)
+        result = super().get(request, *args, **kwargs)
 
         if request.user.user_type == 'student':
             return redirect('index')

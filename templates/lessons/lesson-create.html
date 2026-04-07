@@ -1,12 +1,81 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="auth-form-container">
     <h2>Add Lesson</h2>
+
     <form class="auth-form" method="post" action="{% url 'lesson-add' %}" enctype="multipart/form-data">
-            {{ form.as_p }}
-            {% csrf_token %}
+        {% csrf_token %}
+
+        <p>
+            {{ form.title.label_tag }}
+            {{ form.title }}
+            {% if form.title.errors %}
+                <span class="field-error">{{ form.title.errors.0 }}</span>
+            {% endif %}
+        </p>
+
+        <div class="spec-picker-wrap">
+            <label class="spec-picker-label">Specializations:</label>
+
+            {% if form.specializations.errors %}
+                <span class="field-error">{{ form.specializations.errors.0 }}</span>
+            {% endif %}
+
+            <div class="spec-picker" id="specPicker">
+                <div class="spec-selected" id="specSelected"></div>
+
+                <input
+                    type="text"
+                    id="specSearch"
+                    class="spec-search-input"
+                    placeholder="Search specializations..."
+                    autocomplete="off"
+                >
+
+                <div class="spec-dropdown" id="specDropdown">
+                    {% for choice in form.specializations.field.queryset %}
+                        <div
+                            class="spec-option"
+                            data-value="{{ choice.pk }}"
+                            data-label="{{ choice.name|lower }}"
+                            data-text="{{ choice.name }}"
+                        >
+                            {{ choice.name }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="spec-hidden-inputs">
+                {% for checkbox in form.specializations %}
+                    <div class="spec-hidden-checkbox">
+                        {{ checkbox.tag }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <p>
+            {{ form.price.label_tag }}
+            {{ form.price }}
+            {% if form.price.errors %}
+                <span class="field-error">{{ form.price.errors.0 }}</span>
+            {% endif %}
+        </p>
+
+        <div>
+            {{ form.cover_image.label_tag }}
+            {{ form.cover_image }}
+            {% if form.cover_image.errors %}
+                <span class="field-error">{{ form.cover_image.errors.0 }}</span>
+            {% endif %}
+        </div>
+
         <button type="submit">Add Lesson</button>
     </form>
 </div>
+
+<script src="{% static 'js/specialization-picker.js' %}"></script>
 {% endblock %}

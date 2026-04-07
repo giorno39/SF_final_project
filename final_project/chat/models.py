@@ -16,6 +16,13 @@ class Conversation(models.Model):
         blank=True,
         related_name='conversations',
     )
+    lesson = models.ForeignKey(
+        'lessons.Lesson',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='conversations',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

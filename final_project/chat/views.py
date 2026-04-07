@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Max
-from django.views import generic as views
+from django.shortcuts import get_object_or_404, redirect
+from django.views import View, generic as views
 
 from final_project.chat.models import Conversation, Message
+from final_project.lessons.models import Lesson
 
 
 class InboxView(LoginRequiredMixin, views.ListView):
@@ -50,3 +52,33 @@ class ConversationView(LoginRequiredMixin, views.DetailView):
         ).exclude(sender=self.request.user).update(is_read=True)
 
         return context
+
+
+class StartLessonConversationView(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        lesson = get_object_or_404(Lesson.objects.select_related('teacher'), pk=pk)
+        other_user = lesson.teacher
+
+        if request.user == other_user:
+            return redirect('lesson-details', pk=lesson.pk)
+
+        existing_conversation = None
+
+        candidate_conversations = (
+            Conversation.objects
+            .filter(term_paper__isnull=True, participants=request.user)
+            .prefetch_related('participants')
+            .distinct()
+        )
+
+        for conversation in candidate_conversations:
+            participant_ids = set(conversation.participants.values_list('id', flat=True))
+            if participant_ids == {request.user.id, other_user.id}:
+                existing_conversation = conversation
+                break
+
+        if existing_conversation is None:
+            existing_conversation = Conversation.objects.create()
+            existing_conversation.participants.add(request.user, other_user)
+
+        return redirect('chat-conversation', pk=existing_conversation.pk)
