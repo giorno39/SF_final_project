@@ -1,118 +1,118 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<section class="container lessons-wrap">
+<section class="lesson-feed">
+  <div class="container lesson-feed-inner">
 
-  <form class="search-form search-form-stacked" method="get" action="{% url 'completed_paper-index' %}">
-    <label class="search-form-label" for="{{ search_form.completed_title.id_for_label }}">
-      Completed title
-    </label>
+    <h1 class="lesson-feed-title">{{ completed_paper_feed_title|default:"Completed Papers Feed" }}</h1>
 
-    <div class="search-bar">
-      {{ search_form.completed_title }}
-      <button class="btn" type="submit">search</button>
-    </div>
-    {% csrf_token %}
-  </form>
-
-  <div class="lessons-grid">
-    {% for object in object_list %}
-      <article class="term-paper-card paper-card-enhanced paper-card-compact">
-        <header class="paper-card-header">
-          <div>
-            <h2 class="paper-card-title">{{ object.title }}</h2>
-            <p class="paper-card-university">{{ object.university }}</p>
-          </div>
-        </header>
-
-        <div class="paper-card-specs-block">
-          <span class="paper-meta-label">Specializations</span>
-          <div class="paper-card-specs">
-            {% for spec in object.specializations.all %}
-              <span class="paper-spec-pill">{{ spec.name }}</span>
-            {% empty %}
-              <span class="paper-spec-empty">No specializations</span>
-            {% endfor %}
-          </div>
-        </div>
-
-        <div class="paper-card-meta">
-          <div class="paper-meta-row">
-            <span class="paper-meta-label">Completed by</span>
-            <span class="paper-meta-value">
-              {% if object.completed_by and object.completed_by.first_name or object.completed_by and object.completed_by.last_name %}
-                {{ object.completed_by.first_name }} {{ object.completed_by.last_name }}
-              {% elif object.completed_by %}
-                {{ object.completed_by.username }}
-              {% else %}
-                Unknown
-              {% endif %}
-            </span>
-          </div>
-        </div>
-
-        <div class="lesson-actions">
-          <a class="main-card-link" href="{% url 'completed-paper-details' pk=object.pk %}">Details</a>
-        </div>
-      </article>
-    {% empty %}
-      <div class="search-empty-state">
-        <h3 class="search-empty-state-title">No completed papers found</h3>
-        <p class="search-empty-state-text">
-          Try another title or clear the search to see all completed papers.
-        </p>
+    <form class="search-form" method="get" action="{% url 'completed_paper-index' %}">
+      <div class="search-bar">
+        {{ search_form.completed_title }}
+        {{ search_form.specialization }}
+        <button class="btn" type="submit">Search</button>
       </div>
-    {% endfor %}
-  </div>
+    </form>
 
-  {% if page_obj.paginator.num_pages > 1 %}
-    <nav class="pager" aria-label="Pagination">
-      {% if page_obj.has_previous %}
-        <a class="page-btn" href="?page={{ page_obj.previous_page_number }}">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
-        </a>
-      {% else %}
-        <span class="page-btn is-disabled">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
-        </span>
-      {% endif %}
+    <div class="lessons-grid">
+      {% for object in object_list %}
+        <article class="term-paper-card paper-card-enhanced paper-card-compact">
+          <header class="paper-card-header">
+            <div>
+              <h2 class="paper-card-title">{{ object.title }}</h2>
+              <p class="paper-card-university">{{ object.university }}</p>
+            </div>
+          </header>
 
-      {% if page_obj.number > 2 %}
-        <a class="page-btn" href="?page=1">1</a>
-      {% endif %}
+          <div class="paper-card-specs-block">
+            <span class="paper-meta-label">Specializations</span>
+            <div class="paper-card-specs">
+              {% for spec in object.specializations.all %}
+                <span class="paper-spec-pill">{{ spec.name }}</span>
+              {% empty %}
+                <span class="paper-spec-empty">No specializations</span>
+              {% endfor %}
+            </div>
+          </div>
 
-      {% if page_obj.number > 3 %}
-        <span class="page-btn is-disabled">…</span>
-      {% endif %}
+          <div class="paper-card-meta">
+            <div class="paper-meta-row">
+              <span class="paper-meta-label">Completed by</span>
+              <span class="paper-meta-value">
+                {% if object.completed_by and object.completed_by.first_name or object.completed_by and object.completed_by.last_name %}
+                  {{ object.completed_by.first_name }} {{ object.completed_by.last_name }}
+                {% elif object.completed_by %}
+                  {{ object.completed_by.username }}
+                {% else %}
+                  Unknown
+                {% endif %}
+              </span>
+            </div>
+          </div>
 
-      {% for n in page_obj.paginator.page_range %}
-        {% if n >= page_obj.number|add:'-1' and n <= page_obj.number|add:'1' %}
-          {% if n == page_obj.number %}
-            <span class="page-btn is-active">{{ n }}</span>
-          {% else %}
-            <a class="page-btn" href="?page={{ n }}">{{ n }}</a>
-          {% endif %}
-        {% endif %}
+          <div class="lesson-actions">
+            <a class="main-card-link" href="{% url 'completed-paper-details' pk=object.pk %}">Details</a>
+          </div>
+        </article>
+      {% empty %}
+        <div class="search-empty-state">
+          <h3 class="search-empty-state-title">No completed papers found</h3>
+          <p class="search-empty-state-text">
+            Try a different title or specialization, or clear the filters and browse all completed papers.
+          </p>
+        </div>
       {% endfor %}
+    </div>
 
-      {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
-        <span class="page-btn is-disabled">…</span>
-      {% endif %}
+    {% if page_obj.paginator.num_pages > 1 %}
+      <nav class="pager" aria-label="Pagination">
+        {% if page_obj.has_previous %}
+          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
+          </a>
+        {% else %}
+          <span class="page-btn is-disabled">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
+          </span>
+        {% endif %}
 
-      {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
-        <a class="page-btn" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
-      {% endif %}
+        {% if page_obj.number > 2 %}
+          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page=1">1</a>
+        {% endif %}
 
-      {% if page_obj.has_next %}
-        <a class="page-btn" href="?page={{ page_obj.next_page_number }}">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4-9.4-9.4-24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
-        </a>
-      {% else %}
-        <span class="page-btn is-disabled">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4-9.4-9.4-24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
-        </span>
-      {% endif %}
-    </nav>
-  {% endif %}
+        {% if page_obj.number > 3 %}
+          <span class="page-btn is-disabled">…</span>
+        {% endif %}
+
+        {% for n in page_obj.paginator.page_range %}
+          {% if n >= page_obj.number|add:'-1' and n <= page_obj.number|add:'1' %}
+            {% if n == page_obj.number %}
+              <span class="page-btn is-active">{{ n }}</span>
+            {% else %}
+              <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ n }}">{{ n }}</a>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+          <span class="page-btn is-disabled">…</span>
+        {% endif %}
+
+        {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
+          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.next_page_number }}">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4-9.4-9.4-24.6 0-33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
+          </a>
+        {% else %}
+          <span class="page-btn is-disabled">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4-9.4-9.4-24.6 0-33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
+          </span>
+        {% endif %}
+      </nav>
+    {% endif %}
+  </div>
 </section>
 {% endblock %}

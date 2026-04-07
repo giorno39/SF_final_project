@@ -30,6 +30,11 @@ from django.views.decorators.http import require_POST
 
 UserModel = get_user_model()
 
+def _term_paper_feed_querystring(request):
+    q = request.GET.copy()
+    q.pop('page', None)
+    return q.urlencode()
+
 def get_or_create_teacher_profile(user):
     teacher_profile, _ = TeacherProfile.objects.get_or_create(user=user)
     return teacher_profile
@@ -74,8 +79,7 @@ class TermPaperIndexView(views.ListView):
     def get_queryset(self, *args, **kwargs):
         search_form = TermPaperSearchForm(self.request.GET)
         search_pattern = None
-        if search_form.is_valid():
-            search_pattern = search_form.cleaned_data['paper_title']
+        specialization = None
 
         queryset = (
             TermPaper.objects
@@ -87,19 +91,27 @@ class TermPaperIndexView(views.ListView):
             .exclude(
                 requests__status=TermPaperRequest.StatusChoices.PENDING,
             )
+            .prefetch_related('specializations')
             .distinct()
         )
+
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data.get('paper_title')
+            specialization = search_form.cleaned_data.get('specialization')
 
         if search_pattern:
             queryset = queryset.filter(title__icontains=search_pattern)
 
-        return queryset
+        if specialization:
+            queryset = queryset.filter(specializations=specialization)
+
+        return queryset.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context['search_form'] = TermPaperSearchForm(self.request.GET)
-
+        context['term_paper_feed_title'] = 'Term Paper Discovery Feed'
+        context['get_params'] = _term_paper_feed_querystring(self.request)
         return context
 
 

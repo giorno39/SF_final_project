@@ -6,6 +6,10 @@ from final_project import settings
 from final_project.completed_papers.forms import CompletedPaperSearchForm
 from final_project.completed_papers.models import CompletedPaper
 
+def _completed_paper_feed_querystring(request):
+    q = request.GET.copy()
+    q.pop('page', None)
+    return q.urlencode()
 
 class CompletedPapersIndexView(views.ListView):
     model = CompletedPaper
@@ -15,8 +19,7 @@ class CompletedPapersIndexView(views.ListView):
     def get_queryset(self):
         search_form = CompletedPaperSearchForm(self.request.GET)
         search_pattern = None
-        if search_form.is_valid():
-            search_pattern = search_form.cleaned_data['completed_title']
+        specialization = None
 
         completed_papers = (
             CompletedPaper.objects
@@ -24,14 +27,23 @@ class CompletedPapersIndexView(views.ListView):
             .prefetch_related('specializations')
         )
 
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data.get('completed_title')
+            specialization = search_form.cleaned_data.get('specialization')
+
         if search_pattern:
             completed_papers = completed_papers.filter(title__icontains=search_pattern)
 
-        return completed_papers
+        if specialization:
+            completed_papers = completed_papers.filter(specializations=specialization)
+
+        return completed_papers.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = CompletedPaperSearchForm(self.request.GET)
+        context['completed_paper_feed_title'] = 'Completed Papers Feed'
+        context['get_params'] = _completed_paper_feed_querystring(self.request)
         return context
 
 
