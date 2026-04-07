@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-+ggl=+_-t^5&@no!75iv*3x7kqjt7rh6(bj@4u&8=a7#hzmtdx'
 
-DEBUG = 'TRUE'
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -126,9 +126,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    BASE_DIR / 'staticfiles',
-)
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -140,8 +142,7 @@ LOGIN_REDIRECT_URL = 'index'
 AUTH_USER_MODEL = 'accounts.AppUser'
 
 MEDIA_URL = '/media/'
-
-MEDIA_ROOT = 'final_project/mediafiles/term_papers'
+MEDIA_ROOT = BASE_DIR / 'final_project' / 'media_files'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
