@@ -1,117 +1,117 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<section class="container lessons-wrap">
+<section class="lesson-feed">
+  <div class="container lesson-feed-inner">
 
-  <form class="search-form search-form-stacked" method="get" action="{% url 'term-paper-index' %}">
-    <label class="search-form-label" for="{{ search_form.paper_title.id_for_label }}">
-      Paper title
-    </label>
+    <h1 class="lesson-feed-title">{{ term_paper_feed_title|default:"Term Paper Discovery Feed" }}</h1>
 
-    <div class="search-bar">
-      {{ search_form.paper_title }}
-      <button class="btn" type="submit">search</button>
-    </div>
-    {% csrf_token %}
-  </form>
-
-  <div class="lessons-grid">
-    {% for object in object_list %}
-      <article class="term-paper-card paper-card-enhanced paper-card-compact">
-        <header class="paper-card-header">
-          <div>
-            <h2 class="paper-card-title">{{ object.title }}</h2>
-            <p class="paper-card-university">{{ object.university }}</p>
-          </div>
-
-          {% if object.completed %}
-            <span class="badge">Completed</span>
-          {% endif %}
-        </header>
-
-        <div class="paper-card-specs-block">
-          <span class="paper-meta-label">Specializations</span>
-          <div class="paper-card-specs">
-            {% for spec in object.specializations.all %}
-              <span class="paper-spec-pill">{{ spec.name }}</span>
-            {% empty %}
-              <span class="paper-spec-empty">No specializations</span>
-            {% endfor %}
-          </div>
-        </div>
-
-        <div class="paper-card-meta">
-          <div class="paper-meta-row">
-            <span class="paper-meta-label">Deadline</span>
-            <span class="paper-meta-value">{{ object.death_line }}</span>
-          </div>
-
-          <div class="paper-meta-row">
-            <span class="paper-meta-label">Price cap</span>
-            <span class="paper-meta-value">{{ object.price_cap }}</span>
-          </div>
-        </div>
-
-        <div class="lesson-actions">
-          <a class="main-card-link" href="{% url 'term-paper-details' pk=object.pk %}">
-            Details
-          </a>
-        </div>
-      </article>
-    {% empty %}
-      <div class="search-empty-state">
-        <h3 class="search-empty-state-title">No term papers found</h3>
-        <p class="search-empty-state-text">
-          Try a different title or clear the search and browse all available papers.
-        </p>
+    <form class="search-form" method="get" action="{% url 'term-paper-index' %}">
+      <div class="search-bar">
+        {{ search_form.paper_title }}
+        {{ search_form.specialization }}
+        <button class="btn" type="submit">Search</button>
       </div>
-    {% endfor %}
-  </div>
+    </form>
 
-  {% if page_obj.paginator.num_pages > 1 %}
-    <nav class="pager" aria-label="Pagination">
+    <div class="lessons-grid">
+      {% for object in object_list %}
+        <article class="term-paper-card paper-card-enhanced paper-card-compact">
+          <header class="paper-card-header">
+            <div>
+              <h2 class="paper-card-title">{{ object.title }}</h2>
+              <p class="paper-card-university">{{ object.university }}</p>
+            </div>
 
-      {% if page_obj.has_previous %}
-        <a class="page-btn" href="?page={{ page_obj.previous_page_number }}">‹</a>
-      {% else %}
-        <span class="page-btn is-disabled">‹</span>
-      {% endif %}
+            {% if object.completed %}
+              <span class="badge">Completed</span>
+            {% endif %}
+          </header>
 
-      {% if page_obj.number > 2 %}
-        <a class="page-btn" href="?page=1">1</a>
-      {% endif %}
+          <div class="paper-card-specs-block">
+            <span class="paper-meta-label">Specializations</span>
+            <div class="paper-card-specs">
+              {% for spec in object.specializations.all %}
+                <span class="paper-spec-pill">{{ spec.name }}</span>
+              {% empty %}
+                <span class="paper-spec-empty">No specializations</span>
+              {% endfor %}
+            </div>
+          </div>
 
-      {% if page_obj.number > 3 %}
-        <span class="page-btn is-disabled">…</span>
-      {% endif %}
+          <div class="paper-card-meta">
+            <div class="paper-meta-row">
+              <span class="paper-meta-label">Deadline</span>
+              <span class="paper-meta-value">{{ object.death_line }}</span>
+            </div>
 
-      {% for n in page_obj.paginator.page_range %}
-        {% if n >= page_obj.number|add:'-1' and n <= page_obj.number|add:'1' %}
-          {% if n == page_obj.number %}
-            <span class="page-btn is-active">{{ n }}</span>
-          {% else %}
-            <a class="page-btn" href="?page={{ n }}">{{ n }}</a>
-          {% endif %}
-        {% endif %}
+            <div class="paper-meta-row">
+              <span class="paper-meta-label">Price cap</span>
+              <span class="paper-meta-value">{{ object.price_cap }}</span>
+            </div>
+          </div>
+
+          <div class="lesson-actions">
+            <a class="main-card-link" href="{% url 'term-paper-details' pk=object.pk %}">
+              Details
+            </a>
+          </div>
+        </article>
+      {% empty %}
+        <div class="search-empty-state">
+          <h3 class="search-empty-state-title">No term papers found</h3>
+          <p class="search-empty-state-text">
+            Try a different title or specialization, or clear the filters and browse all available papers.
+          </p>
+        </div>
       {% endfor %}
+    </div>
 
-      {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
-        <span class="page-btn is-disabled">…</span>
-      {% endif %}
+    {% if page_obj.paginator.num_pages > 1 %}
+      <nav class="pager" aria-label="Pagination">
 
-      {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
-        <a class="page-btn" href="?page={{ page_obj.paginator.num_pages }}">
-          {{ page_obj.paginator.num_pages }}
-        </a>
-      {% endif %}
+        {% if page_obj.has_previous %}
+          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">‹</a>
+        {% else %}
+          <span class="page-btn is-disabled">‹</span>
+        {% endif %}
 
-      {% if page_obj.has_next %}
-        <a class="page-btn" href="?page={{ page_obj.next_page_number }}">›</a>
-      {% else %}
-        <span class="page-btn is-disabled">›</span>
-      {% endif %}
+        {% if page_obj.number > 2 %}
+          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page=1">1</a>
+        {% endif %}
 
-    </nav>
-  {% endif %}
+        {% if page_obj.number > 3 %}
+          <span class="page-btn is-disabled">…</span>
+        {% endif %}
+
+        {% for n in page_obj.paginator.page_range %}
+          {% if n >= page_obj.number|add:'-1' and n <= page_obj.number|add:'1' %}
+            {% if n == page_obj.number %}
+              <span class="page-btn is-active">{{ n }}</span>
+            {% else %}
+              <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ n }}">{{ n }}</a>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+          <span class="page-btn is-disabled">…</span>
+        {% endif %}
+
+        {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
+          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.paginator.num_pages }}">
+            {{ page_obj.paginator.num_pages }}
+          </a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.next_page_number }}">›</a>
+        {% else %}
+          <span class="page-btn is-disabled">›</span>
+        {% endif %}
+
+      </nav>
+    {% endif %}
+  </div>
 </section>
 {% endblock %}

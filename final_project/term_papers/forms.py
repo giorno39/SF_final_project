@@ -2,6 +2,7 @@ from datetime import date
 
 from django import forms
 
+from final_project.accounts.models import Specialization
 from final_project.term_papers.models import TermPaper
 
 
@@ -49,5 +50,16 @@ class TermPaperSearchForm(forms.Form):
     paper_title = forms.CharField(
         max_length=TermPaper.TERM_PAPER_MAX_LEN,
         required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Search term papers…'}),
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Search by title...',
+                'autocomplete': 'off',
+            }
+        ),
+    )
+
+    specialization = forms.ModelChoiceField(
+        queryset=Specialization.objects.all(),
+        required=False,
+        empty_label='All specializations',
     )
