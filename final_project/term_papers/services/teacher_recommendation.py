@@ -12,6 +12,7 @@ from final_project.ai.client import get_openai_client
 
 UserModel = get_user_model()
 
+DEBUG_EMPTY_AI_SENTINEL = True
 
 def _safe_float(value, default=0.0):
     try:
@@ -160,10 +161,13 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
         "teachers": candidates,
         "task": (
             f"Rank the best {result_size} teachers for this term paper. "
+            f"There are {len(candidates)} candidate teachers available. "
+            "You must return at least 1 recommendation and at most "
+            f"{min(result_size, len(candidates))}. "
+            "Do not return an empty recommendations list if any teachers are provided. "
+            "If no teacher is a perfect fit, return the best available matches anyway. "
             "Use semantic similarity between the paper topic and teacher background, "
-            "but also consider trust score, trophy ratings, and relevant completed papers. "
-            "A teacher does not need to have an exact specialization match to still be a good fit. "
-            "Return JSON only."
+            "but also consider trust score, trophy ratings, and relevant completed papers."
         ),
     }
 
@@ -195,22 +199,51 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
                     "    }\n"
                     "  ]\n"
                     "}\n\n"
+                    "Rules:\n"
+                    f"- You have {len(candidates)} available teachers.\n"
+                    f"- Return between 1 and {min(result_size, len(candidates))} recommendations.\n"
+                    "- Never return an empty recommendations array when teachers are provided.\n"
+                    "- Pick the best available matches even if the fit is imperfect.\n"
+                    "- Return valid JSON only.\n\n"
                     f"Here is the data:\n{json.dumps(prompt_payload, ensure_ascii=False)}"
                 ),
             },
         ],
     )
 
-    raw_text = response.output_text.strip()
+    raw_text = (response.output_text or "").strip()
+
+    print("RAW AI TEXT:", repr(raw_text))
+    print("CANDIDATE IDS:", [candidate["teacher_id"] for candidate in candidates])
+
+    if not raw_text:
+        if DEBUG_EMPTY_AI_SENTINEL:
+            return _build_ai_debug_recommendation(
+                "empty-output",
+                "DEBUG: response.output_text was empty.",
+            )
+        return []
 
     try:
         parsed = json.loads(raw_text)
     except json.JSONDecodeError:
+        if DEBUG_EMPTY_AI_SENTINEL:
+            return _build_ai_debug_recommendation(
+                "invalid-json",
+                f"DEBUG: json.loads failed. Raw text: {raw_text[:180]}",
+            )
         return []
 
     recommendations = parsed.get("recommendations", [])
 
+    print("PARSED RECOMMENDATIONS:", recommendations)
+
     if not isinstance(recommendations, list):
+        if DEBUG_EMPTY_AI_SENTINEL:
+            return _build_ai_debug_recommendation(
+                "wrong-shape",
+                "DEBUG: Parsed JSON, but recommendations was not a list.",
+            )
         return []
 
     cleaned_recommendations = []
@@ -225,6 +258,12 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
             continue
 
         teacher_id = item.get("teacher_id")
+        print("AI teacher_id before cast:", teacher_id, type(teacher_id))
+
+        try:
+            teacher_id = int(teacher_id)
+        except (TypeError, ValueError):
+            continue
 
         if teacher_id not in candidate_map:
             continue
@@ -247,8 +286,34 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
             "reason": item.get("reason", "").strip(),
         })
 
+    if not cleaned_recommendations:
+        if DEBUG_EMPTY_AI_SENTINEL:
+            return _build_ai_debug_recommendation(
+                "candidate-mismatch",
+                "DEBUG: AI returned recommendations, but none matched backend candidate IDs.",
+            )
+        return []
+
     cleaned_recommendations.sort(
         key=lambda x: (x["rank"] is None, x["rank"])
     )
 
     return cleaned_recommendations
+
+
+def _build_ai_debug_recommendation(code, reason):
+    return [{
+        "teacher_id": -99999,
+        "teacher_name": f"DEBUG: {code}",
+        "email": f"{code}@debug.local",
+        "specializations": ["DEBUG"],
+        "trust_score": 0,
+        "avg_trophy_rate": 0,
+        "trophy_count": 0,
+        "completed_papers_count": 0,
+        "relevant_completed_papers_count": 0,
+        "base_score": 0,
+        "rank": 1,
+        "score": 0,
+        "reason": reason,
+    }]

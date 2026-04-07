@@ -73,14 +73,16 @@
               <strong>Why this teacher:</strong> {{ recommendation.reason }}
             </p>
 
-            {% if recommendation.teacher_id in requested_teacher_ids %}
-              <span class="badge">Pending request</span>
-            {% else %}
-              <form method="post" action="{% url 'send-term-paper-request' pk=term_paper.pk teacher_pk=recommendation.teacher_id %}">
-                {% csrf_token %}
-                <button class="main-card-link" type="submit">Request help</button>
-              </form>
-            {% endif %}
+                {% if recommendation.email|slice:"-12:" == "@debug.local" %}
+                  <span class="badge">Debug result only</span>
+                {% elif recommendation.teacher_id in requested_teacher_ids %}
+                  <span class="badge">Pending request</span>
+                {% else %}
+                  <form method="post" action="{% url 'send-term-paper-request' pk=term_paper.pk teacher_pk=recommendation.teacher_id %}">
+                    {% csrf_token %}
+                    <button class="main-card-link" type="submit">Request help</button>
+                  </form>
+                {% endif %}
         </div>
         {% endfor %}
       </div>
