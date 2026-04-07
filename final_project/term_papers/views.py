@@ -466,9 +466,10 @@ class TermPaperRequestTeacherListView(views.DetailView):
 
         ai_recommendations = []
         ai_error = None
+        has_fallen_back = True
 
         try:
-            ai_recommendations = rank_teachers_with_ai(
+            has_fallen_back, ai_recommendations = rank_teachers_with_ai(
                 term_paper=self.object,
                 shortlist_size=8,
                 result_size=3,
@@ -477,6 +478,7 @@ class TermPaperRequestTeacherListView(views.DetailView):
             ai_error = str(exc)
 
         context['requested_teacher_ids'] = requested_teacher_ids
+        context['has_fallen_back'] = has_fallen_back
         context['ai_recommendations'] = ai_recommendations
         context['ai_error'] = ai_error
 

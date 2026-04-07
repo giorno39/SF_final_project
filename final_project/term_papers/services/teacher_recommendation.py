@@ -12,6 +12,7 @@ from final_project.ai.client import get_openai_client
 
 UserModel = get_user_model()
 
+DEBUG_EMPTY_AI_SENTINEL = True
 
 def _safe_float(value, default=0.0):
     try:
@@ -137,6 +138,26 @@ def get_pre_ranked_teacher_candidates(term_paper, shortlist_size=8):
     return candidates[:shortlist_size]
 
 
+def _fallback_recommendations(candidates, result_size):
+    return (True, [
+        {
+            "teacher_id": c["teacher_id"],
+            "teacher_name": c["teacher_name"],
+            "email": c["email"],
+            "specializations": c["specializations"],
+            "trust_score": c["trust_score"],
+            "avg_trophy_rate": c["avg_trophy_rate"],
+            "trophy_count": c["trophy_count"],
+            "completed_papers_count": c["completed_papers_count"],
+            "relevant_completed_papers_count": c["relevant_completed_papers_count"],
+            "base_score": c["base_score"],
+            "rank": i + 1,
+            "score": None,
+            "reason": "Fallback: top pre-ranked teacher.",
+        }
+        for i, c in enumerate(candidates[:result_size])
+    ])
+
 def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
     candidates = get_pre_ranked_teacher_candidates(
         term_paper=term_paper,
@@ -160,10 +181,13 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
         "teachers": candidates,
         "task": (
             f"Rank the best {result_size} teachers for this term paper. "
+            f"There are {len(candidates)} candidate teachers available. "
+            "You must return at least 1 recommendation and at most "
+            f"{min(result_size, len(candidates))}. "
+            "Do not return an empty recommendations list if any teachers are provided. "
+            "If no teacher is a perfect fit, return the best available matches anyway. "
             "Use semantic similarity between the paper topic and teacher background, "
-            "but also consider trust score, trophy ratings, and relevant completed papers. "
-            "A teacher does not need to have an exact specialization match to still be a good fit. "
-            "Return JSON only."
+            "but also consider trust score, trophy ratings, and relevant completed papers."
         ),
     }
 
@@ -195,23 +219,34 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
                     "    }\n"
                     "  ]\n"
                     "}\n\n"
+                    "Rules:\n"
+                    f"- You have {len(candidates)} available teachers.\n"
+                    f"- Return between 1 and {min(result_size, len(candidates))} recommendations.\n"
+                    "- Never return an empty recommendations array when teachers are provided.\n"
+                    "- Pick the best available matches even if the fit is imperfect.\n"
+                    "- Return valid JSON only.\n\n"
                     f"Here is the data:\n{json.dumps(prompt_payload, ensure_ascii=False)}"
                 ),
             },
         ],
     )
 
-    raw_text = response.output_text.strip()
+    raw_text = (response.output_text or "").strip()
+
+    print("RAW AI TEXT:", repr(raw_text))
+    print("CANDIDATE IDS:", [candidate["teacher_id"] for candidate in candidates])
+
+    if not raw_text:
+        return _fallback_recommendations(candidates, result_size)
 
     try:
         parsed = json.loads(raw_text)
     except json.JSONDecodeError:
-        return []
+        return _fallback_recommendations(candidates, result_size)
 
     recommendations = parsed.get("recommendations", [])
 
-    if not isinstance(recommendations, list):
-        return []
+    print("PARSED RECOMMENDATIONS:", recommendations)
 
     cleaned_recommendations = []
 
@@ -220,11 +255,17 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
         for candidate in candidates
     }
 
-    for item in recommendations[:result_size]:
+    for item in recommendations:
         if not isinstance(item, dict):
             continue
 
         teacher_id = item.get("teacher_id")
+        print("AI teacher_id before cast:", teacher_id, type(teacher_id))
+
+        try:
+            teacher_id = int(teacher_id)
+        except (TypeError, ValueError):
+            continue
 
         if teacher_id not in candidate_map:
             continue
@@ -247,8 +288,11 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
             "reason": item.get("reason", "").strip(),
         })
 
+    if not cleaned_recommendations:
+        return _fallback_recommendations(candidates, result_size)
+
     cleaned_recommendations.sort(
         key=lambda x: (x["rank"] is None, x["rank"])
     )
 
-    return cleaned_recommendations
+    return False, cleaned_recommendations[:result_size]
