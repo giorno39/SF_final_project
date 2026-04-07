@@ -138,6 +138,26 @@ def get_pre_ranked_teacher_candidates(term_paper, shortlist_size=8):
     return candidates[:shortlist_size]
 
 
+def _fallback_recommendations(candidates, result_size):
+    return (True, [
+        {
+            "teacher_id": c["teacher_id"],
+            "teacher_name": c["teacher_name"],
+            "email": c["email"],
+            "specializations": c["specializations"],
+            "trust_score": c["trust_score"],
+            "avg_trophy_rate": c["avg_trophy_rate"],
+            "trophy_count": c["trophy_count"],
+            "completed_papers_count": c["completed_papers_count"],
+            "relevant_completed_papers_count": c["relevant_completed_papers_count"],
+            "base_score": c["base_score"],
+            "rank": i + 1,
+            "score": None,
+            "reason": "Fallback: top pre-ranked teacher.",
+        }
+        for i, c in enumerate(candidates[:result_size])
+    ])
+
 def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
     candidates = get_pre_ranked_teacher_candidates(
         term_paper=term_paper,
@@ -217,34 +237,16 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
     print("CANDIDATE IDS:", [candidate["teacher_id"] for candidate in candidates])
 
     if not raw_text:
-        if DEBUG_EMPTY_AI_SENTINEL:
-            return _build_ai_debug_recommendation(
-                "empty-output",
-                "DEBUG: response.output_text was empty.",
-            )
-        return []
+        return _fallback_recommendations(candidates, result_size)
 
     try:
         parsed = json.loads(raw_text)
     except json.JSONDecodeError:
-        if DEBUG_EMPTY_AI_SENTINEL:
-            return _build_ai_debug_recommendation(
-                "invalid-json",
-                f"DEBUG: json.loads failed. Raw text: {raw_text[:180]}",
-            )
-        return []
+        return _fallback_recommendations(candidates, result_size)
 
     recommendations = parsed.get("recommendations", [])
 
     print("PARSED RECOMMENDATIONS:", recommendations)
-
-    if not isinstance(recommendations, list):
-        if DEBUG_EMPTY_AI_SENTINEL:
-            return _build_ai_debug_recommendation(
-                "wrong-shape",
-                "DEBUG: Parsed JSON, but recommendations was not a list.",
-            )
-        return []
 
     cleaned_recommendations = []
 
@@ -253,7 +255,7 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
         for candidate in candidates
     }
 
-    for item in recommendations[:result_size]:
+    for item in recommendations:
         if not isinstance(item, dict):
             continue
 
@@ -287,33 +289,10 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
         })
 
     if not cleaned_recommendations:
-        if DEBUG_EMPTY_AI_SENTINEL:
-            return _build_ai_debug_recommendation(
-                "candidate-mismatch",
-                "DEBUG: AI returned recommendations, but none matched backend candidate IDs.",
-            )
-        return []
+        return _fallback_recommendations(candidates, result_size)
 
     cleaned_recommendations.sort(
         key=lambda x: (x["rank"] is None, x["rank"])
     )
 
-    return cleaned_recommendations
-
-
-def _build_ai_debug_recommendation(code, reason):
-    return [{
-        "teacher_id": -99999,
-        "teacher_name": f"DEBUG: {code}",
-        "email": f"{code}@debug.local",
-        "specializations": ["DEBUG"],
-        "trust_score": 0,
-        "avg_trophy_rate": 0,
-        "trophy_count": 0,
-        "completed_papers_count": 0,
-        "relevant_completed_papers_count": 0,
-        "base_score": 0,
-        "rank": 1,
-        "score": 0,
-        "reason": reason,
-    }]
+    return False, cleaned_recommendations[:result_size]

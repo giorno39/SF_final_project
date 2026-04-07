@@ -1,100 +1,101 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<section class="container lessons-wrap">
-  <div class="lesson-card">
-    <header class="lesson-header">
-      <div class="lesson-avatar">✉</div>
-      <div>
-        <h1 class="lesson-title">Request a teacher</h1>
-        <p class="lesson-sub">
-          Choose a teacher for: <strong>{{ term_paper.title }}</strong>
-        </p>
-      </div>
-    </header>
+    <section class="container lessons-wrap">
+        <div class="lesson-card">
+            <header class="lesson-header">
+                <div class="lesson-avatar">✉</div>
+                <div>
+                    <h1 class="lesson-title">Request a teacher</h1>
+                    <p class="lesson-sub">
+                        Choose a teacher for: <strong>{{ term_paper.title }}</strong>
+                    </p>
+                </div>
+            </header>
 
-    {% if messages %}
-      {% for message in messages %}
-        <p class="field-error">{{ message }}</p>
-      {% endfor %}
-    {% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="field-error">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
 
-    {% if ai_recommendations %}
-      <h2 class="lesson-title" style="margin-top: 1rem;">Top AI recommendations</h2>
-      <p class="lesson-sub" style="margin-bottom: 1rem;">
-        These teachers are ranked as the best fit based on the paper topic, specializations,
-        previous completed papers, trust score, and trophies.
-      </p>
+            {% if not has_fallen_back %}
+                <h2 class="lesson-title" style="margin-top: 1rem;">Top AI recommendations</h2>
 
-<div class="lesson-card">
-  {% for recommendation in ai_recommendations %}
-    <div class="term-paper-card">
-            <p class="term-paper-card-p">
-              <strong>Rank:</strong> #{{ recommendation.rank }}
+            {% elif ai_error %}
+                <p class="field-error" style="margin-top: 1rem;">
+                    AI recommendations are temporarily unavailable.
+                </p>
+            {% endif %}
+            <p class="lesson-sub" style="margin-bottom: 1rem;">
+                These teachers are ranked as the best fit based on the paper topic, specializations,
+                previous completed papers, trust score, and trophies.
             </p>
 
-            <p class="term-paper-card-p">
-              <strong>Name:</strong> {{ recommendation.teacher_name }}
-            </p>
+            {% if ai_recommendations %}
+                <div class="lesson-card">
+                    {% for recommendation in ai_recommendations %}
+                        <div class="term-paper-card">
+                            <p class="term-paper-card-p">
+                                <strong>Rank:</strong> #{{ recommendation.rank }}
+                            </p>
 
-            <p class="term-paper-card-p">
-              <strong>Email:</strong> {{ recommendation.email }}
-            </p>
+                            <p class="term-paper-card-p">
+                                <strong>Name:</strong> {{ recommendation.teacher_name }}
+                            </p>
 
-            <p class="term-paper-card-p">
-              <strong>AI score:</strong> {{ recommendation.score }}
-            </p>
+                            <p class="term-paper-card-p">
+                                <strong>Email:</strong> {{ recommendation.email }}
+                            </p>
 
-            <p class="term-paper-card-p">
-              <strong>Trust score:</strong> {{ recommendation.trust_score }}
-            </p>
+                            <p class="term-paper-card-p">
+                                <strong>AI score:</strong> {{ recommendation.score }}
+                            </p>
 
-            <p class="term-paper-card-p">
-              <strong>Average trophy rate:</strong> {{ recommendation.avg_trophy_rate }}
-              {% if recommendation.trophy_count %}
-                (from {{ recommendation.trophy_count }} trophy{{ recommendation.trophy_count|pluralize }})
-              {% endif %}
-            </p>
+                            <p class="term-paper-card-p">
+                                <strong>Trust score:</strong> {{ recommendation.trust_score }}
+                            </p>
 
-            <p class="term-paper-card-p">
-              <strong>Relevant completed papers:</strong> {{ recommendation.relevant_completed_papers_count }}
-            </p>
+                            <p class="term-paper-card-p">
+                                <strong>Average trophy rate:</strong> {{ recommendation.avg_trophy_rate }}
+                                {% if recommendation.trophy_count %}
+                                    (from {{ recommendation.trophy_count }} trophy{{ recommendation.trophy_count|pluralize }})
+                                {% endif %}
+                            </p>
 
-            <p class="term-paper-card-p">
-              <strong>Specializations:</strong>
-              {% for spec in recommendation.specializations %}
-                {{ spec }}{% if not forloop.last %}, {% endif %}
-              {% empty %}
-                No specializations yet
-              {% endfor %}
-            </p>
+                            <p class="term-paper-card-p">
+                                <strong>Relevant completed papers:</strong> {{ recommendation.relevant_completed_papers_count }}
+                            </p>
 
-            <p class="term-paper-card-p">
-              <strong>Why this teacher:</strong> {{ recommendation.reason }}
-            </p>
+                            <p class="term-paper-card-p">
+                                <strong>Specializations:</strong>
+                                {% for spec in recommendation.specializations %}
+                                    {{ spec }}{% if not forloop.last %}, {% endif %}
+                                    {% empty %}
+                                    No specializations yet
+                                {% endfor %}
+                            </p>
 
-                {% if recommendation.email|slice:"-12:" == "@debug.local" %}
-                  <span class="badge">Debug result only</span>
-                {% elif recommendation.teacher_id in requested_teacher_ids %}
-                  <span class="badge">Pending request</span>
-                {% else %}
-                  <form method="post" action="{% url 'send-term-paper-request' pk=term_paper.pk teacher_pk=recommendation.teacher_id %}">
-                    {% csrf_token %}
-                    <button class="main-card-link" type="submit">Request help</button>
-                  </form>
-                {% endif %}
+                            <p class="term-paper-card-p">
+                                <strong>Why this teacher:</strong> {{ recommendation.reason }}
+                            </p>
+
+                            {% if recommendation.teacher_id in requested_teacher_ids %}
+                                <span class="badge">Pending request</span>
+                            {% else %}
+                                <form method="post" action="{% url 'send-term-paper-request' pk=term_paper.pk teacher_pk=recommendation.teacher_id %}">
+                                    {% csrf_token %}
+                                    <button class="main-card-link" type="submit">Request help</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="inbox-empty">
+                    <p>No teachers available yet.</p>
+                </div>
+            {% endif %}
         </div>
-        {% endfor %}
-      </div>
-    {% elif ai_error %}
-      <p class="field-error" style="margin-top: 1rem;">
-        AI recommendations are temporarily unavailable.
-      </p>
-    {% else %}
-      <div class="inbox-empty">
-        <p>No teachers available yet.</p>
-      </div>
-    {% endif %}
-  </div>
-</section>
+    </section>
 {% endblock %}
