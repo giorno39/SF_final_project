@@ -142,8 +142,7 @@ LOGIN_REDIRECT_URL = 'index'
 AUTH_USER_MODEL = 'accounts.AppUser'
 
 MEDIA_URL = '/media/'
-
-MEDIA_ROOT = 'final_project/mediafiles/term_papers'
+MEDIA_ROOT = BASE_DIR / 'final_project' / 'media_files'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
