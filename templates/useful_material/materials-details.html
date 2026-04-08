@@ -140,6 +140,32 @@
             </div>
           {% endfor %}
         </div>
+
+        {% if comments_is_paginated %}
+          <nav class="materials-pagination" aria-label="Comments pages">
+            <div class="materials-pagination-inner">
+              {% if comments.has_previous %}
+                <a class="materials-pagination-btn" href="?page=1">First</a>
+                <a class="materials-pagination-btn" href="?page={{ comments.previous_page_number }}">Previous</a>
+              {% else %}
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">First</span>
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">Previous</span>
+              {% endif %}
+
+              <span class="materials-pagination-status">
+                Page {{ comments.number }} of {{ comments.paginator.num_pages }}
+              </span>
+
+              {% if comments.has_next %}
+                <a class="materials-pagination-btn" href="?page={{ comments.next_page_number }}">Next</a>
+                <a class="materials-pagination-btn" href="?page={{ comments.paginator.num_pages }}">Last</a>
+              {% else %}
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">Next</span>
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">Last</span>
+              {% endif %}
+            </div>
+          </nav>
+        {% endif %}
       </section>
 
     </div>
