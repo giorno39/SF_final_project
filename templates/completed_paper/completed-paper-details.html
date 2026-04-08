@@ -1,51 +1,60 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<section class="container lesson-wrap">
-  <article class="lesson-card">
-    <header class="lesson-header">
-      <div class="lesson-avatar">
-        {{ object.title|slice:":1"|upper }}
-      </div>
+<section class="completed-paper-page">
+  <div class="completed-paper-shell">
+    <article class="completed-paper-card">
 
-      <div>
-        <h1 class="lesson-title">{{ object.title }}</h1>
-      </div>
-    </header>
+      <header class="completed-paper-header">
+        <div class="completed-paper-header-left">
+          <div class="completed-paper-avatar">
+            {{ object.title|slice:":1"|upper }}
+          </div>
 
-    <div class="lesson-info">
-      <p><span class="label">University:</span> {{ object.university }}</p>
+          <div class="completed-paper-heading">
+            <h1 class="completed-paper-title">{{ object.title }}</h1>
 
-      <div class="term-paper-specs-row">
-        <span class="label">Specializations:</span>
-        <div class="term-paper-specs">
+            <div class="completed-paper-meta">
+              <span class="completed-paper-meta-icon">🎓</span>
+              <span class="completed-paper-meta-label">University:</span>
+              <span>{{ object.university }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="completed-paper-header-right">
           {% for spec in object.specializations.all %}
-            <span class="term-paper-spec-pill">{{ spec.name }}</span>
+            <span class="completed-paper-tag">{{ spec.name }}</span>
           {% empty %}
-            <span class="term-paper-spec-empty">No specializations selected.</span>
+            <span class="completed-paper-tag">No specialization</span>
           {% endfor %}
         </div>
-      </div>
+      </header>
 
-      {% if object.description %}
-        <div class="term-paper-description-block">
-          <span class="label">Description:</span>
-          <p>{{ object.description }}</p>
+    <section class="completed-paper-description">
+      <span class="completed-paper-description-label">Description</span>
+      <p class="completed-paper-description-text">
+        {{ object.description|default:"No description" }}
+      </p>
+    </section>
+
+      <footer class="completed-paper-footer">
+        {% if object.completed_by %}
+          <a class="completed-paper-completed" href="{% url 'details-user' pk=object.completed_by_id %}">
+            <span class="completed-paper-completed-icon">✔</span>
+            Completed by
+          </a>
+        {% endif %}
+
+        <div class="completed-paper-actions">
+          <a class="completed-paper-btn" href="{% url 'completed_paper-open' pk=object.pk %}">
+            <span class="completed-paper-btn-icon">↓</span>
+            Download File
+          </a>
         </div>
-      {% endif %}
-    </div>
+      </footer>
 
-    <div class="lesson-actions">
-      {% if object.completed_by %}
-        <a class="main-card-link" href="{% url 'details-user' pk=object.completed_by_id %}">
-          Completed by
-        </a>
-      {% endif %}
-
-      <a class="main-card-link" href="{% url 'completed_paper-open' pk=object.pk %}">
-        Download File
-      </a>
-    </div>
-  </article>
+    </article>
+  </div>
 </section>
 {% endblock %}
