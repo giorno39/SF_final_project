@@ -1,8 +1,9 @@
-import os
+from os import path
 from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.http import FileResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -61,6 +62,7 @@ class MaterialCreateView(LoginRequiredMixin, views.CreateView):
 class MaterialDetailsView(views.DetailView):
     model = Materials
     template_name = 'useful_material/materials-details.html'
+    comments_paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -79,11 +81,18 @@ class MaterialDetailsView(views.DetailView):
             ).count()
             remaining_comments = max(0, 3 - comments_last_24h)
 
+        comments_qs = self.object.comments.select_related('author').order_by('-created_at')
+        paginator = Paginator(comments_qs, self.comments_paginate_by)
+        page_number = self.request.GET.get('page')
+        comments_page = paginator.get_page(page_number)
+
         context['is_owner'] = self.request.user == self.object.uploaded_by
         context['comment_form'] = MaterialCommentForm()
-        context['comments'] = self.object.comments.select_related('author')
+        context['comments'] = comments_page
         context['comments_last_24h'] = comments_last_24h
         context['remaining_comments'] = remaining_comments
+        context['comments_page_obj'] = comments_page
+        context['comments_is_paginated'] = comments_page.paginator.num_pages > 1
 
         return context
 

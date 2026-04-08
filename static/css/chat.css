@@ -330,7 +330,14 @@
   outline: none;
   box-shadow: 0 0 0 3px rgba(24, 100, 171, .35);
 }
-.chat-send-btn svg { fill: #fff; }
+
+.chat-send-btn svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: #fff;
+  transform: translateX(-6px);
+}
 
 /* ===== Navbar badge ===== */
 .nav-badge-wrap {

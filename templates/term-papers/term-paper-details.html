@@ -1,75 +1,106 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<section class="container lesson-wrap">
-  <article class="lesson-card">
-    <header class="lesson-header">
-      <div class="lesson-avatar">
-        {{ object.title|slice:":1"|upper }}
-      </div>
+<section class="term-paper-details-page">
+  <div class="term-paper-details-shell">
+    <article class="term-paper-details-card">
 
-      <div>
-        <h1 class="lesson-title">{{ object.title }}</h1>
-      </div>
+      <header class="term-paper-details-header">
+        <div class="term-paper-details-header-left">
+          <div class="term-paper-details-avatar">
+            {{ object.title|slice:":1"|upper }}
+          </div>
 
-      <span class="price-chip">{{ object.price_cap }}</span>
-    </header>
+          <div class="term-paper-details-heading">
+            <h1 class="term-paper-details-title">{{ object.title }}</h1>
 
-    <div class="lesson-info">
-      <p><span class="label">University:</span> {{ object.university }}</p>
-      <p><span class="label">Death Line:</span> {{ object.death_line }}</p>
-      <p><span class="label">Price Cap:</span> {{ object.price_cap }}</p>
+            <div class="term-paper-details-meta">
+              <span class="term-paper-details-meta-label">University:</span>
+              <span>{{ object.university }}</span>
+            </div>
+          </div>
+        </div>
 
-      <div class="term-paper-specs-row">
-        <span class="label">Specializations:</span>
-        <div class="term-paper-specs">
-          {% for spec in object.specializations.all %}
-            <span class="term-paper-spec-pill">{{ spec.name }}</span>
-          {% empty %}
-            <span class="term-paper-spec-empty">No specializations selected.</span>
-          {% endfor %}
+        <div class="term-paper-details-price-chip">
+          €{{ object.price_cap }}
+        </div>
+      </header>
+
+      <div class="term-paper-details-info-grid term-paper-details-info-grid--single">
+        <div class="term-paper-details-info-item">
+          <span class="term-paper-details-info-label">Deadline</span>
+          <span class="term-paper-details-info-value">{{ object.death_line }}</span>
         </div>
       </div>
 
-      <p><span class="label">Description:</span> {{ object.description }}</p>
-    </div>
+      <section class="term-paper-details-specs-block">
+        <span class="term-paper-details-section-label">Specializations</span>
+        <div class="term-paper-details-specs">
+          {% for spec in object.specializations.all %}
+            <span class="term-paper-details-spec-pill">{{ spec.name }}</span>
+          {% empty %}
+            <span class="term-paper-details-spec-empty">No specializations selected.</span>
+          {% endfor %}
+        </div>
+      </section>
 
-    <div class="lesson-actions">
-      <a class="main-card-link" href="{% url 'term-paper-file-open' pk=object.pk %}">Download File</a>
+      <section class="term-paper-details-description">
+        <span class="term-paper-details-description-label">Description</span>
+        <p class="term-paper-details-description-text">
+          {{ object.description|default:"No description" }}
+        </p>
+      </section>
 
-    {% if is_taken and object.completed == False %}
-      <span class="badge">Already taken</span>
-      <a class="main-card-link" href="{% url 'details-user' pk=object.taken_by_id %}">Taken by</a>
-    {% else %}
-      {% if request.user.user_type == 'teacher' %}
-        {% if not has_pending_request %}
-          <a class="main-card-link" href="{% url 'term-paper-take' pk=object.pk %}">Take term paper</a>
+      <footer class="term-paper-details-actions">
+        <a class="term-paper-details-btn" href="{% url 'term-paper-file-open' pk=object.pk %}">
+          Download File
+        </a>
+
+        {% if is_taken and object.completed == False %}
+          <span class="term-paper-details-badge">Already taken</span>
+          <a class="term-paper-details-btn term-paper-details-btn-secondary" href="{% url 'details-user' pk=object.taken_by_id %}">
+            Taken by
+          </a>
         {% else %}
-          <span class="badge">Currently requested</span>
-        {% endif %}
-      {% endif %}
-    {% endif %}
-
-      {% if object.completed %}
-        <span class="badge">Completed</span>
-        <a class="main-card-link" href="{% url 'trophy-add' paper_pk=object.pk %}">Rate</a>
-      {% endif %}
-
-      {% if is_owner %}
-        {% if not is_taken and not has_pending_request %}
-          <a class="main-card-link" href="{% url 'term-paper-request-teacher' pk=object.pk %}">
-            {% if has_declined_request %}
-              Request again
+          {% if request.user.user_type == 'teacher' %}
+            {% if not has_pending_request %}
+              <a class="term-paper-details-btn" href="{% url 'term-paper-take' pk=object.pk %}">
+                Take term paper
+              </a>
             {% else %}
-              Request teacher
+              <span class="term-paper-details-badge">Currently requested</span>
             {% endif %}
+          {% endif %}
+        {% endif %}
+
+        {% if object.completed %}
+          <span class="term-paper-details-badge">Completed</span>
+          <a class="term-paper-details-btn term-paper-details-btn-secondary" href="{% url 'trophy-add' paper_pk=object.pk %}">
+            Rate
           </a>
         {% endif %}
 
-        <a class="main-card-link" href="{% url 'term-paper-edit' pk=object.pk %}">Edit</a>
-        <a class="main-card-link" href="{% url 'term-paper-delete' pk=object.pk %}">Delete</a>
-      {% endif %}
-    </div>
-  </article>
+        {% if is_owner %}
+          {% if not is_taken and not has_pending_request %}
+            <a class="term-paper-details-btn term-paper-details-btn-secondary" href="{% url 'term-paper-request-teacher' pk=object.pk %}">
+              {% if has_declined_request %}
+                Request again
+              {% else %}
+                Request teacher
+              {% endif %}
+            </a>
+          {% endif %}
+
+          <a class="term-paper-details-btn term-paper-details-btn-secondary" href="{% url 'term-paper-edit' pk=object.pk %}">
+            Edit
+          </a>
+          <a class="term-paper-details-btn term-paper-details-btn-secondary" href="{% url 'term-paper-delete' pk=object.pk %}">
+            Delete
+          </a>
+        {% endif %}
+      </footer>
+
+    </article>
+  </div>
 </section>
 {% endblock %}

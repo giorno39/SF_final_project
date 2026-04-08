@@ -1,119 +1,174 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<section class="container lesson-wrap">
-  <article class="lesson-card">
-    <header class="lesson-header">
-      <div class="lesson-avatar">
-        {{ object.title|slice:":1"|upper }}
-      </div>
+<section class="materials-details-page">
+  <div class="materials-details-shell">
+    <div class="materials-details-grid">
 
-      <div>
-        <h1 class="lesson-title">{{ object.title }}</h1>
-        <p class="lesson-sub">
-          {% for specialization in object.specializations.all %}
-            <span class="badge">{{ specialization.name }}</span>
-          {% empty %}
-            <span class="badge">No specialization</span>
-          {% endfor %}
-        </p>
-      </div>
-    </header>
+      <article class="materials-details-card">
+        <header class="materials-details-card-header">
+          <div class="materials-details-card-top">
+            <div class="materials-details-avatar">
+              {{ object.title|slice:":1"|upper }}
+            </div>
 
-    <div class="lesson-info">
-      <p><span class="label">Title:</span> {{ object.title }}</p>
+            <div class="materials-details-heading">
+              <h1 class="materials-details-title">{{ object.title }}</h1>
 
-      <p>
-        <span class="label">Specializations:</span>
-        {% for specialization in object.specializations.all %}
-          {{ specialization.name }}{% if not forloop.last %}, {% endif %}
-        {% empty %}
-          No specialization selected
-        {% endfor %}
-      </p>
+              <div class="materials-details-tags">
+                {% for specialization in object.specializations.all %}
+                  <span class="materials-details-tag">{{ specialization.name }}</span>
+                {% empty %}
+                  <span class="materials-details-tag materials-details-tag--muted">No specialization</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </header>
 
-      {% if object.references %}
-        <p><span class="label">Reference:</span> {{ object.references }}</p>
-      {% endif %}
-    </div>
+        <div class="materials-details-info">
+          <div class="materials-details-info-block">
+            <span class="materials-details-info-label">Title</span>
+            <p class="materials-details-info-value">{{ object.title }}</p>
+          </div>
 
-    <div class="lesson-actions">
-      {% if object.content %}
-        <a class="main-card-link" href="{% url 'materials-download' pk=object.pk %}">
-          Download PDF
-        </a>
-      {% endif %}
+          <div class="materials-details-info-block">
+            <span class="materials-details-info-label">Specializations</span>
+            <p class="materials-details-info-value">
+              {% for specialization in object.specializations.all %}
+                {{ specialization.name }}{% if not forloop.last %}, {% endif %}
+              {% empty %}
+                No specialization selected
+              {% endfor %}
+            </p>
+          </div>
 
-      {% if object.references %}
-        <a class="main-card-link" href="{{ object.references }}" target="_blank" rel="noopener noreferrer">
-          Open Reference
-        </a>
-      {% endif %}
-
-      {% if object.uploaded_by_id %}
-        <a class="main-card-link" href="{% url 'details-user' pk=object.uploaded_by_id %}">
-          Uploaded by
-        </a>
-      {% endif %}
-
-      {% if is_owner %}
-        <a class="main-card-link" href="{% url 'materials-edit' pk=object.pk %}">Edit</a>
-        <a class="main-card-link" href="{% url 'materials-delete' pk=object.pk %}">Delete</a>
-      {% endif %}
-    </div>
-  </article>
-
-  <section class="lesson-card" style="margin-top: 24px;">
-    <h2 class="lesson-title" style="font-size: 1.4rem;">Discussion</h2>
-
-    {% if user.is_authenticated %}
-      <p class="lesson-sub">
-        You have {{ remaining_comments }} comment{{ remaining_comments|pluralize }} remaining for the next 24 hours.
-      </p>
-
-      <form class="auth-form" method="post" action="{% url 'materials-comment-add' pk=object.pk %}">
-        {% csrf_token %}
-
-        <p>
-          {{ comment_form.content }}
-          {% if comment_form.content.errors %}
-            <span class="field-error">{{ comment_form.content.errors.0 }}</span>
+          {% if object.references %}
+            <div class="materials-details-info-block">
+              <span class="materials-details-info-label">Reference</span>
+              <p class="materials-details-info-value materials-details-reference-text">
+                {{ object.references }}
+              </p>
+            </div>
           {% endif %}
-        </p>
-
-        <button type="submit">Post comment</button>
-      </form>
-    {% else %}
-      <p class="lesson-sub">Log in to join the discussion.</p>
-    {% endif %}
-
-    <div style="margin-top: 24px;">
-      {% for comment in comments %}
-        <article class="term-paper-card" style="margin-bottom: 16px;">
-          <p class="term-paper-card-p">
-            <strong>
-              {% if comment.author.get_full_name %}
-                {{ comment.author.get_full_name }}
-              {% else %}
-                {{ comment.author.username }}
-              {% endif %}
-            </strong>
-          </p>
-
-          <p class="term-paper-card-p">{{ comment.content }}</p>
-          <p class="term-paper-card-p">
-            <small>{{ comment.created_at }}</small>
-          </p>
-        </article>
-      {% empty %}
-        <div class="search-empty-state">
-          <h3 class="search-empty-state-title">No discussion yet</h3>
-          <p class="search-empty-state-text">
-            Be the first to leave a comment for this material.
-          </p>
         </div>
-      {% endfor %}
+
+        <div class="materials-details-actions">
+          {% if object.content %}
+            <a class="materials-btn materials-btn--primary" href="{% url 'materials-download' pk=object.pk %}">
+              Download PDF
+            </a>
+          {% endif %}
+
+          {% if object.references %}
+            <a class="materials-btn materials-btn--primary" href="{{ object.references }}" target="_blank" rel="noopener noreferrer">
+              Open Reference
+            </a>
+          {% endif %}
+
+          {% if object.uploaded_by_id %}
+            <a class="materials-btn materials-btn--primary" href="{% url 'details-user' pk=object.uploaded_by_id %}">
+              Uploaded by
+            </a>
+          {% endif %}
+
+          {% if is_owner %}
+            <div class="materials-details-actions-row">
+              <a class="materials-btn materials-btn--primary materials-btn--half" href="{% url 'materials-edit' pk=object.pk %}">
+                Edit
+              </a>
+              <a class="materials-btn materials-btn--primary materials-btn--half" href="{% url 'materials-delete' pk=object.pk %}">
+                Delete
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </article>
+
+      <section class="materials-discussion-card">
+        <div class="materials-discussion-header">
+          <h2 class="materials-discussion-title">Discussion</h2>
+
+          {% if user.is_authenticated %}
+            <p class="materials-discussion-subtitle">
+              You have {{ remaining_comments }} comment{{ remaining_comments|pluralize }} remaining for the next 24 hours.
+            </p>
+          {% else %}
+            <p class="materials-discussion-subtitle">
+              Log in to join the discussion.
+            </p>
+          {% endif %}
+        </div>
+
+        {% if user.is_authenticated %}
+          <form class="materials-comment-form" method="post" action="{% url 'materials-comment-add' pk=object.pk %}">
+            {% csrf_token %}
+
+            <div class="materials-comment-field">
+              {{ comment_form.content }}
+              {% if comment_form.content.errors %}
+                <span class="materials-field-error">{{ comment_form.content.errors.0 }}</span>
+              {% endif %}
+            </div>
+
+            <button class="materials-comment-submit" type="submit">
+              Post comment
+            </button>
+          </form>
+        {% endif %}
+
+        <div class="materials-comments-list">
+          {% for comment in comments %}
+            <article class="materials-comment-card">
+              <p class="materials-comment-author">
+                {% if comment.author.get_full_name %}
+                  {{ comment.author.get_full_name }}
+                {% else %}
+                  {{ comment.author.username }}
+                {% endif %}
+              </p>
+
+              <p class="materials-comment-text">{{ comment.content }}</p>
+              <p class="materials-comment-date">{{ comment.created_at }}</p>
+            </article>
+          {% empty %}
+            <div class="materials-comments-empty">
+              <h3 class="materials-comments-empty-title">No discussion yet</h3>
+              <p class="materials-comments-empty-text">
+                Be the first to leave a comment for this material.
+              </p>
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if comments_is_paginated %}
+          <nav class="materials-pagination" aria-label="Comments pages">
+            <div class="materials-pagination-inner">
+              {% if comments.has_previous %}
+                <a class="materials-pagination-btn" href="?page=1">First</a>
+                <a class="materials-pagination-btn" href="?page={{ comments.previous_page_number }}">Previous</a>
+              {% else %}
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">First</span>
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">Previous</span>
+              {% endif %}
+
+              <span class="materials-pagination-status">
+                Page {{ comments.number }} of {{ comments.paginator.num_pages }}
+              </span>
+
+              {% if comments.has_next %}
+                <a class="materials-pagination-btn" href="?page={{ comments.next_page_number }}">Next</a>
+                <a class="materials-pagination-btn" href="?page={{ comments.paginator.num_pages }}">Last</a>
+              {% else %}
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">Next</span>
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">Last</span>
+              {% endif %}
+            </div>
+          </nav>
+        {% endif %}
+      </section>
+
     </div>
-  </section>
+  </div>
 </section>
 {% endblock %}

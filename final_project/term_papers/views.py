@@ -593,6 +593,7 @@ class TeacherTermPaperRequestsListView(views.ListView):
     model = TermPaperRequest
     template_name = 'teacher/teacher-term-paper-requests.html'
     context_object_name = 'requests_list'
+    paginate_by = 1
 
     def get_queryset(self):
         if self.request.user.user_type != 'teacher':

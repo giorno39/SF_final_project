@@ -1,101 +1,153 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <section class="container lessons-wrap">
-        <div class="lesson-card">
-            <header class="lesson-header">
-                <div class="lesson-avatar">✉</div>
-                <div>
-                    <h1 class="lesson-title">Request a teacher</h1>
-                    <p class="lesson-sub">
-                        Choose a teacher for: <strong>{{ term_paper.title }}</strong>
-                    </p>
-                </div>
-            </header>
-
-            {% if messages %}
-                {% for message in messages %}
-                    <p class="field-error">{{ message }}</p>
-                {% endfor %}
-            {% endif %}
-
+<section class="ai-teacher-page">
+    <div class="ai-teacher-shell">
+        <header class="ai-teacher-header">
             {% if not has_fallen_back %}
-                <h2 class="lesson-title" style="margin-top: 1rem;">Top AI recommendations</h2>
-
+                <h1 class="ai-teacher-header__title">Top AI Teacher Recommendations</h1>
+                <p class="ai-teacher-header__subtitle">
+                    These teachers are ranked as the best fit based on the paper topic, specializations,
+                    previous completed papers, trust score, and trophies.
+                </p>
             {% elif ai_error %}
-                <p class="field-error" style="margin-top: 1rem;">
-                    AI recommendations are temporarily unavailable.
+                <h1 class="ai-teacher-header__title">Teacher Recommendations</h1>
+                <p class="ai-teacher-header__subtitle">
+                    AI recommendations are temporarily unavailable. Showing fallback recommendations instead.
+                </p>
+            {% else %}
+                <h1 class="ai-teacher-header__title">Teacher Recommendations</h1>
+                <p class="ai-teacher-header__subtitle">
+                    Showing fallback recommendations based on the available matching data.
                 </p>
             {% endif %}
-            <p class="lesson-sub" style="margin-bottom: 1rem;">
-                These teachers are ranked as the best fit based on the paper topic, specializations,
-                previous completed papers, trust score, and trophies.
-            </p>
+        </header>
 
-            {% if ai_recommendations %}
-                <div class="lesson-card">
-                    {% for recommendation in ai_recommendations %}
-                        <div class="term-paper-card">
-                            <p class="term-paper-card-p">
-                                <strong>Rank:</strong> #{{ recommendation.rank }}
-                            </p>
+        {% if messages %}
+            <div class="ai-teacher-messages">
+                {% for message in messages %}
+                    <p class="ai-teacher-message">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                            <p class="term-paper-card-p">
-                                <strong>Name:</strong> {{ recommendation.teacher_name }}
-                            </p>
+        {% if ai_recommendations %}
+            <div class="ai-teacher-list">
+                {% for recommendation in ai_recommendations %}
+                    <article class="ai-teacher-card">
+                        <div class="ai-teacher-card__topbar">
+                            <span class="ai-teacher-card__rank-badge">
+                                Top #{{ recommendation.rank }}
+                            </span>
 
-                            <p class="term-paper-card-p">
-                                <strong>Email:</strong> {{ recommendation.email }}
-                            </p>
-
-                            <p class="term-paper-card-p">
-                                <strong>AI score:</strong> {{ recommendation.score }}
-                            </p>
-
-                            <p class="term-paper-card-p">
-                                <strong>Trust score:</strong> {{ recommendation.trust_score }}
-                            </p>
-
-                            <p class="term-paper-card-p">
-                                <strong>Average trophy rate:</strong> {{ recommendation.avg_trophy_rate }}
-                                {% if recommendation.trophy_count %}
-                                    (from {{ recommendation.trophy_count }} trophy{{ recommendation.trophy_count|pluralize }})
-                                {% endif %}
-                            </p>
-
-                            <p class="term-paper-card-p">
-                                <strong>Relevant completed papers:</strong> {{ recommendation.relevant_completed_papers_count }}
-                            </p>
-
-                            <p class="term-paper-card-p">
-                                <strong>Specializations:</strong>
-                                {% for spec in recommendation.specializations %}
-                                    {{ spec }}{% if not forloop.last %}, {% endif %}
-                                    {% empty %}
-                                    No specializations yet
-                                {% endfor %}
-                            </p>
-
-                            <p class="term-paper-card-p">
-                                <strong>Why this teacher:</strong> {{ recommendation.reason }}
-                            </p>
-
-                            {% if recommendation.teacher_id in requested_teacher_ids %}
-                                <span class="badge">Pending request</span>
+                            {% if has_fallen_back %}
+                                <span class="ai-teacher-card__source-badge">
+                                    Fallback match
+                                </span>
                             {% else %}
-                                <form method="post" action="{% url 'send-term-paper-request' pk=term_paper.pk teacher_pk=recommendation.teacher_id %}">
-                                    {% csrf_token %}
-                                    <button class="main-card-link" type="submit">Request help</button>
-                                </form>
+                                <span class="ai-teacher-card__source-badge ai-teacher-card__source-badge--ai">
+                                    AI match
+                                </span>
                             {% endif %}
                         </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="inbox-empty">
-                    <p>No teachers available yet.</p>
-                </div>
-            {% endif %}
-        </div>
-    </section>
+
+                        <div class="ai-teacher-card__body">
+                            <div class="ai-teacher-card__profile">
+                                <div class="ai-teacher-card__avatar">
+                                    <span class="ai-teacher-card__avatar-initial">
+                                        {% if recommendation.teacher_name %}
+                                            {{ recommendation.teacher_name|first|upper }}
+                                        {% else %}
+                                            T
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                <div class="ai-teacher-card__identity">
+                                    <h3 class="ai-teacher-card__name">{{ recommendation.teacher_name }}</h3>
+                                    <p class="ai-teacher-card__email">{{ recommendation.email }}</p>
+
+                                    <div class="ai-teacher-card__metrics">
+                                        <div class="ai-teacher-metric">
+                                            <div class="ai-teacher-metric__top">
+                                                <span>AI Score: {{ recommendation.score }}%</span>
+                                                <strong>{{ recommendation.score }}%</strong>
+                                            </div>
+                                            <div class="ai-teacher-metric__bar">
+                                                <span style="width: {{ recommendation.score }}%;"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="ai-teacher-metric">
+                                            <div class="ai-teacher-metric__top">
+                                                <span>Trust Score: {{ recommendation.trust_score }}%</span>
+                                                <strong>{{ recommendation.trust_score }}%</strong>
+                                            </div>
+                                            <div class="ai-teacher-metric__bar">
+                                                <span style="width: {{ recommendation.trust_score }}%;"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="ai-teacher-card__chips">
+                                        <span class="ai-teacher-chip ai-teacher-chip--gold">
+                                            Average Trophy Rate: {{ recommendation.avg_trophy_rate }}
+                                        </span>
+
+                                        <span class="ai-teacher-chip">
+                                            Relevant completed papers: {{ recommendation.relevant_completed_papers_count }}
+                                        </span>
+
+                                        {% if has_fallen_back %}
+                                            <span class="ai-teacher-chip ai-teacher-chip--soft">
+                                                Fallback recommendation
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ai-teacher-card__side">
+                                <div class="ai-teacher-card__section">
+                                    <h4 class="ai-teacher-card__section-title">Specializations</h4>
+                                    <p class="ai-teacher-card__section-text">
+                                        {% for spec in recommendation.specializations %}
+                                            {{ spec }}{% if not forloop.last %}, {% endif %}
+                                        {% empty %}
+                                            No specializations yet
+                                        {% endfor %}
+                                    </p>
+                                </div>
+
+                                <div class="ai-teacher-card__section">
+                                    <h4 class="ai-teacher-card__section-title">Why this teacher</h4>
+                                    <p class="ai-teacher-card__section-text">
+                                        {{ recommendation.reason }}
+                                    </p>
+                                </div>
+
+                                <div class="ai-teacher-card__actions">
+                                    {% if recommendation.teacher_id in requested_teacher_ids %}
+                                        <span class="ai-teacher-btn ai-teacher-btn--pending">Pending request</span>
+                                    {% else %}
+                                        <form method="post" action="{% url 'send-term-paper-request' pk=term_paper.pk teacher_pk=recommendation.teacher_id %}">
+                                            {% csrf_token %}
+                                            <button class="ai-teacher-btn ai-teacher-btn--gold" type="submit">
+                                                Request help
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="ai-teacher-empty">
+                <p>No teachers available yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
 {% endblock %}
