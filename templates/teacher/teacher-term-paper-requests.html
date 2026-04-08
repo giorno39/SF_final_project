@@ -3,85 +3,132 @@
 {% block title %}Teacher Requests{% endblock %}
 
 {% block content %}
-<section class="container lessons-wrap">
-  <div class="lesson-card">
-    <header class="lesson-header">
-      <div class="lesson-avatar">📩</div>
-      <div>
-        <h1 class="lesson-title">Paper requests</h1>
-        <p class="lesson-sub">Requests from students asking for your help.</p>
+<section class="teacher-requests-page">
+  <div class="teacher-requests-shell">
+    <header class="teacher-requests-header">
+      <div class="teacher-requests-header-icon">📩</div>
+
+      <div class="teacher-requests-header-copy">
+        <h1 class="teacher-requests-title">Paper requests</h1>
+        <p class="teacher-requests-subtitle">
+          Requests from students asking for your help.
+        </p>
       </div>
     </header>
 
     {% if messages %}
-      {% for message in messages %}
-        <p class="field-error">{{ message }}</p>
-      {% endfor %}
+      <div class="teacher-requests-messages">
+        {% for message in messages %}
+          <p class="field-error">{{ message }}</p>
+        {% endfor %}
+      </div>
     {% endif %}
 
     {% if requests_list %}
-      <div class="lessons-grid">
+      <div class="teacher-requests-list">
         {% for req in requests_list %}
-          <div class="term-paper-card">
-            <p class="term-paper-card-p">
-              <strong>Paper:</strong> {{ req.term_paper.title }}
-            </p>
-            <p class="term-paper-card-p">
-              <strong>Student:</strong> {{ req.student.get_full_name|default:req.student.username }}
-            </p>
-            <p class="term-paper-card-p">
-              <strong>University:</strong> {{ req.term_paper.university }}
-            </p>
-            <p class="term-paper-card-p">
-              <strong>Deadline:</strong> {{ req.term_paper.death_line }}
-            </p>
-            <p class="term-paper-card-p">
-              <strong>Budget:</strong> {{ req.term_paper.price_cap }}
-            </p>
-
-            {% if req.term_paper.description %}
-              <p class="term-paper-card-p">
-                <strong>Description:</strong> {{ req.term_paper.description }}
-              </p>
-            {% endif %}
-
-            <div class="request-card-actions">
-              <div class="request-card-actions-row">
-                <a class="request-card-link request-card-link--secondary"
-                   href="{% url 'term-paper-details' pk=req.term_paper.pk %}">
-                  View Paper
-                </a>
-
-                <a class="request-card-link request-card-link--secondary"
-                   href="{% url 'chat-inbox' %}">
-                  Inbox
-                </a>
+          <article class="teacher-request-card">
+            <div class="teacher-request-card__grid">
+              <div class="teacher-request-card__panel teacher-request-card__panel--meta">
+                <p class="teacher-request-card__meta-item">
+                  <strong>Deadline:</strong> {{ req.term_paper.death_line }}
+                </p>
+                <p class="teacher-request-card__meta-item">
+                  <strong>University:</strong> {{ req.term_paper.university }}
+                </p>
+                <p class="teacher-request-card__meta-item">
+                  <strong>Budget:</strong> {{ req.term_paper.price_cap }}
+                </p>
               </div>
 
-              <div class="request-card-actions-row">
-                <form class="request-card-form" method="post" action="{% url 'accept-term-paper-request' request_pk=req.pk %}">
-                  {% csrf_token %}
-                  <button class="request-card-button request-card-button--accept" type="submit">
-                    Accept
-                  </button>
-                </form>
+              <div class="teacher-request-card__panel teacher-request-card__panel--description">
+                <p class="teacher-request-card__section-title">Description:</p>
+                <p class="teacher-request-card__description">
+                  {{ req.term_paper.description|default:"No description provided." }}
+                </p>
+              </div>
 
-                <form class="request-card-form" method="post" action="{% url 'decline-term-paper-request' request_pk=req.pk %}">
-                  {% csrf_token %}
-                  <button class="request-card-button request-card-button--decline" type="submit">
-                    Decline
-                  </button>
-                </form>
+              <div class="teacher-request-card__panel teacher-request-card__panel--paper">
+                <p class="teacher-request-card__meta-item">
+                  <strong>Paper:</strong> {{ req.term_paper.title }}
+                </p>
+                <p class="teacher-request-card__meta-item">
+                  <strong>Student:</strong> {% firstof req.student.get_full_name req.student.username %}
+                </p>
+              </div>
+
+              <div class="teacher-request-card__panel teacher-request-card__panel--actions">
+                <div class="teacher-request-card__actions">
+                  <div class="teacher-request-card__actions-row">
+                    <a class="teacher-request-card__link teacher-request-card__link--gold"
+                       href="{% url 'term-paper-details' pk=req.term_paper_id %}">
+                      View Paper
+                    </a>
+
+                    <a class="teacher-request-card__link teacher-request-card__link--gold"
+                       href="{% url 'chat-inbox' %}">
+                      Inbox
+                    </a>
+                  </div>
+
+                  <div class="teacher-request-card__actions-row">
+                    <form method="post" action="{% url 'accept-term-paper-request' request_pk=req.pk %}">
+                      {% csrf_token %}
+                      <button class="teacher-request-card__button teacher-request-card__button--blue" type="submit">
+                        Accept
+                      </button>
+                    </form>
+
+                    <form method="post" action="{% url 'decline-term-paper-request' request_pk=req.pk %}">
+                      {% csrf_token %}
+                      <button class="teacher-request-card__button teacher-request-card__button--blue" type="submit">
+                        Decline
+                      </button>
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </article>
         {% endfor %}
       </div>
-    {% else %}
-      <div class="inbox-empty">
-        <p>No pending requests.</p>
-      </div>
-    {% endif %}
+        {% if is_paginated %}
+              <nav class="teacher-requests-pagination" aria-label="Requests pagination">
+                {% if page_obj.has_previous %}
+                  <a class="teacher-requests-pagination__btn teacher-requests-pagination__btn--nav"
+                     href="?page={{ page_obj.previous_page_number }}">
+                    Previous
+                  </a>
+                {% endif %}
+
+                <div class="teacher-requests-pagination__pages">
+                  {% for num in paginator.page_range %}
+                    {% if num == page_obj.number %}
+                      <span class="teacher-requests-pagination__btn teacher-requests-pagination__btn--page teacher-requests-pagination__btn--active">
+                        {{ num }}
+                      </span>
+                    {% else %}
+                      <a class="teacher-requests-pagination__btn teacher-requests-pagination__btn--page"
+                         href="?page={{ num }}">
+                        {{ num }}
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+
+                {% if page_obj.has_next %}
+                  <a class="teacher-requests-pagination__btn teacher-requests-pagination__btn--nav"
+                     href="?page={{ page_obj.next_page_number }}">
+                    Next
+                  </a>
+                {% endif %}
+              </nav>
+            {% endif %}
+        {% else %}
+          <div class="teacher-requests-empty">
+            <p>No pending requests.</p>
+          </div>
+        {% endif %}
   </div>
 </section>
 {% endblock %}
