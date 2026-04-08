@@ -197,13 +197,16 @@ p{margin:0 0 .8rem}
   color:var(--brand);
   background:transparent;
 }
-.site-nav-link:hover{
-  color:var(--text);
+
+.site-nav-link:hover:not(.site-nav-link--cta){
+  color: var(--text);
   background:#f3f4f6;
 }
-.site-nav-icons .site-nav-link:hover{
+
+.site-nav-icons .site-nav-link:hover:not(.site-nav-link--cta){
   background:transparent;
 }
+
 .site-nav-link.is-active,
 .site-nav-link[aria-current="page"]{
   color:var(--brand);
@@ -219,7 +222,24 @@ p{margin:0 0 .8rem}
 }
 .site-nav-icons .site-nav-link.is-active,
 .site-nav-icons .site-nav-link[aria-current="page"]{
-  border-bottom-color:var(--brand);
+  border-bottom-color:transparent;
+}
+
+.site-nav-icons .site-nav-link:not(.site-nav-link--cta).is-active,
+.site-nav-icons .site-nav-link:not(.site-nav-link--cta)[aria-current="page"]{
+  position:relative;
+}
+
+.site-nav-icons .site-nav-link:not(.site-nav-link--cta).is-active::after,
+.site-nav-icons .site-nav-link:not(.site-nav-link--cta)[aria-current="page"]::after{
+  content:"";
+  position:absolute;
+  left:.65rem;
+  right:.65rem;
+  bottom:.28rem;
+  height:2px;
+  background:var(--brand);
+  border-radius:999px;
 }
 .site-nav-link--cta{
   background:var(--brand);
@@ -237,14 +257,39 @@ p{margin:0 0 .8rem}
   color:#fff !important;
   opacity:1 !important;
 }
+
 .site-nav-link--cta.is-active{
   border-bottom-color:transparent;
-  box-shadow:0 0 0 2px rgba(230,180,34,.55);
+  box-shadow:none;
 }
+
 .site-nav-link--cta:focus-visible{
   outline:none;
   box-shadow:0 0 0 3px rgba(24,100,171,.4);
 }
+
+.site-nav-icons .site-nav-link.site-nav-link--cta.is-active,
+.site-nav-icons .site-nav-link.site-nav-link--cta[aria-current="page"]{
+  background:var(--brand);
+  color:#fff;
+  border-bottom-color:transparent;
+  box-shadow:none;
+  text-decoration:underline;
+  text-decoration-color:#fff;
+  text-decoration-thickness:2px;
+  text-underline-offset:6px;
+}
+
+.site-nav-icons .site-nav-link.site-nav-link--cta,
+.site-nav-icons .site-nav-link.site-nav-link--cta:hover,
+.site-nav-icons .site-nav-link.site-nav-link--cta:focus{
+  color:#fff;
+}
+
+.site-nav-icons .site-nav-link.site-nav-link--cta:hover{
+  background:var(--brand-600);
+}
+
 .header-icon-btn{
   display:inline-flex;
   align-items:center;
