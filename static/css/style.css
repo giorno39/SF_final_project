@@ -1,6 +1,6 @@
-@import "new_design_auth.css";
-@import "new_design_home.css";
-@import "new_design_footer.css";
+@import "auth.css";
+@import "home.css";
+@import "footer.css";
 @import "chat.css";
 @import "trophies.css";
 @import "term-papers.css";
