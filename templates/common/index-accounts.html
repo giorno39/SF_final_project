@@ -2,57 +2,91 @@
 {% load static %}
 
 {% block content %}
-
-    <div class="main-card">
-    <div class="main-card-text-box">
-        <h1 class="main-card-header">Find someone to help you out!</h1>
-        <p class="main-card-description">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scelerisque vitae
-            commodo vitae, egestas in sem. Praesent sed turpis efficitur, bibendum orci at,
-            dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
-        <a class="main-card-link" href="{% url 'term-paper-index' %}">Term Papers</a>
-        </div>
-        <img class="main-card-img" src="{% static 'images/how-to-write-a-term-paper.jpg' %}" alt="Photo"/>
+<section class="landing-home">
+  <div class="landing-home__hero">
+    <div class="landing-home__hero-media">
+      <img
+        src="{% static 'images/academic-support.jpg' %}"
+        alt="Student working together with academic support"
+        class="landing-home__hero-image"
+      />
     </div>
 
+    <div class="landing-home__hero-copy">
+      <span class="landing-home__eyebrow">Academic support, all in one place</span>
+      <h1 class="landing-home__title">Unlock your academic potential with BrainBuddyHive</h1>
+      <p class="landing-home__subtitle">
+        Connect with tutors, discover practical lessons, browse completed work, and use
+        curated study materials built to make your next task easier.
+      </p>
 
-        <div class="main-card">
-        <div class="main-card-text-box">
-        <h1 class="main-card-header">Lessons to make you feel more secure</h1>
-            <p class="main-card-description">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scelerisque vitae
-            commodo vitae, egestas in sem. Praesent sed turpis efficitur, bibendum orci at,
-            dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
-    <a class="main-card-link" href="{% url 'lesson-index' %}">Lessons</a>
-            </div>
-         <img class="main-card-img" src="{% static 'images/lessons-learned.jpg' %}" alt="Photo"/>
+      <div class="landing-home__hero-actions">
+        <a class="landing-home__primary-btn" href="{% url 'lesson-index' %}">Find a Tutor</a>
+        <a class="landing-home__secondary-btn" href="{% url 'materials-index' %}">Explore Materials</a>
+      </div>
     </div>
+  </div>
 
+  <section class="landing-home__grid" aria-label="BrainBuddyHive sections">
+    <article class="landing-feature-card">
+      <div class="landing-feature-card__media">
+        <img src="{% static 'images/how-to-write-a-term-paper.jpg' %}" alt="One-on-one tutoring" />
+      </div>
+      <div class="landing-feature-card__content">
+        <span class="landing-feature-card__badge">Support</span>
+        <h2 class="landing-feature-card__title">One-on-One Tutoring</h2>
+        <p class="landing-feature-card__text">
+          Get personalized help with essays, research, and planning from someone who can guide
+          you step by step.
+        </p>
+        <a class="landing-feature-card__button" href="{% url 'term-paper-index' %}">Explore available tasks</a>
+      </div>
+    </article>
 
-        <div class="main-card">
-        <div class="main-card-text-box">
-            <h1 class="main-card-header">Find something that someone already did</h1>
-                        <p class="main-card-description">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scelerisque vitae
-            commodo vitae, egestas in sem. Praesent sed turpis efficitur, bibendum orci at,
-            dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
-    <a class="main-card-link" href="{% url 'completed_paper-index' %}">Completed Papers</a>
-            </div>
-        <img class="main-card-img" src="{% static 'images/completed.jpg' %}" alt="Photo"/>
-    </div>
-        <div class="main-card">
-        <div class="main-card-text-box">
-         <h1 class="main-card-header">Look into our choices of useful materials</h1>
-                                    <p class="main-card-description">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero elit, scelerisque vitae
-            commodo vitae, egestas in sem. Praesent sed turpis efficitur, bibendum orci at,
-            dapibus augue. Integer eu ex eros. Fusce nec turpis ullamcorper.</p>
+    <article class="landing-feature-card">
+      <div class="landing-feature-card__media">
+        <img src="{% static 'images/lessons-learned.jpg' %}" alt="Skill building lessons" />
+      </div>
+      <div class="landing-feature-card__content">
+        <span class="landing-feature-card__badge">Learning</span>
+        <h2 class="landing-feature-card__title">Skill Building Lessons</h2>
+        <p class="landing-feature-card__text">
+          Build confidence with lessons that break down core ideas, writing habits, and study
+          strategies into practical steps.
+        </p>
+        <a class="landing-feature-card__button" href="{% url 'lesson-index' %}">Browse Lessons</a>
+      </div>
+    </article>
 
-    <a class="main-card-link" href="{% url 'materials-index' %}">Materials</a>
-            </div>
-         <img class="main-card-img" src="{% static 'images/materials.webp' %}" alt="Photo"/>
-            </div>
+    <article class="landing-feature-card">
+      <div class="landing-feature-card__media">
+        <img src="{% static 'images/completed.jpg' %}" alt="Completed papers and examples" />
+      </div>
+      <div class="landing-feature-card__content">
+        <span class="landing-feature-card__badge">Examples</span>
+        <h2 class="landing-feature-card__title">Completed Term Papers</h2>
+        <p class="landing-feature-card__text">
+          Review finished work to understand structure, pacing, and what a polished submission
+          can look like.
+        </p>
+        <a class="landing-feature-card__button" href="{% url 'completed_paper-index' %}">Explore completed tasks</a>
+      </div>
+    </article>
 
-
-
+    <article class="landing-feature-card">
+      <div class="landing-feature-card__media">
+        <img src="{% static 'images/materials.jpg' %}" alt="Study materials and resources" />
+      </div>
+      <div class="landing-feature-card__content">
+        <span class="landing-feature-card__badge">Resources</span>
+        <h2 class="landing-feature-card__title">Study Materials</h2>
+        <p class="landing-feature-card__text">
+          Explore guides, references, and supporting resources that help you study smarter and
+          prepare faster.
+        </p>
+        <a class="landing-feature-card__button" href="{% url 'materials-index' %}">View Materials</a>
+      </div>
+    </article>
+  </section>
+</section>
 {% endblock %}
