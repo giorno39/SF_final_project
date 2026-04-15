@@ -610,6 +610,44 @@ class TeacherTermPaperRequestsListView(views.ListView):
             .order_by('-created_at')
         )
 
+class TeacherTakenPapersView(views.ListView):
+    model = TermPaper
+    template_name = 'teacher/teacher-taken-papers.html'
+    paginate_by = 4
+
+    def get_queryset(self):
+        search_form = TermPaperSearchForm(self.request.GET)
+        search_pattern = None
+        specialization = None
+
+        queryset = (
+            TermPaper.objects
+            .filter(
+                taken_by=self.request.user,
+                completed=False,
+            )
+            .prefetch_related('specializations')
+            .distinct()
+        )
+
+        if search_form.is_valid():
+            search_pattern = search_form.cleaned_data.get('paper_title')
+            specialization = search_form.cleaned_data.get('specialization')
+
+        if search_pattern:
+            queryset = queryset.filter(title__icontains=search_pattern)
+
+        if specialization:
+            queryset = queryset.filter(specializations=specialization)
+
+        return queryset.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = TermPaperSearchForm(self.request.GET)
+        context['get_params'] = _teacher_papers_querystring(self.request)
+        return context
+
 @login_required
 def accept_term_paper_request(request, request_pk):
     if request.user.user_type != 'teacher':
