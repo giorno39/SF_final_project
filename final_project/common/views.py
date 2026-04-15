@@ -59,7 +59,7 @@ class StudentPaperView(LoginRequiredMixin, views.ListView):
 class TeacherPaperView(LoginRequiredMixin, views.ListView):
     model = TermPaper
     template_name = 'teacher/teacher-taken-papers.html'
-    paginate_by = 4
+    paginate_by = 2
 
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
