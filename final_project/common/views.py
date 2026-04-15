@@ -10,6 +10,12 @@ from final_project.term_papers.models import TermPaper
 UserModel = get_user_model()
 
 
+def _teacher_papers_querystring(request):
+    q = request.GET.copy()
+    q.pop('page', None)
+    return q.urlencode()
+
+
 def index(request):
     if request.user.is_authenticated:
         return render(request, 'common/index-accounts.html')
@@ -46,16 +52,14 @@ class StudentPaperView(LoginRequiredMixin, views.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context['search_form'] = TermPaperSearchForm(self.request.GET)
-
         return context
 
 
 class TeacherPaperView(LoginRequiredMixin, views.ListView):
     model = TermPaper
     template_name = 'teacher/teacher-taken-papers.html'
-    paginate_by = 4
+    paginate_by = 2
 
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
@@ -67,21 +71,31 @@ class TeacherPaperView(LoginRequiredMixin, views.ListView):
         return result
 
     def get_queryset(self):
-        queryset = TermPaper.objects.filter(taken_by=self.request.user.pk, completed=False)
+        queryset = (
+            TermPaper.objects
+            .filter(taken_by=self.request.user.pk, completed=False)
+            .prefetch_related('specializations')
+            .distinct()
+        )
 
         search_form = TermPaperSearchForm(self.request.GET)
         search_pattern = None
+        specialization = None
+
         if search_form.is_valid():
-            search_pattern = search_form.cleaned_data['paper_title']
+            search_pattern = search_form.cleaned_data.get('paper_title')
+            specialization = search_form.cleaned_data.get('specialization')
 
         if search_pattern:
             queryset = queryset.filter(title__icontains=search_pattern)
 
-        return queryset
+        if specialization:
+            queryset = queryset.filter(specializations=specialization)
+
+        return queryset.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context['search_form'] = TermPaperSearchForm(self.request.GET)
-
+        context['get_params'] = _teacher_papers_querystring(self.request)
         return context
