@@ -82,3 +82,31 @@ class MaterialComment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.author} on {self.material}'
+
+class MaterialCommentVote(models.Model):
+    comment = models.ForeignKey(
+        MaterialComment,
+        on_delete=models.CASCADE,
+        related_name='votes',
+    )
+
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE,
+        related_name='material_comment_votes',
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('comment', 'user'),
+                name='unique_material_comment_vote',
+            ),
+        ]
+
+    def __str__(self):
+        return f'{self.user} liked comment #{self.comment.pk}'

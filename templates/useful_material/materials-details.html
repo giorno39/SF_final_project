@@ -120,13 +120,42 @@
         <div class="materials-comments-list">
           {% for comment in comments %}
             <article class="materials-comment-card">
-              <p class="materials-comment-author">
-                {% if comment.author.get_full_name %}
-                  {{ comment.author.get_full_name }}
-                {% else %}
-                  {{ comment.author.username }}
-                {% endif %}
-              </p>
+              <div class="materials-comment-top">
+                <p class="materials-comment-author">
+                  {% if comment.author.get_full_name %}
+                    {{ comment.author.get_full_name }}
+                  {% else %}
+                    {{ comment.author.username }}
+                  {% endif %}
+                </p>
+
+                <div class="materials-comment-likes">
+                  {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'materials-comment-like' pk=comment.pk %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="page" value="{{ comments.number }}">
+
+                      <button
+                        type="submit"
+                        class="materials-comment-like-btn {% if comment.user_has_liked %}materials-comment-like-btn--active{% endif %}"
+                        aria-label="Like comment"
+                      >
+                        <span class="materials-comment-like-icon">♥</span>
+                        <span class="materials-comment-like-text">
+                          {{ comment.likes_count }} like{{ comment.likes_count|pluralize }}
+                        </span>
+                      </button>
+                    </form>
+                  {% else %}
+                    <div class="materials-comment-like-static">
+                      <span class="materials-comment-like-icon">♥</span>
+                      <span class="materials-comment-like-text">
+                        {{ comment.likes_count }} like{{ comment.likes_count|pluralize }}
+                      </span>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
 
               <p class="materials-comment-text">{{ comment.content }}</p>
               <p class="materials-comment-date">{{ comment.created_at }}</p>

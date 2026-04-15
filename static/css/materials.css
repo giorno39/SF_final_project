@@ -433,3 +433,114 @@
   font-size: 0.94rem;
   font-weight: 700;
 }
+
+.materials-comment-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.materials-comment-likes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.materials-comment-likes-count {
+  color: var(--materials-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.materials-comment-like-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--materials-card-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--materials-title);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.materials-comment-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.materials-comment-likes {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.materials-comment-like-btn,
+.materials-comment-like-static {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--materials-muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.materials-comment-like-btn {
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.materials-comment-like-btn:hover {
+  color: var(--materials-title);
+  transform: translateY(-1px);
+}
+
+.materials-comment-like-icon {
+  font-size: 1rem;
+  line-height: 1;
+  color: #9aa3b2;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.materials-comment-like-text {
+  white-space: nowrap;
+}
+
+.materials-comment-like-btn:hover .materials-comment-like-icon {
+  color: var(--materials-title);
+  transform: scale(1.08);
+}
+
+/* Optional yellow version instead of blue */
+
+.materials-comment-like-btn--active {
+  color: var(--materials-btn-bg);
+}
+
+.materials-comment-like-btn--active .materials-comment-like-icon {
+  color: var(--materials-btn-bg);
+}
+
+
+@media (max-width: 640px) {
+  .materials-comment-top {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+}
