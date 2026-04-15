@@ -1,3 +1,4 @@
+import os
 from os import path
 from datetime import timedelta
 
@@ -6,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import FileResponse
 from django.shortcuts import redirect, get_object_or_404
+from django.db.models import Count, Exists, OuterRef
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic as views
@@ -18,7 +20,7 @@ from final_project.useful_materials.forms import (
     MaterialSearchForm,
     MaterialCommentForm,
 )
-from final_project.useful_materials.models import Materials, MaterialComment
+from final_project.useful_materials.models import Materials, MaterialComment, MaterialCommentVote
 
 
 class MaterialsIndexView(views.ListView):
@@ -81,7 +83,15 @@ class MaterialDetailsView(views.DetailView):
             ).count()
             remaining_comments = max(0, 3 - comments_last_24h)
 
-        comments_qs = self.object.comments.select_related('author').order_by('-created_at')
+        comments_qs = self.object.comments.select_related('author').annotate(
+            likes_count=Count('votes', distinct=True),
+            user_has_liked=Exists(
+                MaterialCommentVote.objects.filter(
+                    comment=OuterRef('pk'),
+                    user=self.request.user,
+                )
+            ) if self.request.user.is_authenticated else False,
+        ).order_by('-likes_count', '-created_at')
         paginator = Paginator(comments_qs, self.comments_paginate_by)
         page_number = self.request.GET.get('page')
         comments_page = paginator.get_page(page_number)
@@ -171,3 +181,31 @@ def download_completed_paper(request, pk):
     response = FileResponse(open(file_path, 'rb'))
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
     return response
+
+@login_required
+def toggle_material_comment_like(request, pk):
+    comment = get_object_or_404(MaterialComment, pk=pk)
+
+    if request.method != 'POST':
+        return redirect('materials-details', pk=comment.material.pk)
+
+    existing_vote = MaterialCommentVote.objects.filter(
+        comment=comment,
+        user=request.user,
+    ).first()
+
+    if existing_vote:
+        existing_vote.delete()
+        messages.success(request, 'Like removed.')
+    else:
+        MaterialCommentVote.objects.create(
+            comment=comment,
+            user=request.user,
+        )
+        messages.success(request, 'Comment liked.')
+
+    page = request.POST.get('page')
+    if page:
+        return redirect(f"{reverse_lazy('materials-details', kwargs={'pk': comment.material.pk})}?page={page}")
+
+    return redirect('materials-details', pk=comment.material.pk)

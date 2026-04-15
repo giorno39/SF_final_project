@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from final_project.useful_materials.models import Materials, MaterialComment
+from final_project.useful_materials.models import Materials, MaterialComment, MaterialCommentVote
 
 
 class MaterialCommentInline(admin.TabularInline):
@@ -57,4 +57,11 @@ class MaterialCommentAdmin(admin.ModelAdmin):
     list_display = ('material', 'author', 'created_at')
     list_filter = ('created_at',)
     search_fields = ('material__title', 'author__username', 'author__email', 'content')
+    ordering = ('-created_at',)
+
+@admin.register(MaterialCommentVote)
+class MaterialCommentVoteAdmin(admin.ModelAdmin):
+    list_display = ('comment', 'user', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('comment__content', 'user__username', 'user__email')
     ordering = ('-created_at',)
