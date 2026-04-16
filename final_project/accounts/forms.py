@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth import forms as auth_forms, get_user_model
+from django.forms import formset_factory
 
-from final_project.accounts.models import TeacherProfile
+from final_project.accounts.models import TeacherProfile, TypesOfUsers, TeacherSpecializationRequest
 
 UserModel = get_user_model()
 
@@ -47,6 +48,10 @@ class UserCreateForm(auth_forms.UserCreationForm):
         self.fields['email'].widget.attrs.setdefault(
             'placeholder', 'name@example.com',
         )
+        self.fields['user_type'].choices = [
+            (TypesOfUsers.student.value, 'Student'),
+            (TypesOfUsers.teacher.value, 'Teacher'),
+        ]
         if 'password1' in self.fields:
             self.fields['password1'].widget.attrs.setdefault(
                 'placeholder', 'Create a password',
@@ -106,3 +111,17 @@ class TeacherSpecializationsForm(forms.ModelForm):
         if not specs or specs.count() == 0:
             raise forms.ValidationError("Please select at least one specialization.")
         return specs
+
+class TeacherSpecializationProofForm(forms.ModelForm):
+    class Meta:
+        model = TeacherSpecializationRequest
+        fields = ("proof_file",)
+        widgets = {
+            "proof_file": forms.ClearableFileInput(attrs={"class": "input"}),
+        }
+
+
+TeacherSpecializationProofFormSet = formset_factory(
+    TeacherSpecializationProofForm,
+    extra=0,
+)

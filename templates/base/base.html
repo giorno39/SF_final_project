@@ -42,6 +42,12 @@
             <li>
               <a class="site-nav-link{% if n == 'student-papers' or n == 'term-paper-edit' or n == 'term-paper-delete' or n == 'term-paper-details' %} is-active{% endif %}" href="{% url 'student-papers' %}"{% if n == 'student-papers' %} aria-current="page"{% endif %}>My Papers</a>
             </li>
+
+            {% elif request.user.user_type == 'reviewer' %}
+            <li>
+              <a class="site-nav-link{% if n == 'reviewer-specialization-requests' or n == 'reviewer-specialization-request-detail' %} is-active{% endif %}" href="{% url 'reviewer-specialization-requests' %}"{% if n == 'reviewer-specialization-requests' %} aria-current="page"{% endif %}>Specialization Reviews</a>
+            </li>
+
             {% else %}
             <li>
               <a class="site-nav-link{% if n == 'teacher-papers' or n == 'term-paper-complete' %} is-active{% endif %}" href="{% url 'teacher-papers' %}"{% if n == 'teacher-papers' %} aria-current="page"{% endif %}>Taken Papers</a>

@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<section class="container lesson-wrap">
+  <article class="lesson-card">
+
+    <header class="lesson-header">
+      <div class="lesson-avatar">⬆</div>
+      <div>
+        <h1 class="lesson-title">Upload proof documents</h1>
+        <p class="lesson-sub">
+          <span class="badge">Step 2 of 2</span>
+        </p>
+      </div>
+    </header>
+
+    <form class="auth-form specializations-form" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ formset.management_form }}
+
+      <div class="specializations-grid" style="display:block;">
+        {% for specialization, form in paired_forms %}
+          <div class="field" style="margin-bottom: 1.25rem;">
+            <label>
+              <strong>{{ specialization.name }}</strong>
+            </label>
+
+            <div style="margin-top: .5rem;">
+              {{ form.proof_file }}
+            </div>
+
+            {% if form.proof_file.errors %}
+              <div class="field-error" style="margin-top: .35rem;">
+                {{ form.proof_file.errors.0 }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="lesson-actions">
+        <a href="{% url 'teacher-specializations' %}" class="btn btn-secondary">Back</a>
+        <button type="submit" class="btn">Submit for review</button>
+      </div>
+    </form>
+
+  </article>
+</section>
+{% endblock %}

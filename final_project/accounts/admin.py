@@ -1,9 +1,12 @@
 from django.contrib import admin
-
-# Register your models here.
 from django.contrib.auth import admin as auth_admin, get_user_model
-from .models import Specialization, TeacherProfile, StudentProfile
 
+from .models import (
+    Specialization,
+    TeacherProfile,
+    StudentProfile,
+    TeacherSpecializationRequest,
+)
 from final_project.accounts.forms import UserEditForm, UserCreateForm
 
 UserModel = get_user_model()
@@ -60,39 +63,37 @@ class UserAdmin(auth_admin.UserAdmin):
         ),
     )
 
-    def get_form(self, request, obj=None, **kwargs):
-        return super().get_form(request, obj, **kwargs)
-
     @admin.display(empty_value='-')
     def has_last_name(self, obj):
-        if not obj.last_name:
-            return '-'
-        return obj.last_name
-
-    has_last_name.short_description = 'LAST NAME'
-    has_last_name.admin_order_field = 'last_name'
+        return obj.last_name or '-'
 
     @admin.display(empty_value='-')
     def has_first_name(self, obj):
-        if not obj.first_name:
-            return '-'
-        return obj.first_name
+        return obj.first_name or '-'
 
-    has_first_name.short_description = 'FIRST NAME'
-    has_first_name.admin_order_field = 'first_name'
 
-    @admin.register(Specialization)
-    class SpecializationAdmin(admin.ModelAdmin):
-        list_display = ("name",)
-        search_fields = ("name",)
+@admin.register(Specialization)
+class SpecializationAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)
 
-    @admin.register(TeacherProfile)
-    class TeacherProfileAdmin(admin.ModelAdmin):
-        list_display = ("user",)
-        search_fields = ("user__username", "user__email")
-        filter_horizontal = ("specializations",)
 
-    @admin.register(StudentProfile)
-    class StudentProfileAdmin(admin.ModelAdmin):
-        list_display = ("user",)
-        search_fields = ("user__username", "user__email")
+@admin.register(TeacherProfile)
+class TeacherProfileAdmin(admin.ModelAdmin):
+    list_display = ("user",)
+    search_fields = ("user__username", "user__email")
+    filter_horizontal = ("specializations",)
+
+
+@admin.register(StudentProfile)
+class StudentProfileAdmin(admin.ModelAdmin):
+    list_display = ("user",)
+    search_fields = ("user__username", "user__email")
+
+
+@admin.register(TeacherSpecializationRequest)
+class TeacherSpecializationRequestAdmin(admin.ModelAdmin):
+    list_display = ("teacher", "specialization", "status", "created_at", "reviewed_at", "reviewed_by")
+    list_filter = ("status", "specialization", "created_at")
+    search_fields = ("teacher__user__username", "teacher__user__email", "specialization__name")
+    autocomplete_fields = ("teacher", "specialization", "reviewed_by")
