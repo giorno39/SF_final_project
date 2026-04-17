@@ -1,11 +1,20 @@
+import os
+
 from django import forms
 from django.contrib.auth import forms as auth_forms, get_user_model
+from django.core.exceptions import ValidationError
 from django.forms import formset_factory
 
 from final_project.accounts.models import TeacherProfile, TypesOfUsers, TeacherSpecializationRequest
 
 UserModel = get_user_model()
 
+ALLOWED_EXTENSIONS = {'.pdf', '.jpg', '.jpeg', '.png'}
+
+def validate_proof_file(file):
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        raise ValidationError("Only PDF, JPG, JPEG, and PNG files are allowed.")
 
 class LoginForm(auth_forms.AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -113,12 +122,19 @@ class TeacherSpecializationsForm(forms.ModelForm):
         return specs
 
 class TeacherSpecializationProofForm(forms.ModelForm):
+    proof_file = forms.FileField(
+        validators=[validate_proof_file],
+        widget=forms.FileInput(
+            attrs={
+                "class": "spec-proof-native-input",
+                "accept": ".pdf,.jpg,.jpeg,.png",
+            }
+        ),
+    )
+
     class Meta:
         model = TeacherSpecializationRequest
         fields = ("proof_file",)
-        widgets = {
-            "proof_file": forms.ClearableFileInput(attrs={"class": "input"}),
-        }
 
 
 TeacherSpecializationProofFormSet = formset_factory(

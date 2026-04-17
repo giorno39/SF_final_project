@@ -14,6 +14,20 @@
       </div>
     </header>
 
+    {% if pending_requests %}
+      <section class="field">
+        <label>Currently requested specializations</label>
+        <div class="specializations-grid">
+          {% for req in pending_requests %}
+            <div class="spec-option spec-option--pending">
+              <span class="spec-label">{{ req.specialization.name }}</span>
+              <span class="badge">Pending</span>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
     <form class="auth-form specializations-form" method="post">
       {% csrf_token %}
 
@@ -34,6 +48,10 @@
             {{ checkbox.tag }}
             <span class="spec-label">{{ checkbox.choice_label }}</span>
           </label>
+        {% empty %}
+          <div class="spec-option spec-option--empty">
+            <span class="spec-label">No available specializations to request right now.</span>
+          </div>
         {% endfor %}
       </div>
 
@@ -90,6 +108,14 @@
 
 #id_specializations.specializations-grid > label.spec-option > .spec-label{
   flex:0 1 auto;
+}
+
+.spec-option--pending,
+.spec-option--empty{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.75rem;
 }
 </style>
 

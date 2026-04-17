@@ -1,0 +1,84 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<section class="spec-review-page">
+  <article class="spec-review-card spec-review-card--detail">
+    <header class="spec-review-header">
+      <h1 class="spec-review-title">Review Specialization Request</h1>
+      <p class="spec-review-subtitle">Check the proof and choose an action.</p>
+    </header>
+
+    <section class="spec-review-detail">
+      <div class="spec-review-detail-row">
+        <span class="spec-review-label">Teacher</span>
+        <span class="spec-review-value">
+          {{ specialization_request.teacher.user.get_full_name|default:specialization_request.teacher.user.username }}
+        </span>
+      </div>
+
+      <div class="spec-review-detail-row">
+        <span class="spec-review-label">Username</span>
+        <span class="spec-review-value">{{ specialization_request.teacher.user.username }}</span>
+      </div>
+
+      <div class="spec-review-detail-row">
+        <span class="spec-review-label">Specialization</span>
+        <span class="spec-review-value">{{ specialization_request.specialization.name }}</span>
+      </div>
+
+      <div class="spec-review-detail-row">
+        <span class="spec-review-label">Submitted</span>
+        <span class="spec-review-value">{{ specialization_request.created_at|date:"d M Y, H:i" }}</span>
+      </div>
+
+      <div class="spec-review-detail-row">
+        <span class="spec-review-label">Proof file</span>
+        <span class="spec-review-value">
+          <a href="{{ specialization_request.proof_file.url }}" target="_blank">Open uploaded file</a>
+        </span>
+      </div>
+
+      <div class="spec-review-detail-row">
+        <span class="spec-review-label">Status</span>
+        <span class="spec-review-value">{{ specialization_request.get_status_display }}</span>
+      </div>
+    </section>
+
+    {% if specialization_request.status == 'pending' %}
+      <form method="post" class="spec-review-form">
+        {% csrf_token %}
+
+        <div class="spec-review-field">
+          <label for="id_reviewer_note" class="spec-review-note-label">Reviewer note</label>
+          <textarea
+            id="id_reviewer_note"
+            name="reviewer_note"
+            rows="5"
+            class="spec-review-note-input"
+            placeholder="Add an optional note for this decision..."
+          ></textarea>
+        </div>
+
+        <div class="spec-review-actions">
+          <button type="submit" name="action" value="reject" class="spec-review-btn spec-review-btn--reject">
+            Reject
+          </button>
+          <button type="submit" name="action" value="approve" class="spec-review-btn spec-review-btn--approve">
+            Approve
+          </button>
+        </div>
+      </form>
+    {% else %}
+      <section class="spec-review-reviewed-box">
+        <p><strong>Reviewed by:</strong> {{ specialization_request.reviewed_by }}</p>
+        <p><strong>Reviewed at:</strong> {{ specialization_request.reviewed_at|date:"d M Y, H:i" }}</p>
+        {% if specialization_request.reviewer_note %}
+          <p><strong>Reviewer note:</strong> {{ specialization_request.reviewer_note }}</p>
+        {% endif %}
+      </section>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}

@@ -2,11 +2,15 @@ from statistics import mean
 
 from django.contrib import messages
 from django.contrib.auth import views as auth_views, get_user_model, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views import generic as views
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 from final_project.accounts.forms import (
     LoginForm,
@@ -122,31 +126,87 @@ class TeacherSpecializationsView(LoginRequiredMixin, View):
             return redirect("index")
         return super().dispatch(request, *args, **kwargs)
 
+    def get_pending_requests(self, teacher_profile):
+        return teacher_profile.specialization_requests.filter(
+            status="pending"
+        ).select_related("specialization").order_by("specialization__name")
+
     def get(self, request, *args, **kwargs):
         teacher_profile, _ = TeacherProfile.objects.get_or_create(user=request.user)
 
-        initial_ids = list(
-            teacher_profile.specialization_requests.exclude(specialization__in=teacher_profile.specializations.all())
-            .values_list("specialization_id", flat=True)
+        pending_requests = self.get_pending_requests(teacher_profile)
+        pending_spec_ids = list(
+            pending_requests.values_list("specialization_id", flat=True)
         )
 
-        form = TeacherSpecializationsForm(
-            initial={"specializations": initial_ids}
+        form = TeacherSpecializationsForm()
+
+        form.fields["specializations"].queryset = Specialization.objects.exclude(
+            id__in=pending_spec_ids
         )
-        return render(request, self.template_name, {"form": form})
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "form": form,
+                "pending_requests": pending_requests,
+            },
+        )
 
     def post(self, request, *args, **kwargs):
+        teacher_profile, _ = TeacherProfile.objects.get_or_create(user=request.user)
+        pending_requests = self.get_pending_requests(teacher_profile)
+        pending_spec_ids = list(
+            pending_requests.values_list("specialization_id", flat=True)
+        )
+
         form = TeacherSpecializationsForm(request.POST)
+        form.fields["specializations"].queryset = Specialization.objects.exclude(
+            id__in=pending_spec_ids
+        )
 
         if not form.is_valid():
-            return render(request, self.template_name, {"form": form})
+            return render(
+                request,
+                self.template_name,
+                {
+                    "form": form,
+                    "pending_requests": pending_requests,
+                },
+            )
 
         specialization_ids = [
             specialization.id
             for specialization in form.cleaned_data["specializations"]
         ]
-        request.session[self.session_key] = specialization_ids
 
+        already_requested_ids = set(specialization_ids) & set(pending_spec_ids)
+        if already_requested_ids:
+            messages.warning(
+                request,
+                "You have already requested one or more of the selected specializations."
+            )
+            specialization_ids = [
+                spec_id for spec_id in specialization_ids
+                if spec_id not in already_requested_ids
+            ]
+
+        if not specialization_ids:
+            messages.warning(
+                request,
+                "All selected specializations are already pending review."
+            )
+            return render(
+                request,
+                self.template_name,
+                {
+                    "form": form,
+                    "pending_requests": pending_requests,
+                },
+            )
+
+        request.session[self.session_key] = specialization_ids
         return redirect("teacher-specialization-proofs")
 
 
@@ -244,3 +304,135 @@ class TeacherSpecializationProofUploadView(LoginRequiredMixin, View):
             "Your specialization requests were submitted for review.",
         )
         return redirect("index")
+
+
+class ReviewerSpecializationRequestsView(LoginRequiredMixin, View):
+    template_name = "accounts/reviewer-specialization-requests.html"
+    paginate_by = 5
+    allowed_statuses = {"pending", "approved", "rejected"}
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+
+        if not (
+            request.user.is_staff
+            or request.user.user_type == TypesOfUsers.reviewer.value
+        ):
+            messages.error(request, "You do not have access to this page.")
+            return redirect("index")
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_selected_status(self, request):
+        status = request.GET.get("status", "pending").lower()
+        if status not in self.allowed_statuses:
+            status = "pending"
+        return status
+
+    def get(self, request, *args, **kwargs):
+        selected_status = self.get_selected_status(request)
+
+        requests_qs = (
+            TeacherSpecializationRequest.objects
+            .filter(status=selected_status)
+            .select_related("teacher__user", "specialization", "reviewed_by")
+            .order_by("-created_at")
+        )
+
+        paginator = Paginator(requests_qs, self.paginate_by)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "page_obj": page_obj,
+                "requests_page": page_obj.object_list,
+                "selected_status": selected_status,
+                "status_tabs": [
+                    ("pending", "Pending"),
+                    ("approved", "Approved"),
+                    ("rejected", "Rejected"),
+                ],
+            },
+        )
+
+
+class ReviewerSpecializationRequestDetailView(LoginRequiredMixin, View):
+    template_name = "accounts/reviewer-specialization-request-detail.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+
+        if not (
+            request.user.is_staff
+            or request.user.user_type == TypesOfUsers.reviewer.value
+        ):
+            messages.error(request, "You do not have access to this page.")
+            return redirect("index")
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, pk):
+        return get_object_or_404(
+            TeacherSpecializationRequest.objects.select_related(
+                "teacher__user",
+                "specialization",
+            ),
+            pk=pk,
+        )
+
+    def get(self, request, pk, *args, **kwargs):
+        specialization_request = self.get_object(pk)
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "specialization_request": specialization_request,
+            },
+        )
+
+    def post(self, request, pk, *args, **kwargs):
+        specialization_request = self.get_object(pk)
+
+        if specialization_request.status != "pending":
+            messages.warning(request, "This request has already been reviewed.")
+            return redirect(
+                "reviewer-specialization-request-detail",
+                pk=specialization_request.pk,
+            )
+
+        action = request.POST.get("action")
+        reviewer_note = request.POST.get("reviewer_note", "").strip()
+
+        specialization_request.reviewer_note = reviewer_note
+        specialization_request.reviewed_by = request.user
+        specialization_request.reviewed_at = timezone.now()
+
+        if action == "approve":
+            specialization_request.status = "approved"
+            specialization_request.save()
+
+            specialization_request.teacher.specializations.add(
+                specialization_request.specialization
+            )
+
+            messages.success(request, "Specialization request approved successfully.")
+            return redirect("reviewer-specialization-requests")
+
+        if action == "reject":
+            specialization_request.status = "rejected"
+            specialization_request.save()
+
+            messages.success(request, "Specialization request rejected.")
+            return redirect("reviewer-specialization-requests")
+
+        messages.error(request, "Invalid action.")
+        return redirect(
+            "reviewer-specialization-request-detail",
+            pk=specialization_request.pk,
+        )

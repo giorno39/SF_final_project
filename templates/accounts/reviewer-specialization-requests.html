@@ -1,0 +1,106 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<section class="spec-review-page">
+  <article class="spec-review-card">
+    <header class="spec-review-header">
+      <h1 class="spec-review-title">Specialization Review Requests</h1>
+      <p class="spec-review-subtitle">
+        Review and browse specialization requests by status.
+      </p>
+    </header>
+
+    <nav class="spec-review-tabs" aria-label="Request status filters">
+      {% for value, label in status_tabs %}
+        <a
+          href="?status={{ value }}"
+          class="spec-review-tab{% if selected_status == value %} is-active{% endif %}"
+        >
+          {{ label }}
+        </a>
+      {% endfor %}
+    </nav>
+
+    <div class="spec-review-list">
+      {% for req in requests_page %}
+        <section class="spec-review-item">
+          <div class="spec-review-item-main">
+            <div class="spec-review-item-top">
+              <h2 class="spec-review-item-title">{{ req.specialization.name }}</h2>
+              <span class="spec-review-status spec-review-status--{{ req.status }}">
+                {{ req.get_status_display }}
+              </span>
+            </div>
+
+            <p class="spec-review-meta">
+              <strong>Teacher:</strong>
+              {{ req.teacher.user.get_full_name|default:req.teacher.user.username }}
+            </p>
+
+            <p class="spec-review-meta">
+              <strong>Submitted:</strong> {{ req.created_at|date:"d M Y, H:i" }}
+            </p>
+
+            <p class="spec-review-meta">
+              <strong>Proof:</strong>
+              <a href="{{ req.proof_file.url }}" target="_blank">Open uploaded file</a>
+            </p>
+
+            {% if req.status != 'pending' %}
+              <p class="spec-review-meta">
+                <strong>Reviewed by:</strong>
+                {{ req.reviewed_by|default:"—" }}
+              </p>
+              <p class="spec-review-meta">
+                <strong>Reviewed at:</strong>
+                {{ req.reviewed_at|date:"d M Y, H:i"|default:"—" }}
+              </p>
+            {% endif %}
+          </div>
+
+          <div class="spec-review-item-actions">
+            <a
+              href="{% url 'reviewer-specialization-request-detail' req.pk %}"
+              class="spec-review-open-btn"
+            >
+              {% if req.status == 'pending' %}Review{% else %}Open{% endif %}
+            </a>
+          </div>
+        </section>
+      {% empty %}
+        <section class="spec-review-empty">
+          <p>No {{ selected_status }} specialization requests right now.</p>
+        </section>
+      {% endfor %}
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+      <nav class="spec-review-pagination" aria-label="Pagination">
+        {% if page_obj.has_previous %}
+          <a
+            href="?status={{ selected_status }}&page={{ page_obj.previous_page_number }}"
+            class="spec-review-page-btn"
+          >
+            Previous
+          </a>
+        {% endif %}
+
+        <span class="spec-review-page-info">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+          <a
+            href="?status={{ selected_status }}&page={{ page_obj.next_page_number }}"
+            class="spec-review-page-btn"
+          >
+            Next
+          </a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}

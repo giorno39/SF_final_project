@@ -1,7 +1,8 @@
 from django.urls import path
 
 from final_project.accounts.views import SignInView, SignUpView, SignOutView, ProfileDetails, ProfileEdit, \
-    ProfileDelete, ChangePasswordView, TeacherSpecializationsView, TeacherSpecializationProofUploadView
+    ProfileDelete, ChangePasswordView, TeacherSpecializationsView, TeacherSpecializationProofUploadView, \
+    ReviewerSpecializationRequestsView, ReviewerSpecializationRequestDetailView
 
 urlpatterns = (
     path('login/', SignInView.as_view(), name='login-user'),
@@ -13,4 +14,6 @@ urlpatterns = (
     path('chage-pass/', ChangePasswordView.as_view(), name='change-password'),
     path("teacher/specializations/", TeacherSpecializationsView.as_view(), name="teacher-specializations"),
     path("teacher/specializations/proofs/", TeacherSpecializationProofUploadView.as_view(), name="teacher-specialization-proofs"),
+    path("reviewer/specialization-requests/",ReviewerSpecializationRequestsView.as_view(),name="reviewer-specialization-requests"),
+    path("reviewer/specialization-requests/<int:pk>/",ReviewerSpecializationRequestDetailView.as_view(),name="reviewer-specialization-request-detail"),
 )
