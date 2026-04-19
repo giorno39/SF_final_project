@@ -1,6 +1,32 @@
 {% extends 'base/base.html' %}
-
+{% load static %}
 
 {% block content %}
-It seems you don't have the permissions to visit this page!
+<section class="no-change-page">
+  <article class="no-change-card no-change-card--danger">
+    <div class="no-change-illustration-wrap">
+      <img
+        src="{% static 'images/no-perms.png' %}"
+        alt="No permission"
+        class="no-change-illustration"
+      >
+    </div>
+
+    <h1 class="no-change-title">Access denied</h1>
+
+    <p class="no-change-text">
+      It looks like you do not have permission to visit this page.
+    </p>
+
+    <div class="no-change-actions">
+      <a href="javascript:history.back()" class="no-change-btn no-change-btn--primary">
+        Go Back
+      </a>
+
+      <a href="{% url 'index' %}" class="no-change-btn no-change-btn--ghost">
+        Back to Home
+      </a>
+    </div>
+  </article>
+</section>
 {% endblock %}

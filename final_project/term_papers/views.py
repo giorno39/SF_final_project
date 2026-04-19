@@ -1,3 +1,4 @@
+import hashlib
 from datetime import datetime, date
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -425,17 +426,26 @@ class CompletePaper(views.UpdateView):
         return result
 
     def form_valid(self, form, *args, **kwargs):
+        current_obj = self.get_object()
+        uploaded_file = form.cleaned_data.get('content')
 
-        initial_data = self.get_object().__dict__.copy()
+        if uploaded_file and current_obj.content:
+            existing_hash = hashlib.md5()
+            with current_obj.content.open('rb') as existing_file:
+                for chunk in iter(lambda: existing_file.read(8192), b''):
+                    existing_hash.update(chunk)
 
-        cleaned_data = form.cleaned_data
+            uploaded_hash = hashlib.md5()
+            for chunk in uploaded_file.chunks():
+                uploaded_hash.update(chunk)
 
-        if initial_data['content'] == cleaned_data['content']:
-            self.is_updatable = False
-            return render(self.request, 'common/no-changes_detected.html')
+            uploaded_file.seek(0)
+
+            if existing_hash.hexdigest() == uploaded_hash.hexdigest():
+                self.is_updatable = False
+                return render(self.request, 'common/no-changes_detected.html')
 
         self.is_updatable = True
-
         return super().form_valid(form)
 
 class TermPaperRequestTeacherListView(views.DetailView):
