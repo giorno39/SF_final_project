@@ -122,8 +122,12 @@ class TeacherSpecializationsView(LoginRequiredMixin, View):
     session_key = "selected_specialization_ids"
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+
         if request.user.user_type != TypesOfUsers.teacher.value:
-            return redirect("index")
+            return render(request, "no-perms.html")
+
         return super().dispatch(request, *args, **kwargs)
 
     def get_pending_requests(self, teacher_profile):
@@ -215,8 +219,12 @@ class TeacherSpecializationProofUploadView(LoginRequiredMixin, View):
     session_key = "selected_specialization_ids"
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+
         if request.user.user_type != TypesOfUsers.teacher.value:
-            return redirect("index")
+            return render(request, "no-perms.html")
+
         return super().dispatch(request, *args, **kwargs)
 
     def get_selected_specializations(self, request):
