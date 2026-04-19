@@ -126,7 +126,7 @@ class TeacherSpecializationsView(LoginRequiredMixin, View):
             return self.handle_no_permission()
 
         if request.user.user_type != TypesOfUsers.teacher.value:
-            return render(request, "no-perms.html")
+            return render(request, "common/no-perms.html")
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -223,7 +223,7 @@ class TeacherSpecializationProofUploadView(LoginRequiredMixin, View):
             return self.handle_no_permission()
 
         if request.user.user_type != TypesOfUsers.teacher.value:
-            return render(request, "no-perms.html")
+            return render(request, "common/no-perms.html")
 
         return super().dispatch(request, *args, **kwargs)
 
