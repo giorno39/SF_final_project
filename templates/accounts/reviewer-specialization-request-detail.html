@@ -42,7 +42,11 @@
 
       <div class="spec-review-detail-row">
         <span class="spec-review-label">Status</span>
-        <span class="spec-review-value">{{ specialization_request.get_status_display }}</span>
+        <span class="spec-review-value">
+          <span class="spec-review-status spec-review-status--{{ specialization_request.status }}">
+            {{ specialization_request.get_status_display }}
+          </span>
+        </span>
       </div>
     </section>
 
@@ -72,10 +76,31 @@
       </form>
     {% else %}
       <section class="spec-review-reviewed-box">
-        <p><strong>Reviewed by:</strong> {{ specialization_request.reviewed_by }}</p>
-        <p><strong>Reviewed at:</strong> {{ specialization_request.reviewed_at|date:"d M Y, H:i" }}</p>
+        <div class="spec-review-reviewed-head">
+          <h3 class="spec-review-reviewed-title">Decision summary</h3>
+          <span class="spec-review-status spec-review-status--{{ specialization_request.status }}">
+            {{ specialization_request.get_status_display }}
+          </span>
+        </div>
+
+        <div class="spec-review-reviewed-meta">
+          <p><strong>Reviewed by:</strong> {{ specialization_request.reviewed_by }}</p>
+          <p><strong>Reviewed at:</strong> {{ specialization_request.reviewed_at|date:"d M Y, H:i" }}</p>
+        </div>
+
         {% if specialization_request.reviewer_note %}
-          <p><strong>Reviewer note:</strong> {{ specialization_request.reviewer_note }}</p>
+          <div class="spec-review-reviewed-note">
+            <span class="spec-review-reviewed-note-label">
+              {% if specialization_request.status == 'approved' %}
+                Approval comment
+              {% elif specialization_request.status == 'rejected' %}
+                Rejection comment
+              {% else %}
+                Reviewer note
+              {% endif %}
+            </span>
+            <p class="spec-review-reviewed-note-text">{{ specialization_request.reviewer_note }}</p>
+          </div>
         {% endif %}
       </section>
     {% endif %}
