@@ -1,0 +1,53 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<section class="spec-proof-page">
+  <article class="spec-proof-card">
+    <header class="spec-proof-header">
+      <h1 class="spec-proof-title">Upload Specialization Proof</h1>
+      <p class="spec-proof-step">Step 2 of 2</p>
+    </header>
+
+    <form class="spec-proof-form" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ formset.management_form }}
+
+      <div class="spec-proof-list">
+        {% for specialization, form in paired_forms %}
+          <section class="spec-proof-item">
+            <h2 class="spec-proof-item-title">{{ specialization.name }}</h2>
+
+            <label class="spec-proof-upload">
+              <span class="spec-proof-upload-icon">⇪</span>
+              <span class="spec-proof-upload-text">
+                <span class="spec-proof-upload-main">Upload your proof document</span>
+                <span class="spec-proof-upload-button">Choose File</span>
+                <span class="spec-proof-upload-note">Allowed files: PDF, JPG, JPEG, PNG</span>
+                <span class="spec-proof-file-name">No file selected</span>
+              </span>
+
+              {{ form.proof_file }}
+            </label>
+
+            {% if form.proof_file.errors %}
+              <div class="spec-proof-error">
+                {{ form.proof_file.errors.0 }}
+              </div>
+            {% endif %}
+          </section>
+        {% endfor %}
+      </div>
+
+      <div class="spec-proof-actions">
+        <a href="{% url 'teacher-specializations' %}" class="spec-proof-back-btn">Back</a>
+        <button type="submit" class="spec-proof-submit-btn">Submit for Review</button>
+      </div>
+    </form>
+  </article>
+</section>
+
+<script src="{% static 'js/file-selection.js' %}"></script>
+
+{% endblock %}

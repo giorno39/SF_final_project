@@ -5,6 +5,7 @@ from django.contrib.auth import models as auth_models
 from django.contrib.auth.models import UserManager
 from django.core import validators
 from django.db import models
+from django.utils import timezone
 
 from final_project.core.model_mixins import NumberChoicesEnumMixin
 
@@ -15,6 +16,7 @@ from final_project.core.model_mixins import NumberChoicesEnumMixin
 class TypesOfUsers(NumberChoicesEnumMixin, Enum):
     student = 'student'
     teacher = 'teacher'
+    reviewer = 'reviewer'
 
 
 class AppUser(auth_models.AbstractUser):
@@ -108,3 +110,58 @@ class StudentProfile(models.Model):
 
     def __str__(self):
         return f"StudentProfile<{self.user.username}>"
+
+
+class SpecializationRequestStatus(models.TextChoices):
+    PENDING = "pending", "Pending"
+    APPROVED = "approved", "Approved"
+    REJECTED = "rejected", "Rejected"
+
+class TeacherSpecializationRequest(models.Model):
+    teacher = models.ForeignKey(
+        TeacherProfile,
+        on_delete=models.CASCADE,
+        related_name="specialization_requests",
+    )
+    specialization = models.ForeignKey(
+        Specialization,
+        on_delete=models.CASCADE,
+        related_name="teacher_requests",
+    )
+    proof_file = models.FileField(
+        upload_to="specialization_proofs/",
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=SpecializationRequestStatus.choices,
+        default=SpecializationRequestStatus.PENDING,
+    )
+    reviewer_note = models.TextField(
+        blank=True,
+    )
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="reviewed_specialization_requests",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    reviewed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        ordering = ("-created_at",)
+        constraints = [
+            models.UniqueConstraint(
+                fields=["teacher", "specialization"],
+                name="unique_teacher_specialization_request",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.teacher.user.username} - {self.specialization.name} [{self.status}]"

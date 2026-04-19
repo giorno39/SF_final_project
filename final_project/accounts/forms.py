@@ -1,10 +1,20 @@
+import os
+
 from django import forms
 from django.contrib.auth import forms as auth_forms, get_user_model
+from django.core.exceptions import ValidationError
+from django.forms import formset_factory
 
-from final_project.accounts.models import TeacherProfile
+from final_project.accounts.models import TeacherProfile, TypesOfUsers, TeacherSpecializationRequest
 
 UserModel = get_user_model()
 
+ALLOWED_EXTENSIONS = {'.pdf', '.jpg', '.jpeg', '.png'}
+
+def validate_proof_file(file):
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        raise ValidationError("Only PDF, JPG, JPEG, and PNG files are allowed.")
 
 class LoginForm(auth_forms.AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -47,6 +57,10 @@ class UserCreateForm(auth_forms.UserCreationForm):
         self.fields['email'].widget.attrs.setdefault(
             'placeholder', 'name@example.com',
         )
+        self.fields['user_type'].choices = [
+            (TypesOfUsers.student.value, 'Student'),
+            (TypesOfUsers.teacher.value, 'Teacher'),
+        ]
         if 'password1' in self.fields:
             self.fields['password1'].widget.attrs.setdefault(
                 'placeholder', 'Create a password',
@@ -106,3 +120,24 @@ class TeacherSpecializationsForm(forms.ModelForm):
         if not specs or specs.count() == 0:
             raise forms.ValidationError("Please select at least one specialization.")
         return specs
+
+class TeacherSpecializationProofForm(forms.ModelForm):
+    proof_file = forms.FileField(
+        validators=[validate_proof_file],
+        widget=forms.FileInput(
+            attrs={
+                "class": "spec-proof-native-input",
+                "accept": ".pdf,.jpg,.jpeg,.png",
+            }
+        ),
+    )
+
+    class Meta:
+        model = TeacherSpecializationRequest
+        fields = ("proof_file",)
+
+
+TeacherSpecializationProofFormSet = formset_factory(
+    TeacherSpecializationProofForm,
+    extra=0,
+)

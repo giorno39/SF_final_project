@@ -1,0 +1,237 @@
+.spec-proof-page {
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem 1rem 3rem;
+}
+
+.spec-proof-page .spec-proof-card {
+  width: 100%;
+  max-width: 720px;
+  background: #fff;
+  border-radius: 28px;
+  padding: 2rem 1.4rem 1.5rem;
+  box-shadow: 0 16px 40px rgba(16, 24, 40, 0.08);
+  border: 1px solid #edf1f5;
+}
+
+.spec-proof-page .spec-proof-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.spec-proof-page .spec-proof-title {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.15;
+  font-weight: 800;
+  color: #2b6fb3;
+}
+
+.spec-proof-page .spec-proof-step {
+  margin: 0.45rem 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.spec-proof-page .spec-proof-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.spec-proof-page .spec-proof-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.spec-proof-page .spec-proof-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.spec-proof-page .spec-proof-item-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1f2a44;
+}
+
+.spec-proof-page .spec-proof-upload {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 132px;
+  padding: 1rem 1rem 0.95rem;
+  border: 2px solid #5f90a9;
+  border-radius: 14px;
+  background: #f7fbff;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  overflow: hidden;
+}
+
+.spec-proof-page .spec-proof-upload:hover {
+  border-color: #2b6fb3;
+  box-shadow: 0 8px 22px rgba(43, 111, 179, 0.12);
+  background: #f3f9ff;
+}
+
+.spec-proof-page .spec-proof-upload-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 0.55rem;
+  border-radius: 50%;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #64748b;
+  background: #eef4f9;
+}
+
+.spec-proof-page .spec-proof-upload-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 260px;
+}
+
+.spec-proof-page .spec-proof-upload-main {
+  font-size: 1rem;
+  color: #4b5563;
+}
+
+.spec-proof-page .spec-proof-upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 118px;
+  min-height: 40px;
+  padding: 0.55rem 1rem;
+  border-radius: 12px;
+  background: #2b6fb3;
+  color: #fff;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: inset 0 0 0 2px #d3a92f;
+}
+
+.spec-proof-page .spec-proof-upload-note {
+  font-size: 0.9rem;
+  color: #667085;
+}
+
+.spec-proof-page .spec-proof-upload {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.spec-proof-page .spec-proof-native-input {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+  cursor: pointer !important;
+  z-index: 3 !important;
+  appearance: none !important;
+}
+
+.spec-proof-page .spec-proof-error {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #c62828;
+  margin-top: 0.15rem;
+}
+
+.spec-proof-page .spec-proof-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 0.35rem;
+}
+
+.spec-proof-page .spec-proof-back-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 76px;
+  height: 38px;
+  padding: 0 1rem;
+  border: 1px solid #d8e1ea;
+  border-radius: 12px;
+  background: #fff;
+  color: #2b6fb3;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.spec-proof-page .spec-proof-back-btn:hover {
+  background: #f8fbff;
+}
+
+.spec-proof-page .spec-proof-submit-btn {
+  width: 100%;
+  min-height: 46px;
+  border: none;
+  border-radius: 12px;
+  background: #2b6fb3;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(43, 111, 179, 0.18);
+}
+
+.spec-proof-page .spec-proof-submit-btn:hover {
+  background: #245f99;
+}
+
+@media (max-width: 520px) {
+  .spec-proof-page .spec-proof-card {
+    padding: 1.5rem 1rem 1.25rem;
+    border-radius: 22px;
+  }
+
+  .spec-proof-page .spec-proof-title {
+    font-size: 1.6rem;
+  }
+
+  .spec-proof-page .spec-proof-upload {
+    min-height: 120px;
+  }
+}
+
+.spec-proof-page .spec-proof-file-name {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #2b6fb3;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.spec-proof-page .spec-proof-upload.has-file {
+  border-color: #2b6fb3;
+  background: #f1f8ff;
+}
