@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
+from final_project.core.permissions_mixins import TeacherRequiredMixin
 from final_project.lessons.forms import CreateLessonForm, LessonEditForm, LessonSearchForm
 from final_project.lessons.models import Lesson
 
@@ -108,7 +109,7 @@ class LessonEditView(views.UpdateView):
         return result
 
 
-class OwnLessonView(views.ListView):
+class OwnLessonView(TeacherRequiredMixin, views.ListView):
     model = Lesson
     template_name = 'lessons/lesson-index.html'
     paginate_by = 6

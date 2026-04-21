@@ -1,23 +1,29 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic as views
 
+from final_project.core.permissions_mixins import StudentRequiredMixin
 from final_project.term_papers.models import TermPaper
 
 from final_project.trophies.models import Trophy
 
 
-class CreateTrophyView(views.CreateView):
+class CreateTrophyView(StudentRequiredMixin, views.CreateView):
     model = Trophy
     template_name = 'trophies/trophy-add.html'
     fields = ('rate', 'comment')
     success_url = reverse_lazy('student-papers')
 
+    def get_term_paper(self):
+        return get_object_or_404(
+            TermPaper,
+            pk=self.kwargs['paper_pk'],
+            user=self.request.user,
+        )
+
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)
-        term_paper = TermPaper.objects \
-            .filter(pk=self.kwargs['paper_pk']) \
-            .get()
+        term_paper = self.get_term_paper()
 
         form.instance.project = term_paper.title
         form.instance.completed_by = term_paper.taken_by
@@ -26,46 +32,38 @@ class CreateTrophyView(views.CreateView):
             'placeholder': 'Describe the teacher’s communication, quality of work, and whether the paper was delivered on time. This helps us improve future recommendations.',
             'rows': 5,
         })
-
         return form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['pk_paper'] = self.kwargs['paper_pk']
-
         return context
 
     def get(self, request, *args, **kwargs):
-        result = super().get(request, *args, **kwargs)
-
-        term_paper = TermPaper.objects \
-            .filter(pk=self.kwargs['paper_pk']) \
-            .get()
+        term_paper = self.get_term_paper()
 
         if term_paper.rated:
             return render(self.request, 'trophies/trophy-already-rated.html')
 
-        return result
+        return super().get(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        result = super().post(request, *args, **kwargs)
+    def form_valid(self, form):
+        term_paper = self.get_term_paper()
 
-        term_paper = TermPaper.objects \
-            .filter(pk=self.kwargs['paper_pk']) \
-            .get()
+        if term_paper.rated:
+            return render(self.request, 'trophies/trophy-already-rated.html')
 
         term_paper.rated = True
         term_paper.save()
 
-        return result
+        return super().form_valid(form)
 
 
 class TeacherTrophies(views.ListView):
     model = Trophy
     template_name = 'trophies/trophy-list.html'
+    context_object_name = 'trophies'
 
     def get_queryset(self):
-        teacher = self.kwargs['teacher']
-        trophies = Trophy.objects.filter(completed_by=teacher)
-
-        return trophies
+        teacher_id = self.kwargs['teacher']
+        return Trophy.objects.filter(completed_by_id=teacher_id)

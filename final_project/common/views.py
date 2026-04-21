@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.views import generic as views
 
 from final_project.core.funcs import get_user_by_id
+from final_project.core.permissions_mixins import StudentRequiredMixin, TeacherRequiredMixin
 from final_project.term_papers.forms import TermPaperSearchForm
 from final_project.term_papers.models import TermPaper
 
@@ -23,7 +24,7 @@ def index(request):
         return render(request, 'base/base.html')
 
 
-class StudentPaperView(LoginRequiredMixin, views.ListView):
+class StudentPaperView(StudentRequiredMixin, views.ListView):
     model = TermPaper
     template_name = 'term-papers/own-papers-student.html'
     paginate_by = 4
@@ -56,7 +57,7 @@ class StudentPaperView(LoginRequiredMixin, views.ListView):
         return context
 
 
-class TeacherPaperView(LoginRequiredMixin, views.ListView):
+class TeacherPaperView(TeacherRequiredMixin, views.ListView):
     model = TermPaper
     template_name = 'teacher/teacher-taken-papers.html'
     paginate_by = 2

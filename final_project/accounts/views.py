@@ -2,7 +2,6 @@ from statistics import mean
 
 from django.contrib import messages
 from django.contrib.auth import views as auth_views, get_user_model, login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
@@ -11,6 +10,7 @@ from django.views import View
 from django.views import generic as views
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from final_project.core.permissions_mixins import TeacherRequiredMixin, ReviewerRequiredMixin
 
 from final_project.accounts.forms import (
     LoginForm,
@@ -117,18 +117,9 @@ class ProfileDelete(LoginRequiredMixin, views.DeleteView):
         return result
 
 
-class TeacherSpecializationsView(LoginRequiredMixin, View):
+class TeacherSpecializationsView(TeacherRequiredMixin, View):
     template_name = "accounts/teacher-specializations.html"
     session_key = "selected_specialization_ids"
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-
-        if request.user.user_type != TypesOfUsers.teacher.value:
-            return render(request, "common/no-perms.html")
-
-        return super().dispatch(request, *args, **kwargs)
 
     def get_pending_requests(self, teacher_profile):
         return teacher_profile.specialization_requests.filter(
@@ -214,18 +205,9 @@ class TeacherSpecializationsView(LoginRequiredMixin, View):
         return redirect("teacher-specialization-proofs")
 
 
-class TeacherSpecializationProofUploadView(LoginRequiredMixin, View):
+class TeacherSpecializationProofUploadView(TeacherRequiredMixin, View):
     template_name = "accounts/teacher-specialization-proofs.html"
     session_key = "selected_specialization_ids"
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-
-        if request.user.user_type != TypesOfUsers.teacher.value:
-            return render(request, "common/no-perms.html")
-
-        return super().dispatch(request, *args, **kwargs)
 
     def get_selected_specializations(self, request):
         specialization_ids = request.session.get(self.session_key, [])
@@ -314,23 +296,10 @@ class TeacherSpecializationProofUploadView(LoginRequiredMixin, View):
         return redirect("index")
 
 
-class ReviewerSpecializationRequestsView(LoginRequiredMixin, View):
+class ReviewerSpecializationRequestsView(ReviewerRequiredMixin, View):
     template_name = "accounts/reviewer-specialization-requests.html"
     paginate_by = 5
     allowed_statuses = {"pending", "approved", "rejected"}
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-
-        if not (
-            request.user.is_staff
-            or request.user.user_type == TypesOfUsers.reviewer.value
-        ):
-            messages.error(request, "You do not have access to this page.")
-            return redirect("index")
-
-        return super().dispatch(request, *args, **kwargs)
 
     def get_selected_status(self, request):
         status = request.GET.get("status", "pending").lower()
@@ -368,21 +337,8 @@ class ReviewerSpecializationRequestsView(LoginRequiredMixin, View):
         )
 
 
-class ReviewerSpecializationRequestDetailView(LoginRequiredMixin, View):
+class ReviewerSpecializationRequestDetailView(ReviewerRequiredMixin, View):
     template_name = "accounts/reviewer-specialization-request-detail.html"
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-
-        if not (
-            request.user.is_staff
-            or request.user.user_type == TypesOfUsers.reviewer.value
-        ):
-            messages.error(request, "You do not have access to this page.")
-            return redirect("index")
-
-        return super().dispatch(request, *args, **kwargs)
 
     def get_object(self, pk):
         return get_object_or_404(
