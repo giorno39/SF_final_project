@@ -9,7 +9,7 @@ class ReviewerOrAdminRequiredMixin:
         if not request.user.is_authenticated:
             return redirect("login-user")
 
-        is_reviewer = request.user.user_type == TypesOfUsers.reviewer.value
+        is_reviewer = request.user.user_type == TypesOfUsers.REVIEWER
         is_real_admin = request.user.is_staff or request.user.is_superuser
 
         if not (is_reviewer or is_real_admin):

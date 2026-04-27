@@ -5,6 +5,7 @@ from django.contrib.auth import models as auth_models
 from django.contrib.auth.models import UserManager
 from django.core import validators
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
 from final_project.core.model_mixins import NumberChoicesEnumMixin
@@ -13,10 +14,10 @@ from final_project.core.model_mixins import NumberChoicesEnumMixin
 # Create your models here.
 
 
-class TypesOfUsers(NumberChoicesEnumMixin, Enum):
-    student = 'student'
-    teacher = 'teacher'
-    reviewer = 'reviewer'
+class TypesOfUsers(models.TextChoices):
+    STUDENT = "student", _("Student")
+    TEACHER = "teacher", _("Teacher")
+    REVIEWER = "reviewer", _("Reviewer")
 
 
 class AppUser(auth_models.AbstractUser):
@@ -40,8 +41,8 @@ class AppUser(auth_models.AbstractUser):
     )
 
     user_type = models.CharField(
-        choices=TypesOfUsers.choices(),
-        max_length=TypesOfUsers.max_type_length(),
+        choices=TypesOfUsers.choices,
+        max_length=20,
     )
 
     objects = UserManager()
@@ -113,9 +114,9 @@ class StudentProfile(models.Model):
 
 
 class SpecializationRequestStatus(models.TextChoices):
-    PENDING = "pending", "Pending"
-    APPROVED = "approved", "Approved"
-    REJECTED = "rejected", "Rejected"
+    PENDING = "pending", _("Pending")
+    APPROVED = "approved", _("Approved")
+    REJECTED = "rejected", _("Rejected")
 
 class TeacherSpecializationRequest(models.Model):
     teacher = models.ForeignKey(

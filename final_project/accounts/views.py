@@ -8,6 +8,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views import generic as views
+from django.utils.translation import gettext_lazy as _
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from final_project.core.permissions_mixins import TeacherRequiredMixin, ReviewerRequiredMixin
@@ -329,9 +330,9 @@ class ReviewerSpecializationRequestsView(ReviewerRequiredMixin, View):
                 "requests_page": page_obj.object_list,
                 "selected_status": selected_status,
                 "status_tabs": [
-                    ("pending", "Pending"),
-                    ("approved", "Approved"),
-                    ("rejected", "Rejected"),
+                    ("pending", _("Pending")),
+                    ("approved", _("Approved")),
+                    ("rejected", _("Rejected")),
                 ],
             },
         )

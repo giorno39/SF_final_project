@@ -17,7 +17,7 @@
           {% endif %}
         </h1>
         <p class="profile-sub">
-          <span class="badge">{{ object.user_type }}</span>
+          <span class="badge">{{ object.get_user_type_display }}</span>
         </p>
       </div>
     </header>
@@ -28,7 +28,7 @@
       {% endif %}
 
       <p><span class="label">{% trans "Email:" %}</span> {{ object.email }}</p>
-      <p><span class="label">{% trans "User type:" %}</span> {{ object.user_type }}</p>
+      <p><span class="label">{% trans "User type:" %}</span> {{ object.get_user_type_display }}</p>
 
       {% if object.user_type == 'teacher' %}
       <p>
