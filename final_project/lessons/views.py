@@ -2,6 +2,7 @@ from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
+from django.utils.translation import gettext_lazy as _
 
 from final_project.core.permissions_mixins import TeacherRequiredMixin
 from final_project.lessons.forms import CreateLessonForm, LessonEditForm, LessonSearchForm
@@ -61,7 +62,7 @@ class LessonIndexView(views.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = LessonSearchForm(self.request.GET)
-        context['lesson_feed_title'] = 'Lesson Discovery Feed'
+        context['lesson_feed_title'] = _('Lesson Discovery Feed')
         context['get_params'] = _lesson_feed_querystring(self.request)
         return context
 

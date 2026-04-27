@@ -4,6 +4,10 @@
 {% block content %}
 <section class="container lessons-wrap">
 
+    <h1 class="lesson-feed-title">
+    {% trans "Materials Feed" %}
+  </h1>
+
   <form class="search-form" method="get" action="{% url 'materials-index' %}">
     <div class="search-bar">
       {{ search_form.material_title }}
@@ -22,7 +26,7 @@
         <p class="term-paper-card-p">
           <strong>{% trans "Specializations:" %}</strong>
           {% for specialization in object.specializations.all %}
-            <span class="badge">{{ specialization.name }}</span>{% if not forloop.last %} {% endif %}
+            <span class="badge">{{ specialization.translated_name }}</span>{% if not forloop.last %} {% endif %}
           {% empty %}
             <span>{% trans "No specialization" %}</span>
           {% endfor %}

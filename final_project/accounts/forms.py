@@ -119,6 +119,13 @@ class TeacherSpecializationsForm(forms.ModelForm):
             "specializations": forms.CheckboxSelectMultiple(),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["specializations"].label_from_instance = (
+            lambda obj: obj.translated_name
+        )
+
     def clean_specializations(self):
         specs = self.cleaned_data.get("specializations")
         if not specs or specs.count() == 0:

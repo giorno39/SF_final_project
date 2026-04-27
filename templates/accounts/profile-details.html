@@ -35,7 +35,7 @@
         <span class="label">{% trans "Specializations:" %}</span>
         {% if specializations %}
           {% for s in specializations %}
-            <span class="badge">{{ s.name }}</span>
+            <span class="badge">{{ s.translated_name }}</span>
           {% endfor %}
         {% else %}
           <span class="muted">{% trans "No specializations selected yet." %}</span>

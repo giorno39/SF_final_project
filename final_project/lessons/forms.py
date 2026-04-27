@@ -104,14 +104,17 @@ class LessonEditForm(forms.ModelForm):
         return specializations
 
 
+from django import forms
+from django.utils.translation import gettext_lazy as _
+
 class LessonSearchForm(forms.Form):
     lesson_title = forms.CharField(
         max_length=200,
         required=False,
         widget=forms.TextInput(
             attrs={
-                'placeholder': 'Search by title...',
-                'autocomplete': 'off',
+                "placeholder": _("Search by title..."),
+                "autocomplete": "off",
             },
         ),
     )
@@ -119,5 +122,12 @@ class LessonSearchForm(forms.Form):
     specialization = forms.ModelChoiceField(
         queryset=Specialization.objects.all(),
         required=False,
-        empty_label='All specializations',
+        empty_label=_("All specializations"),
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["specialization"].label_from_instance = (
+            lambda obj: obj.translated_name
+        )

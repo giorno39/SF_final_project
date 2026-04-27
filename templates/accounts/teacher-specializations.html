@@ -21,7 +21,7 @@
         <div class="specializations-grid">
           {% for req in pending_requests %}
             <div class="spec-option spec-option--pending">
-              <span class="spec-label">{{ req.specialization.name }}</span>
+              <span class="spec-label">{{ req.specialization.translated_name }}</span>
               <span class="badge">{% trans "Pending" %}</span>
             </div>
           {% endfor %}

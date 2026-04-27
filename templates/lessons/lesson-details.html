@@ -84,7 +84,7 @@
           <span>
             <strong>{% trans "Specializations:" %}</strong>
             {% for specialization in object.specializations.all %}
-              {{ specialization.name }}{% if not forloop.last %}, {% endif %}
+              {{ specialization.translated_name }}{% if not forloop.last %}, {% endif %}
             {% empty %}
               {% trans "No specialization" %}
             {% endfor %}

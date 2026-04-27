@@ -806,3 +806,85 @@ button.language-toggle-btn:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(24, 100, 171, .25);
 }
+
+/* ===== Header centered nav with longer translated labels ===== */
+
+.header-inner {
+  max-width: 100%;
+  padding: 0 1rem;
+  gap: .75rem;
+}
+
+.site-header .brand {
+  flex: 0 0 auto;
+  max-width: none;
+  margin-right: 0;
+}
+
+.site-nav-drawer {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: .75rem;
+}
+
+.header-nav-center {
+  min-width: 0;
+  justify-content: center;
+}
+
+.site-nav-primary {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.site-nav-primary-inner {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.site-nav-primary-inner > ul {
+  justify-content: center;
+}
+
+.site-nav-primary-inner .site-nav-link {
+  padding: 0 .6rem;
+  font-size: .86rem;
+}
+
+.header-actions {
+  justify-self: end;
+  flex: 0 0 auto;
+  gap: .35rem;
+}
+
+.profile-btn .profile-btn-role {
+  max-width: 7rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .site-nav-primary-inner .site-nav-link {
+    padding: 0 .45rem;
+    font-size: .8rem;
+  }
+
+  .site-header .brand {
+    font-size: 1.15rem;
+  }
+
+  .profile-btn .profile-btn-role {
+    max-width: 5.7rem;
+    font-size: .68rem;
+  }
+
+  button.language-toggle-btn {
+    min-width: 44px;
+    height: 38px;
+    padding: 0 .75rem;
+  }
+}

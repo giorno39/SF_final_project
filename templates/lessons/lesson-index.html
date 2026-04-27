@@ -41,7 +41,7 @@
             <div class="lesson-card-tags">
               {% for specialization in object.specializations.all %}
                 <span class="lesson-card-tag" title="{% trans 'Specialization' %}">
-                  {{ specialization.name }}
+                  {{ specialization.translated_name }}
                 </span>
               {% empty %}
                 <span class="lesson-card-tag">{% trans "No specialization" %}</span>

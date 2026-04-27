@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic as views
+from django.utils.translation import gettext_lazy as _
 import os
 
 from final_project import settings
@@ -111,7 +112,7 @@ class TermPaperIndexView(views.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = TermPaperSearchForm(self.request.GET)
-        context['term_paper_feed_title'] = 'Term Paper Discovery Feed'
+        context["term_paper_feed_title"] = _("Term Paper Discovery Feed")
         context['get_params'] = _term_paper_feed_querystring(self.request)
         return context
 

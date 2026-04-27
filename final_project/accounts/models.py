@@ -54,6 +54,41 @@ class AppUser(auth_models.AbstractUser):
 class Specialization(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
+    TRANSLATION_MAP = {
+        "Mathematics": _("Mathematics"),
+        "Physics": _("Physics"),
+        "Chemistry": _("Chemistry"),
+        "Biology": _("Biology"),
+        "Computer Science": _("Computer Science"),
+        "Programming": _("Programming"),
+        "Engineering": _("Engineering"),
+        "Statistics": _("Statistics"),
+        "Economics": _("Economics"),
+        "Business & Management": _("Business & Management"),
+        "Accounting": _("Accounting"),
+        "Law": _("Law"),
+        "Political Science": _("Political Science"),
+        "Psychology": _("Psychology"),
+        "Sociology": _("Sociology"),
+        "Philosophy": _("Philosophy"),
+        "History": _("History"),
+        "Geography": _("Geography"),
+        "Literature": _("Literature"),
+        "Linguistics": _("Linguistics"),
+        "English Language": _("English Language"),
+        "Japanese Language": _("Japanese Language"),
+        "Spanish Language": _("Spanish Language"),
+        "French Language": _("French Language"),
+        "Art & Design": _("Art & Design"),
+        "Drawing & Illustration": _("Drawing & Illustration"),
+        "Music": _("Music"),
+        "Education & Pedagogy": _("Education & Pedagogy"),
+    }
+
+    @property
+    def translated_name(self):
+        return self.TRANSLATION_MAP.get(self.name, self.name)
+
     class Meta:
         ordering = ("name",)
 
