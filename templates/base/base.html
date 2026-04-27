@@ -1,6 +1,10 @@
 {% load static %}
+{% load i18n %}
 
-<html lang="en">
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,7 +14,6 @@
   {% block extra_head %}{% endblock %}
 </head>
 
-<!-- make the page a flex column so the footer can stick to the bottom -->
 <body class="site">
   {% if request.resolver_match %}
   {% with n=request.resolver_match.url_name %}
@@ -21,70 +24,112 @@
       <div id="site-nav-drawer" class="site-nav-drawer{% if not request.user.is_authenticated %} site-nav-drawer--guest{% endif %}">
         {% if request.user.is_authenticated %}
         <div class="header-nav-center">
-        <nav class="site-nav site-nav-primary" role="navigation" aria-label="Primary">
-          <div class="site-nav-primary-inner">
-            <span class="site-nav-active-indicator" aria-hidden="true"></span>
-            <ul>
-            {% if request.user.is_staff %}
-            <li>
-              <a class="site-nav-link{% if request.path|slice:':7' == '/admin/' %} is-active{% endif %}" href="{% url 'admin:index' %}"{% if request.path|slice:':7' == '/admin/' %} aria-current="page"{% endif %}>Administration</a>
-            </li>
-            {% endif %}
+          <nav class="site-nav site-nav-primary" role="navigation" aria-label="{% trans 'Primary navigation' %}">
+            <div class="site-nav-primary-inner">
+              <span class="site-nav-active-indicator" aria-hidden="true"></span>
+              <ul>
+                {% if request.user.is_staff %}
+                <li>
+                  <a class="site-nav-link{% if request.path|slice:':7' == '/admin/' %} is-active{% endif %}"
+                     href="{% url 'admin:index' %}"
+                     {% if request.path|slice:':7' == '/admin/' %}aria-current="page"{% endif %}>
+                    {% trans "Administration" %}
+                  </a>
+                </li>
+                {% endif %}
 
-            <li>
-              <a class="site-nav-link{% if n == 'materials-add' or n == 'materials-edit' or n == 'materials-details' or n == 'materials-delete' or n == 'materials-index' %} is-active{% endif %}" href="{% url 'materials-add' %}"{% if n == 'materials-add' %} aria-current="page"{% endif %}>Add Materials</a>
-            </li>
+                <li>
+                  <a class="site-nav-link{% if n == 'materials-add' or n == 'materials-edit' or n == 'materials-details' or n == 'materials-delete' or n == 'materials-index' %} is-active{% endif %}"
+                     href="{% url 'materials-add' %}"
+                     {% if n == 'materials-add' %}aria-current="page"{% endif %}>
+                    {% trans "Add Materials" %}
+                  </a>
+                </li>
 
-            {% if request.user.user_type == 'student' %}
-            <li>
-              <a class="site-nav-link{% if n == 'term-paper-add' %} is-active{% endif %}" href="{% url 'term-paper-add' %}"{% if n == 'term-paper-add' %} aria-current="page"{% endif %}>Add Term Paper</a>
-            </li>
-            <li>
-              <a class="site-nav-link{% if n == 'student-papers' or n == 'term-paper-edit' or n == 'term-paper-delete' or n == 'term-paper-details' %} is-active{% endif %}" href="{% url 'student-papers' %}"{% if n == 'student-papers' %} aria-current="page"{% endif %}>My Papers</a>
-            </li>
+                {% if request.user.user_type == 'student' %}
+                <li>
+                  <a class="site-nav-link{% if n == 'term-paper-add' %} is-active{% endif %}"
+                     href="{% url 'term-paper-add' %}"
+                     {% if n == 'term-paper-add' %}aria-current="page"{% endif %}>
+                    {% trans "Add Term Paper" %}
+                  </a>
+                </li>
+                <li>
+                  <a class="site-nav-link{% if n == 'student-papers' or n == 'term-paper-edit' or n == 'term-paper-delete' or n == 'term-paper-details' %} is-active{% endif %}"
+                     href="{% url 'student-papers' %}"
+                     {% if n == 'student-papers' %}aria-current="page"{% endif %}>
+                    {% trans "My Papers" %}
+                  </a>
+                </li>
 
-            {% elif request.user.user_type == 'reviewer' %}
-            <li>
-              <a class="site-nav-link{% if n == 'reviewer-specialization-requests' or n == 'reviewer-specialization-request-detail' %} is-active{% endif %}" href="{% url 'reviewer-specialization-requests' %}"{% if n == 'reviewer-specialization-requests' %} aria-current="page"{% endif %}>Specialization Reviews</a>
-            </li>
+                {% elif request.user.user_type == 'reviewer' %}
+                <li>
+                  <a class="site-nav-link{% if n == 'reviewer-specialization-requests' or n == 'reviewer-specialization-request-detail' %} is-active{% endif %}"
+                     href="{% url 'reviewer-specialization-requests' %}"
+                     {% if n == 'reviewer-specialization-requests' %}aria-current="page"{% endif %}>
+                    {% trans "Specialization Reviews" %}
+                  </a>
+                </li>
 
-            {% else %}
-            <li>
-              <a class="site-nav-link{% if n == 'teacher-papers' or n == 'term-paper-complete' %} is-active{% endif %}" href="{% url 'teacher-papers' %}"{% if n == 'teacher-papers' %} aria-current="page"{% endif %}>Taken Papers</a>
-            </li>
-            <li>
-              <a class="site-nav-link{% if n == 'teacher-term-paper-requests' or n == 'accept-term-paper-request' or n == 'decline-term-paper-request' %} is-active{% endif %}" href="{% url 'teacher-term-paper-requests' %}"{% if n == 'teacher-term-paper-requests' %} aria-current="page"{% endif %}>Requests</a>
-            </li>
-            <li>
-              <a class="site-nav-link{% if n == 'lesson-add' %} is-active{% endif %}" href="{% url 'lesson-add' %}"{% if n == 'lesson-add' %} aria-current="page"{% endif %}>Add Lesson</a>
-            </li>
-            <li>
-              <a class="site-nav-link{% if n == 'own-lesson-index' or n == 'lesson-edit' or n == 'lesson-details' or n == 'lesson-delete' %} is-active{% endif %}" href="{% url 'own-lesson-index' %}"{% if n == 'own-lesson-index' %} aria-current="page"{% endif %}>My Lessons</a>
-            </li>
-            {% endif %}
-            </ul>
-          </div>
-        </nav>
+                {% else %}
+                <li>
+                  <a class="site-nav-link{% if n == 'teacher-papers' or n == 'term-paper-complete' %} is-active{% endif %}"
+                     href="{% url 'teacher-papers' %}"
+                     {% if n == 'teacher-papers' %}aria-current="page"{% endif %}>
+                    {% trans "Taken Papers" %}
+                  </a>
+                </li>
+                <li>
+                  <a class="site-nav-link{% if n == 'teacher-term-paper-requests' or n == 'accept-term-paper-request' or n == 'decline-term-paper-request' %} is-active{% endif %}"
+                     href="{% url 'teacher-term-paper-requests' %}"
+                     {% if n == 'teacher-term-paper-requests' %}aria-current="page"{% endif %}>
+                    {% trans "Requests" %}
+                  </a>
+                </li>
+                <li>
+                  <a class="site-nav-link{% if n == 'lesson-add' %} is-active{% endif %}"
+                     href="{% url 'lesson-add' %}"
+                     {% if n == 'lesson-add' %}aria-current="page"{% endif %}>
+                    {% trans "Add Lesson" %}
+                  </a>
+                </li>
+                <li>
+                  <a class="site-nav-link{% if n == 'own-lesson-index' or n == 'lesson-edit' or n == 'lesson-details' or n == 'lesson-delete' %} is-active{% endif %}"
+                     href="{% url 'own-lesson-index' %}"
+                     {% if n == 'own-lesson-index' %}aria-current="page"{% endif %}>
+                    {% trans "My Lessons" %}
+                  </a>
+                </li>
+                {% endif %}
+              </ul>
+            </div>
+          </nav>
         </div>
         {% endif %}
 
         <div class="header-actions">
           {% if request.user.is_authenticated %}
-          <nav class="site-nav site-nav-icons" aria-label="Account">
+          <nav class="site-nav site-nav-icons" aria-label="{% trans 'Account navigation' %}">
             <ul>
               <li>
                 <span class="nav-badge-wrap">
-                  <a class="header-icon-btn icon-pill{% if n == 'chat-inbox' or n == 'chat-conversation' %} is-active{% endif %}" href="{% url 'chat-inbox' %}" aria-label="Inbox"{% if n == 'chat-inbox' %} aria-current="page"{% endif %}>
+                  <a class="header-icon-btn icon-pill{% if n == 'chat-inbox' or n == 'chat-conversation' %} is-active{% endif %}"
+                     href="{% url 'chat-inbox' %}"
+                     aria-label="{% trans 'Inbox' %}"
+                     {% if n == 'chat-inbox' %}aria-current="page"{% endif %}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true">
                       <path d="M160 368c26.5 0 48 21.5 48 48v16l72.5-54.4c8.3-6.2 18.4-9.6 28.8-9.6H448c8.8 0 16-7.2 16-16V64c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v288c0 8.8 7.2 16 16 16h96zm48 124l-.2.2-5.4 3.9c-7 5-14.2 7.9-22.1 7.9-12.6 0-24.3-7.6-29.2-19.5-3-7.4-3.1-15.1-3.1-21.3V432H64c-35.3 0-64-28.7-64-64V64C0 28.7 28.7 0 64 0h384c35.3 0 64 28.7 64 64v288c0 35.3-28.7 64-64 64H309.3L208 492z"/>
                     </svg>
-                    <span class="sr-only">Inbox</span>
+                    <span class="sr-only">{% trans "Inbox" %}</span>
                   </a>
                   <span class="nav-unread-badge" id="inboxBadge" style="display:none"></span>
                 </span>
               </li>
+
               <li>
-                <a class="header-icon-btn profile-btn{% if n == 'details-user' or n == 'edit-user' or n == 'delete-user' or n == 'change-password' or n == 'teacher-specializations' %} is-active{% endif %}" href="{% url 'details-user' pk=request.user.pk %}" aria-label="Profile">
+                <a class="header-icon-btn profile-btn{% if n == 'details-user' or n == 'edit-user' or n == 'delete-user' or n == 'change-password' or n == 'teacher-specializations' %} is-active{% endif %}"
+                   href="{% url 'details-user' pk=request.user.pk %}"
+                   aria-label="{% trans 'Profile' %}">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
                     <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112z"/>
                   </svg>
@@ -94,24 +139,64 @@
                   </span>
                 </a>
               </li>
+
               <li>
-                <a class="header-icon-btn icon-pill" href="{% url 'logout-user' %}" aria-label="Log out">
+                <a class="header-icon-btn icon-pill"
+                   href="{% url 'logout-user' %}"
+                   aria-label="{% trans 'Log out' %}">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true">
                     <path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32S177.7 32 160 32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z"/>
                   </svg>
-                  <span class="sr-only">Log out</span>
+                  <span class="sr-only">{% trans "Log out" %}</span>
                 </a>
               </li>
             </ul>
           </nav>
           {% else %}
-          <nav class="site-nav site-nav-icons" aria-label="Account">
+          <nav class="site-nav site-nav-icons" aria-label="{% trans 'Account navigation' %}">
             <ul>
-              <li><a class="site-nav-link{% if n == 'login-user' %} is-active{% endif %}" href="{% url 'login-user' %}"{% if n == 'login-user' %} aria-current="page"{% endif %}>Login</a></li>
-              <li><a class="site-nav-link site-nav-link--cta{% if n == 'register-user' %} is-active{% endif %}" href="{% url 'register-user' %}"{% if n == 'register-user' %} aria-current="page"{% endif %}>Register</a></li>
+              <li>
+                <a class="site-nav-link{% if n == 'login-user' %} is-active{% endif %}"
+                   href="{% url 'login-user' %}"
+                   {% if n == 'login-user' %}aria-current="page"{% endif %}>
+                  {% trans "Login" %}
+                </a>
+              </li>
+              <li>
+                <a class="site-nav-link site-nav-link--cta{% if n == 'register-user' %} is-active{% endif %}"
+                   href="{% url 'register-user' %}"
+                   {% if n == 'register-user' %}aria-current="page"{% endif %}>
+                  {% trans "Register" %}
+                </a>
+              </li>
             </ul>
           </nav>
           {% endif %}
+
+          <form action="{% url 'set_language' %}" method="post" class="language-toggle-form">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+
+            {% if LANGUAGE_CODE == 'bg' %}
+              <button type="submit"
+                      name="language"
+                      value="en"
+                      class="header-icon-btn icon-pill language-toggle-btn"
+                      aria-label="{% trans 'Language' %}"
+                      title="{% trans 'Switch to English' %}">
+                EN
+              </button>
+            {% else %}
+              <button type="submit"
+                      name="language"
+                      value="bg"
+                      class="header-icon-btn icon-pill language-toggle-btn"
+                      aria-label="{% trans 'Language' %}"
+                      title="{% trans 'Switch to Bulgarian' %}">
+                BG
+              </button>
+            {% endif %}
+          </form>
         </div>
       </div>
     </div>
@@ -125,12 +210,45 @@
 
       <div id="site-nav-drawer" class="site-nav-drawer site-nav-drawer--guest">
         <div class="header-actions">
-          <nav class="site-nav site-nav-icons" aria-label="Account">
+          <nav class="site-nav site-nav-icons" aria-label="{% trans 'Account navigation' %}">
             <ul>
-              <li><a class="site-nav-link" href="{% url 'login-user' %}">Login</a></li>
-              <li><a class="site-nav-link site-nav-link--cta" href="{% url 'register-user' %}">Register</a></li>
+              <li>
+                <a class="site-nav-link" href="{% url 'login-user' %}">
+                  {% trans "Login" %}
+                </a>
+              </li>
+              <li>
+                <a class="site-nav-link site-nav-link--cta" href="{% url 'register-user' %}">
+                  {% trans "Register" %}
+                </a>
+              </li>
             </ul>
           </nav>
+
+          <form action="{% url 'set_language' %}" method="post" class="language-toggle-form">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+
+            {% if LANGUAGE_CODE == 'bg' %}
+              <button type="submit"
+                      name="language"
+                      value="en"
+                      class="header-icon-btn icon-pill language-toggle-btn"
+                      aria-label="{% trans 'Language' %}"
+                      title="{% trans 'Switch to English' %}">
+                EN
+              </button>
+            {% else %}
+              <button type="submit"
+                      name="language"
+                      value="bg"
+                      class="header-icon-btn icon-pill language-toggle-btn"
+                      aria-label="{% trans 'Language' %}"
+                      title="{% trans 'Switch to Bulgarian' %}">
+                BG
+              </button>
+            {% endif %}
+          </form>
         </div>
       </div>
     </div>
@@ -146,14 +264,15 @@
     </div>
   {% endif %}
 
-  <!-- this expands to fill remaining height, pushing footer down -->
   <main id="main" class="container site-main">
     {% block content %}{% endblock %}
   </main>
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <small>© 2027 BRAINBUDDY<span>HIVE</span>. All rights reserved.</small>
+      <small>
+        {% blocktrans %}© 2027 BRAINBUDDY<span>HIVE</span>. All rights reserved.{% endblocktrans %}
+      </small>
     </div>
   </footer>
 

@@ -1,9 +1,10 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="auth-form-container">
-    <h2>Edit material</h2>
+    <h2>{% trans "Edit material" %}</h2>
 
     <form class="auth-form" method="post" action="{% url 'materials-edit' pk=object.pk %}" enctype="multipart/form-data">
         {% csrf_token %}
@@ -17,7 +18,7 @@
         </p>
 
         <div class="spec-picker-wrap">
-            <label class="spec-picker-label">Specializations:</label>
+            <label class="spec-picker-label">{% trans "Specializations:" %}</label>
 
             {% if form.specializations.errors %}
                 <span class="field-error">{{ form.specializations.errors.0 }}</span>
@@ -30,7 +31,7 @@
                     type="text"
                     id="specSearch"
                     class="spec-search-input"
-                    placeholder="Search specializations..."
+                    placeholder="{% trans 'Search specializations...' %}"
                     autocomplete="off"
                 >
 
@@ -60,17 +61,17 @@
         <div>
             {{ form.content.label_tag }}
             <div class="custom-file">
-                <span class="custom-file-label">Choose PDF</span>
+                <span class="custom-file-label">{% trans "Choose PDF" %}</span>
                 <span class="custom-file-name" id="file-name">
                     {% if object.content %}
                         {{ object.content.name|cut:'materials_files/' }}
                     {% else %}
-                        No file chosen
+                        {% trans "No file chosen" %}
                     {% endif %}
                 </span>
                 {{ form.content }}
 
-                <span class="help-text">Allowed format: PDF only • Max size: 2MB</span>
+                <span class="help-text">{% trans "Allowed format: PDF only • Max size: 2MB" %}</span>
 
                 {% if form.content.errors %}
                     <span class="field-error">{{ form.content.errors.0 }}</span>
@@ -86,7 +87,7 @@
             {% endif %}
         </p>
 
-        <button type="submit">Save changes</button>
+        <button type="submit">{% trans "Save changes" %}</button>
     </form>
 </div>
 
@@ -96,12 +97,13 @@
   document.addEventListener("DOMContentLoaded", function() {
     const fileInput = document.querySelector('input[type="file"]');
     const fileName = document.getElementById('file-name');
+    const noFileChosenText = "{% trans 'No file chosen' %}";
 
     if (fileInput && fileName) {
       fileInput.addEventListener('change', () => {
         fileName.textContent = fileInput.files.length > 0
           ? fileInput.files[0].name
-          : 'No file chosen';
+          : noFileChosenText;
       });
     }
   });

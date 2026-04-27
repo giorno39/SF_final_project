@@ -1,47 +1,50 @@
 {% extends 'base/base.html' %}
 
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <section class="spec-review-page">
   <article class="spec-review-card spec-review-card--detail">
     <header class="spec-review-header">
-      <h1 class="spec-review-title">Review Specialization Request</h1>
-      <p class="spec-review-subtitle">Check the proof and choose an action.</p>
+      <h1 class="spec-review-title">{% trans "Review Specialization Request" %}</h1>
+      <p class="spec-review-subtitle">{% trans "Check the proof and choose an action." %}</p>
     </header>
 
     <section class="spec-review-detail">
       <div class="spec-review-detail-row">
-        <span class="spec-review-label">Teacher</span>
+        <span class="spec-review-label">{% trans "Teacher" %}</span>
         <span class="spec-review-value">
           {{ specialization_request.teacher.user.get_full_name|default:specialization_request.teacher.user.username }}
         </span>
       </div>
 
       <div class="spec-review-detail-row">
-        <span class="spec-review-label">Username</span>
+        <span class="spec-review-label">{% trans "Username" %}</span>
         <span class="spec-review-value">{{ specialization_request.teacher.user.username }}</span>
       </div>
 
       <div class="spec-review-detail-row">
-        <span class="spec-review-label">Specialization</span>
+        <span class="spec-review-label">{% trans "Specialization" %}</span>
         <span class="spec-review-value">{{ specialization_request.specialization.name }}</span>
       </div>
 
       <div class="spec-review-detail-row">
-        <span class="spec-review-label">Submitted</span>
+        <span class="spec-review-label">{% trans "Submitted" %}</span>
         <span class="spec-review-value">{{ specialization_request.created_at|date:"d M Y, H:i" }}</span>
       </div>
 
       <div class="spec-review-detail-row">
-        <span class="spec-review-label">Proof file</span>
+        <span class="spec-review-label">{% trans "Proof file" %}</span>
         <span class="spec-review-value">
-          <a href="{{ specialization_request.proof_file.url }}" target="_blank">Open uploaded file</a>
+          <a href="{{ specialization_request.proof_file.url }}" target="_blank">
+            {% trans "Open uploaded file" %}
+          </a>
         </span>
       </div>
 
       <div class="spec-review-detail-row">
-        <span class="spec-review-label">Status</span>
+        <span class="spec-review-label">{% trans "Status" %}</span>
         <span class="spec-review-value">
           <span class="spec-review-status spec-review-status--{{ specialization_request.status }}">
             {{ specialization_request.get_status_display }}
@@ -55,48 +58,50 @@
         {% csrf_token %}
 
         <div class="spec-review-field">
-          <label for="id_reviewer_note" class="spec-review-note-label">Reviewer note</label>
+          <label for="id_reviewer_note" class="spec-review-note-label">
+            {% trans "Reviewer note" %}
+          </label>
           <textarea
             id="id_reviewer_note"
             name="reviewer_note"
             rows="5"
             class="spec-review-note-input"
-            placeholder="Add an optional note for this decision..."
+            placeholder="{% trans 'Add an optional note for this decision...' %}"
           ></textarea>
         </div>
 
         <div class="spec-review-actions">
           <button type="submit" name="action" value="reject" class="spec-review-btn spec-review-btn--reject">
-            Reject
+            {% trans "Reject" %}
           </button>
           <button type="submit" name="action" value="approve" class="spec-review-btn spec-review-btn--approve">
-            Approve
+            {% trans "Approve" %}
           </button>
         </div>
       </form>
     {% else %}
       <section class="spec-review-reviewed-box">
         <div class="spec-review-reviewed-head">
-          <h3 class="spec-review-reviewed-title">Decision summary</h3>
+          <h3 class="spec-review-reviewed-title">{% trans "Decision summary" %}</h3>
           <span class="spec-review-status spec-review-status--{{ specialization_request.status }}">
             {{ specialization_request.get_status_display }}
           </span>
         </div>
 
         <div class="spec-review-reviewed-meta">
-          <p><strong>Reviewed by:</strong> {{ specialization_request.reviewed_by }}</p>
-          <p><strong>Reviewed at:</strong> {{ specialization_request.reviewed_at|date:"d M Y, H:i" }}</p>
+          <p><strong>{% trans "Reviewed by:" %}</strong> {{ specialization_request.reviewed_by }}</p>
+          <p><strong>{% trans "Reviewed at:" %}</strong> {{ specialization_request.reviewed_at|date:"d M Y, H:i" }}</p>
         </div>
 
         {% if specialization_request.reviewer_note %}
           <div class="spec-review-reviewed-note">
             <span class="spec-review-reviewed-note-label">
               {% if specialization_request.status == 'approved' %}
-                Approval comment
+                {% trans "Approval comment" %}
               {% elif specialization_request.status == 'rejected' %}
-                Rejection comment
+                {% trans "Rejection comment" %}
               {% else %}
-                Reviewer note
+                {% trans "Reviewer note" %}
               {% endif %}
             </span>
             <p class="spec-review-reviewed-note-text">{{ specialization_request.reviewer_note }}</p>

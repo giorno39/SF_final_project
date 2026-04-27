@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <section class="landing-home">
@@ -7,84 +8,106 @@
     <div class="landing-home__hero-media">
       <img
         src="{% static 'images/academic-support.jpg' %}"
-        alt="Student working together with academic support"
+        alt="{% trans 'Student working together with academic support' %}"
         class="landing-home__hero-image"
       />
     </div>
 
     <div class="landing-home__hero-copy">
-      <span class="landing-home__eyebrow">Academic support, all in one place</span>
-      <h1 class="landing-home__title">Unlock your academic potential with BrainBuddyHive</h1>
+      <span class="landing-home__eyebrow">{% trans "Academic support, all in one place" %}</span>
+      <h1 class="landing-home__title">{% trans "Unlock your academic potential with BrainBuddyHive" %}</h1>
       <p class="landing-home__subtitle">
-        Connect with tutors, discover practical lessons, browse completed work, and use
-        curated study materials built to make your next task easier.
+        {% blocktrans trimmed %}
+          Connect with tutors, discover practical lessons, browse completed work, and use
+          curated study materials built to make your next task easier.
+        {% endblocktrans %}
       </p>
 
       <div class="landing-home__hero-actions">
-        <a class="landing-home__primary-btn" href="{% url 'lesson-index' %}">Find a Tutor</a>
-        <a class="landing-home__secondary-btn" href="{% url 'materials-index' %}">Explore Materials</a>
+        <a class="landing-home__primary-btn" href="{% url 'lesson-index' %}">
+          {% trans "Find a Tutor" %}
+        </a>
+        <a class="landing-home__secondary-btn" href="{% url 'materials-index' %}">
+          {% trans "Explore Materials" %}
+        </a>
       </div>
     </div>
   </div>
 
-  <section class="landing-home__grid" aria-label="BrainBuddyHive sections">
+  <section class="landing-home__grid" aria-label="{% trans 'BrainBuddyHive sections' %}">
     <article class="landing-feature-card">
       <div class="landing-feature-card__media">
-        <img src="{% static 'images/how-to-write-a-term-paper.jpg' %}" alt="One-on-one tutoring" />
+        <img src="{% static 'images/how-to-write-a-term-paper.jpg' %}" alt="{% trans 'One-on-one tutoring' %}" />
       </div>
       <div class="landing-feature-card__content">
-        <span class="landing-feature-card__badge">Support</span>
-        <h2 class="landing-feature-card__title">One-on-One Tutoring</h2>
+        <span class="landing-feature-card__badge">{% trans "Support" %}</span>
+        <h2 class="landing-feature-card__title">{% trans "One-on-One Tutoring" %}</h2>
         <p class="landing-feature-card__text">
-          Get personalized help with essays, research, and planning from someone who can guide
-          you step by step.
+          {% blocktrans trimmed %}
+            Get personalized help with essays, research, and planning from someone who can guide
+            you step by step.
+          {% endblocktrans %}
         </p>
-        <a class="landing-feature-card__button" href="{% url 'term-paper-index' %}">Explore available tasks</a>
+        <a class="landing-feature-card__button" href="{% url 'term-paper-index' %}">
+          {% trans "Explore available tasks" %}
+        </a>
       </div>
     </article>
 
     <article class="landing-feature-card">
       <div class="landing-feature-card__media">
-        <img src="{% static 'images/lessons-learned.jpg' %}" alt="Skill building lessons" />
+        <img src="{% static 'images/lessons-learned.jpg' %}" alt="{% trans 'Skill building lessons' %}" />
       </div>
       <div class="landing-feature-card__content">
-        <span class="landing-feature-card__badge">Learning</span>
-        <h2 class="landing-feature-card__title">Skill Building Lessons</h2>
+        <span class="landing-feature-card__badge">{% trans "Learning" %}</span>
+        <h2 class="landing-feature-card__title">{% trans "Skill Building Lessons" %}</h2>
         <p class="landing-feature-card__text">
-          Build confidence with lessons that break down core ideas, writing habits, and study
-          strategies into practical steps.
+          {% blocktrans trimmed %}
+            Build confidence with lessons that break down core ideas, writing habits, and study
+            strategies into practical steps.
+          {% endblocktrans %}
         </p>
-        <a class="landing-feature-card__button" href="{% url 'lesson-index' %}">Browse Lessons</a>
+        <a class="landing-feature-card__button" href="{% url 'lesson-index' %}">
+          {% trans "Browse Lessons" %}
+        </a>
       </div>
     </article>
 
     <article class="landing-feature-card">
       <div class="landing-feature-card__media">
-        <img src="{% static 'images/completed.jpg' %}" alt="Completed papers and examples" />
+        <img src="{% static 'images/completed.jpg' %}" alt="{% trans 'Completed papers and examples' %}" />
       </div>
       <div class="landing-feature-card__content">
-        <span class="landing-feature-card__badge">Examples</span>
-        <h2 class="landing-feature-card__title">Completed Term Papers</h2>
+        <span class="landing-feature-card__badge">{% trans "Examples" %}</span>
+        <h2 class="landing-feature-card__title">{% trans "Completed Term Papers" %}</h2>
         <p class="landing-feature-card__text">
-          Review finished work to understand structure, pacing, and what a polished submission
-          can look like.
+          {% blocktrans trimmed %}
+            Review finished work to understand structure, pacing, and what a polished submission
+            can look like.
+          {% endblocktrans %}
         </p>
-        <a class="landing-feature-card__button" href="{% url 'completed_paper-index' %}">Explore completed tasks</a>
+        <a class="landing-feature-card__button" href="{% url 'completed_paper-index' %}">
+          {% trans "Explore completed tasks" %}
+        </a>
       </div>
     </article>
 
     <article class="landing-feature-card">
       <div class="landing-feature-card__media">
-        <img src="{% static 'images/materials.jpg' %}" alt="Study materials and resources" />
+        <img src="{% static 'images/materials.jpg' %}" alt="{% trans 'Study materials and resources' %}" />
       </div>
       <div class="landing-feature-card__content">
-        <span class="landing-feature-card__badge">Resources</span>
-        <h2 class="landing-feature-card__title">Study Materials</h2>
+        <span class="landing-feature-card__badge">{% trans "Resources" %}</span>
+        <h2 class="landing-feature-card__title">{% trans "Study Materials" %}</h2>
         <p class="landing-feature-card__text">
-          Explore guides, references, and supporting resources that help you study smarter and
-          prepare faster.
+          {% blocktrans trimmed %}
+            Explore guides, references, and supporting resources that help you study smarter and
+            prepare faster.
+          {% endblocktrans %}
         </p>
-        <a class="landing-feature-card__button" href="{% url 'materials-index' %}">View Materials</a>
+        <a class="landing-feature-card__button" href="{% url 'materials-index' %}">
+          {% trans "View Materials" %}
+        </a>
       </div>
     </article>
   </section>

@@ -1,14 +1,21 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <div class="auth-form-container">
-  <h2>Log in</h2>
+  <h2>{% trans "Log in" %}</h2>
+
   <form class="auth-form" method="post" action="{% url 'login-user' %}">
     {{ form.as_p }}
     <input type="hidden" name="next" value="{{ next }}">
-    <button type="submit">Log in</button>
+    <button type="submit">{% trans "Log in" %}</button>
     {% csrf_token %}
   </form>
-  <p class="auth-form-footer-link"><a href="{% url 'register-user' %}">Don’t have an account?</a></p>
+
+  <p class="auth-form-footer-link">
+    <a href="{% url 'register-user' %}">
+      {% trans "Don’t have an account?" %}
+    </a>
+  </p>
 </div>
 {% endblock %}

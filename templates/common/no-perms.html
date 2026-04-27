@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <section class="no-change-page">
@@ -7,24 +8,24 @@
     <div class="no-change-illustration-wrap">
       <img
         src="{% static 'images/no-perms.png' %}"
-        alt="No permission"
+        alt="{% trans 'No permission' %}"
         class="no-change-illustration"
       >
     </div>
 
-    <h1 class="no-change-title">Access denied</h1>
+    <h1 class="no-change-title">{% trans "Access denied" %}</h1>
 
     <p class="no-change-text">
-      It looks like you do not have permission to visit this page.
+      {% trans "It looks like you do not have permission to visit this page." %}
     </p>
 
     <div class="no-change-actions">
       <a href="javascript:history.back()" class="no-change-btn no-change-btn--primary">
-        Go Back
+        {% trans "Go Back" %}
       </a>
 
       <a href="{% url 'index' %}" class="no-change-btn no-change-btn--ghost">
-        Back to Home
+        {% trans "Back to Home" %}
       </a>
     </div>
   </article>

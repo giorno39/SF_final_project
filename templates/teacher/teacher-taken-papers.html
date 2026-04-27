@@ -1,134 +1,149 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="container lessons-wrap taken-papers-page">
 
   <form class="search-form search-form-stacked taken-papers-search" method="get" action="{% url 'teacher-papers' %}">
     <label class="search-form-label taken-papers-search__label" for="{{ search_form.paper_title.id_for_label }}">
-      Paper title
+      {% trans "Paper title" %}
     </label>
 
     <div class="search-bar taken-papers-search__bar">
       {{ search_form.paper_title }}
       {{ search_form.specialization }}
-      <button class="btn taken-papers-search__btn" type="submit">Search</button>
+      <button class="btn taken-papers-search__btn" type="submit">{% trans "Search" %}</button>
     </div>
   </form>
 
-<div class="taken-papers-list">
-  {% for object in object_list %}
-    <article class="taken-paper-row">
-      <div class="taken-paper-row__content">
-        <div class="taken-paper-row__header">
-          <div class="taken-paper-row__title-wrap">
-            <h2 class="taken-paper-row__title">{{ object.title }}</h2>
-            <p class="taken-paper-row__subtitle">{{ object.university }}</p>
-          </div>
+  <div class="taken-papers-list">
+    {% for object in object_list %}
+      <article class="taken-paper-row">
+        <div class="taken-paper-row__content">
+          <div class="taken-paper-row__header">
+            <div class="taken-paper-row__title-wrap">
+              <h2 class="taken-paper-row__title">{{ object.title }}</h2>
+              <p class="taken-paper-row__subtitle">{{ object.university }}</p>
+            </div>
 
-          <div class="taken-paper-row__spec-block">
-            <span class="taken-paper-row__spec-heading">Specializations</span>
-            <div class="taken-paper-row__specs">
-              {% for spec in object.specializations.all %}
-                <span class="taken-paper-row__spec-pill">{{ spec.name }}</span>
-              {% empty %}
-                <span class="taken-paper-row__spec-pill taken-paper-row__spec-pill--empty">None</span>
-              {% endfor %}
+            <div class="taken-paper-row__spec-block">
+              <span class="taken-paper-row__spec-heading">{% trans "Specializations" %}</span>
+              <div class="taken-paper-row__specs">
+                {% for spec in object.specializations.all %}
+                  <span class="taken-paper-row__spec-pill">{{ spec.name }}</span>
+                {% empty %}
+                  <span class="taken-paper-row__spec-pill taken-paper-row__spec-pill--empty">{% trans "None" %}</span>
+                {% endfor %}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="taken-paper-row__meta">
-          <div class="taken-paper-row__meta-item">
-            <span class="taken-paper-row__meta-label">Deadline:</span>
-            <span class="taken-paper-row__meta-value">{{ object.death_line }}</span>
+          <div class="taken-paper-row__meta">
+            <div class="taken-paper-row__meta-item">
+              <span class="taken-paper-row__meta-label">{% trans "Deadline:" %}</span>
+              <span class="taken-paper-row__meta-value">{{ object.death_line }}</span>
+            </div>
+
+            <div class="taken-paper-row__meta-item taken-paper-row__meta-item--wide">
+              <span class="taken-paper-row__meta-label">{% trans "Price Cap:" %}</span>
+              <span class="taken-paper-row__meta-value">{{ object.price_cap }}</span>
+            </div>
           </div>
 
-          <div class="taken-paper-row__meta-item taken-paper-row__meta-item--wide">
-            <span class="taken-paper-row__meta-label">Price Cap:</span>
-            <span class="taken-paper-row__meta-value">{{ object.price_cap }}</span>
+          <div class="taken-paper-row__description">
+            <span class="taken-paper-row__description-label">{% trans "Description" %}</span>
+            <p class="taken-paper-row__description-text">
+              {% if object.description %}
+                {{ object.description }}
+              {% else %}
+                {% trans "No description provided." %}
+              {% endif %}
+            </p>
           </div>
         </div>
 
-        <div class="taken-paper-row__description">
-          <span class="taken-paper-row__description-label">Description</span>
-          <p class="taken-paper-row__description-text">
-            {{ object.description|default:"No description provided." }}
-          </p>
+        <div class="taken-paper-row__actions">
+          <a class="taken-paper-row__btn taken-paper-row__btn--outline" href="{% url 'term-paper-file-open' pk=object.pk %}">
+            {% trans "Open File" %}
+          </a>
+          <a class="taken-paper-row__btn taken-paper-row__btn--outline" href="{% url 'term-paper-untake' pk=object.pk %}">
+            {% trans "Unassign" %}
+          </a>
+          <a class="taken-paper-row__btn taken-paper-row__btn--primary" href="{% url 'term-paper-complete' pk=object.pk %}">
+            {% trans "Complete paper" %}
+          </a>
         </div>
+      </article>
+    {% empty %}
+      <div class="search-empty-state">
+        <h3 class="search-empty-state-title">{% trans "You don't have any taken papers" %}</h3>
+        <p class="search-empty-state-text">
+          {% trans "Try a different title or specialization, or clear the search and browse all available papers." %}
+        </p>
       </div>
-
-      <div class="taken-paper-row__actions">
-        <a class="taken-paper-row__btn taken-paper-row__btn--outline" href="{% url 'term-paper-file-open' pk=object.pk %}">Open File</a>
-        <a class="taken-paper-row__btn taken-paper-row__btn--outline" href="{% url 'term-paper-untake' pk=object.pk %}">Unassign</a>
-        <a class="taken-paper-row__btn taken-paper-row__btn--primary" href="{% url 'term-paper-complete' pk=object.pk %}">Complete paper</a>
-      </div>
-    </article>
-  {% empty %}
-    <div class="search-empty-state">
-      <h3 class="search-empty-state-title">You don't have any taken papers</h3>
-      <p class="search-empty-state-text">
-        Try a different title or specialization, or clear the search and browse all available papers.
-      </p>
-    </div>
-  {% endfor %}
-</div>
-
-{% if page_obj.paginator.num_pages > 1 %}
-  <nav class="pager taken-papers-pager" aria-label="Pagination">
-    {% if page_obj.has_previous %}
-      <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true">
-          <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0l22.6-22.6c12.5-12.5 12.5-32.8 0-45.3L131.9 256 269.3 118.6c12.5-12.5 12.5-32.8 0-45.3L246.6 50.7c-12.5-12.5-32.8-12.5-45.3 0l-160 160z"/>
-        </svg>
-      </a>
-    {% else %}
-      <span class="page-btn is-disabled">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true">
-          <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0l22.6-22.6c12.5-12.5 12.5-32.8 0-45.3L131.9 256 269.3 118.6c12.5-12.5 12.5-32.8 0-45.3L246.6 50.7c-12.5-12.5-32.8-12.5-45.3 0l-160 160z"/>
-        </svg>
-      </span>
-    {% endif %}
-
-    {% if page_obj.number > 2 %}
-      <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page=1">1</a>
-    {% endif %}
-
-    {% if page_obj.number > 3 %}
-      <span class="page-btn is-disabled">…</span>
-    {% endif %}
-
-    {% for n in page_obj.paginator.page_range %}
-      {% if n >= page_obj.number|add:'-1' and n <= page_obj.number|add:'1' %}
-        {% if n == page_obj.number %}
-          <span class="page-btn is-active">{{ n }}</span>
-        {% else %}
-          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ n }}">{{ n }}</a>
-        {% endif %}
-      {% endif %}
     {% endfor %}
+  </div>
 
-    {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
-      <span class="page-btn is-disabled">…</span>
-    {% endif %}
+  {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="pager taken-papers-pager" aria-label="{% trans 'Pagination' %}">
+      {% if page_obj.has_previous %}
+        <a class="page-btn"
+           aria-label="{% trans 'Previous page' %}"
+           href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true">
+            <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0l22.6-22.6c12.5-12.5 12.5-32.8 0-45.3L131.9 256 269.3 118.6c12.5-12.5 12.5-32.8 0-45.3L246.6 50.7c-12.5-12.5-32.8-12.5-45.3 0l-160 160z"/>
+          </svg>
+        </a>
+      {% else %}
+        <span class="page-btn is-disabled" aria-label="{% trans 'Previous page' %}">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true">
+            <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0l22.6-22.6c12.5-12.5 12.5-32.8 0-45.3L131.9 256 269.3 118.6c12.5-12.5 12.5-32.8 0-45.3L246.6 50.7c-12.5-12.5-32.8-12.5-45.3 0l-160 160z"/>
+          </svg>
+        </span>
+      {% endif %}
 
-    {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
-      <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
-    {% endif %}
+      {% if page_obj.number > 2 %}
+        <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page=1">1</a>
+      {% endif %}
 
-    {% if page_obj.has_next %}
-      <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.next_page_number }}">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true">
-          <path d="M278.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0L50.7 95.9c-12.5 12.5-12.5 32.8 0 45.3L188.1 256 50.7 393.4c-12.5 12.5-12.5 32.8 0 45.3l22.6 22.6c12.5 12.5 32.8 12.5 45.3 0l160-160z"/>
-        </svg>
-      </a>
-    {% else %}
-      <span class="page-btn is-disabled">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true">
-          <path d="M278.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0L50.7 95.9c-12.5 12.5-12.5 32.8 0 45.3L188.1 256 50.7 393.4c-12.5 12.5-12.5 32.8 0 45.3l22.6 22.6c12.5 12.5 32.8 12.5 45.3 0l160-160z"/>
-        </svg>
-      </span>
-    {% endif %}
-  </nav>
-{% endif %}
+      {% if page_obj.number > 3 %}
+        <span class="page-btn is-disabled">…</span>
+      {% endif %}
+
+      {% for n in page_obj.paginator.page_range %}
+        {% if n >= page_obj.number|add:'-1' and n <= page_obj.number|add:'1' %}
+          {% if n == page_obj.number %}
+            <span class="page-btn is-active">{{ n }}</span>
+          {% else %}
+            <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ n }}">{{ n }}</a>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+        <span class="page-btn is-disabled">…</span>
+      {% endif %}
+
+      {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
+        <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+      {% endif %}
+
+      {% if page_obj.has_next %}
+        <a class="page-btn"
+           aria-label="{% trans 'Next page' %}"
+           href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.next_page_number }}">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true">
+            <path d="M278.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0L50.7 95.9c-12.5 12.5-12.5 32.8 0 45.3L188.1 256 50.7 393.4c-12.5 12.5-12.5 32.8 0 45.3l22.6 22.6c12.5 12.5 32.8 12.5 45.3 0l160-160z"/>
+          </svg>
+        </a>
+      {% else %}
+        <span class="page-btn is-disabled" aria-label="{% trans 'Next page' %}">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true">
+            <path d="M278.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0L50.7 95.9c-12.5 12.5-12.5 32.8 0 45.3L188.1 256 50.7 393.4c-12.5 12.5-12.5 32.8 0 45.3l22.6 22.6c12.5 12.5 32.8 12.5 45.3 0l160-160z"/>
+          </svg>
+        </span>
+      {% endif %}
+    </nav>
+  {% endif %}
 </section>
 {% endblock %}

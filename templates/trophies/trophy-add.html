@@ -1,13 +1,15 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 
-    <div class="auth-form-container">
-    <h2>Add trophy</h2>
+<div class="auth-form-container">
+    <h2>{% trans "Add trophy" %}</h2>
+
     <form class="auth-form" method="post" action="{% url 'trophy-add' paper_pk=pk_paper %}" enctype="multipart/form-data">
-            {{ form.as_p }}
-            {% csrf_token %}
-        <button type="submit">Submit rating</button>
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button type="submit">{% trans "Submit rating" %}</button>
     </form>
 </div>
 

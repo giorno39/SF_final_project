@@ -1,8 +1,10 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <div class="auth-form-container">
-    <h2>Edit profile</h2>
+    <h2>{% trans "Edit profile" %}</h2>
+
     <form class="auth-form" method="post" action="{% url 'edit-user' pk=object.pk %}">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}">
@@ -31,12 +33,12 @@
             {% endif %}
         </p>
 
-        <button type="submit">Save changes</button>
+        <button type="submit">{% trans "Save changes" %}</button>
     </form>
 
     <div class="profile-password-link-wrap">
         <a class="profile-password-link" href="{% url 'change-password' %}">
-            Change password
+            {% trans "Change password" %}
         </a>
     </div>
 </div>

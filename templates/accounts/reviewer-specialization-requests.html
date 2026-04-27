@@ -1,18 +1,19 @@
 {% extends 'base/base.html' %}
 
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <section class="spec-review-page">
   <article class="spec-review-card">
     <header class="spec-review-header">
-      <h1 class="spec-review-title">Specialization Review Requests</h1>
+      <h1 class="spec-review-title">{% trans "Specialization Review Requests" %}</h1>
       <p class="spec-review-subtitle">
-        Review and browse specialization requests by status.
+        {% trans "Review and browse specialization requests by status." %}
       </p>
     </header>
 
-    <nav class="spec-review-tabs" aria-label="Request status filters">
+    <nav class="spec-review-tabs" aria-label="{% trans 'Request status filters' %}">
       {% for value, label in status_tabs %}
         <a
           href="?status={{ value }}"
@@ -35,26 +36,26 @@
             </div>
 
             <p class="spec-review-meta">
-              <strong>Teacher:</strong>
+              <strong>{% trans "Teacher:" %}</strong>
               {{ req.teacher.user.get_full_name|default:req.teacher.user.username }}
             </p>
 
             <p class="spec-review-meta">
-              <strong>Submitted:</strong> {{ req.created_at|date:"d M Y, H:i" }}
+              <strong>{% trans "Submitted:" %}</strong> {{ req.created_at|date:"d M Y, H:i" }}
             </p>
 
             <p class="spec-review-meta">
-              <strong>Proof:</strong>
-              <a href="{{ req.proof_file.url }}" target="_blank">Open uploaded file</a>
+              <strong>{% trans "Proof:" %}</strong>
+              <a href="{{ req.proof_file.url }}" target="_blank">{% trans "Open uploaded file" %}</a>
             </p>
 
             {% if req.status != 'pending' %}
               <p class="spec-review-meta">
-                <strong>Reviewed by:</strong>
+                <strong>{% trans "Reviewed by:" %}</strong>
                 {{ req.reviewed_by|default:"—" }}
               </p>
               <p class="spec-review-meta">
-                <strong>Reviewed at:</strong>
+                <strong>{% trans "Reviewed at:" %}</strong>
                 {{ req.reviewed_at|date:"d M Y, H:i"|default:"—" }}
               </p>
             {% endif %}
@@ -65,30 +66,40 @@
               href="{% url 'reviewer-specialization-request-detail' req.pk %}"
               class="spec-review-open-btn"
             >
-              {% if req.status == 'pending' %}Review{% else %}Open{% endif %}
+              {% if req.status == 'pending' %}
+                {% trans "Review" %}
+              {% else %}
+                {% trans "Open" %}
+              {% endif %}
             </a>
           </div>
         </section>
       {% empty %}
         <section class="spec-review-empty">
-          <p>No {{ selected_status }} specialization requests right now.</p>
+          <p>
+            {% blocktrans with status=selected_status %}
+              No {{ status }} specialization requests right now.
+            {% endblocktrans %}
+          </p>
         </section>
       {% endfor %}
     </div>
 
     {% if page_obj.paginator.num_pages > 1 %}
-      <nav class="spec-review-pagination" aria-label="Pagination">
+      <nav class="spec-review-pagination" aria-label="{% trans 'Pagination' %}">
         {% if page_obj.has_previous %}
           <a
             href="?status={{ selected_status }}&page={{ page_obj.previous_page_number }}"
             class="spec-review-page-btn"
           >
-            Previous
+            {% trans "Previous" %}
           </a>
         {% endif %}
 
         <span class="spec-review-page-info">
-          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+          {% blocktrans with current=page_obj.number total=page_obj.paginator.num_pages %}
+            Page {{ current }} of {{ total }}
+          {% endblocktrans %}
         </span>
 
         {% if page_obj.has_next %}
@@ -96,7 +107,7 @@
             href="?status={{ selected_status }}&page={{ page_obj.next_page_number }}"
             class="spec-review-page-btn"
           >
-            Next
+            {% trans "Next" %}
           </a>
         {% endif %}
       </nav>

@@ -757,3 +757,52 @@ html {
 .lesson-actions.paper-actions .paper-action-btn--primary{
   grid-column: 1 / -1;
 }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  gap: .4rem;
+}
+
+.language-toggle-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  margin: 0 0 0 .75rem;
+  padding: 0;
+  height: 100%;
+}
+
+button.language-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  flex: 0 0 auto;
+  min-width: 48px;
+  height: 42px;
+  margin: 0;
+  padding: 0 1rem;
+  border-radius: 999px;
+  background: var(--brand);
+  border: 1px solid var(--brand);
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  line-height: 1;
+  box-shadow: none;
+}
+
+button.language-toggle-btn:hover {
+  background: var(--brand-600);
+  border-color: var(--brand-600);
+  color: #fff;
+}
+
+button.language-toggle-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(24, 100, 171, .25);
+}

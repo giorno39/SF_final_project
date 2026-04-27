@@ -1,9 +1,10 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="auth-form-container">
-    <h2>Add Lesson</h2>
+    <h2>{% trans "Add Lesson" %}</h2>
 
     <form class="auth-form" method="post" action="{% url 'lesson-add' %}" enctype="multipart/form-data">
         {% csrf_token %}
@@ -17,7 +18,7 @@
         </p>
 
         <div class="spec-picker-wrap">
-            <label class="spec-picker-label">Specializations:</label>
+            <label class="spec-picker-label">{% trans "Specializations:" %}</label>
 
             {% if form.specializations.errors %}
                 <span class="field-error">{{ form.specializations.errors.0 }}</span>
@@ -30,7 +31,7 @@
                     type="text"
                     id="specSearch"
                     class="spec-search-input"
-                    placeholder="Search specializations..."
+                    placeholder="{% trans 'Search specializations...' %}"
                     autocomplete="off"
                 >
 
@@ -73,7 +74,7 @@
             {% endif %}
         </div>
 
-        <button type="submit">Add Lesson</button>
+        <button type="submit">{% trans "Add Lesson" %}</button>
     </form>
 </div>
 

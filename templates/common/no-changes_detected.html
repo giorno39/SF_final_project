@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <section class="no-change-page">
@@ -8,24 +9,24 @@
     <div class="no-change-illustration-wrap">
       <img
         src="{% static 'images/no-changes-detected.png' %}"
-        alt="No changes detected"
+        alt="{% trans 'No changes detected' %}"
         class="no-change-illustration"
       >
     </div>
 
-    <h1 class="no-change-title">No changes detected</h1>
+    <h1 class="no-change-title">{% trans "No changes detected" %}</h1>
 
     <p class="no-change-text">
-      Please add a different file or rename the current one before marking the paper as complete.
+      {% trans "Please add a different file or rename the current one before marking the paper as complete." %}
     </p>
 
     <div class="no-change-actions">
       <a href="javascript:history.back()" class="no-change-btn no-change-btn--primary">
-        Go Back
+        {% trans "Go Back" %}
       </a>
 
       <a href="{% url 'teacher-papers' %}" class="no-change-btn no-change-btn--ghost">
-        Back to Taken Papers
+        {% trans "Back to Taken Papers" %}
       </a>
     </div>
   </article>
