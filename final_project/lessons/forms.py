@@ -2,6 +2,7 @@ from django import forms
 
 from final_project.accounts.models import Specialization
 from final_project.lessons.models import Lesson
+from django.utils.translation import gettext_lazy as _
 
 
 class CreateLessonForm(forms.ModelForm):
@@ -9,16 +10,23 @@ class CreateLessonForm(forms.ModelForm):
         model = Lesson
         exclude = ('teacher',)
         labels = {
-            'cover_image': 'Cover photo (optional)',
+            'cover_image': _('Cover photo (optional)'),
         }
         widgets = {
-            'title': forms.TextInput(attrs={'placeholder': 'Lesson title'}),
+            'title': forms.TextInput(attrs={'placeholder': _('Lesson title')}),
             'specializations': forms.CheckboxSelectMultiple(),
             'price': forms.NumberInput(attrs={'placeholder': '0', 'min': 0}),
             'cover_image': forms.FileInput(
                 attrs={'accept': 'image/*', 'class': 'lesson-cover-input'},
             ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["specializations"].label_from_instance = (
+            lambda obj: obj.translated_name
+        )
 
     def clean_specializations(self):
         specializations = self.cleaned_data.get('specializations')
@@ -33,7 +41,7 @@ class CreateLessonForm(forms.ModelForm):
         teacher_profile = getattr(teacher, 'teacher_profile', None)
         if not teacher_profile:
             raise forms.ValidationError(
-                'You need a teacher profile with selected specializations before creating lessons.'
+                _('You need a teacher profile with selected specializations before creating lessons.')
             )
 
         teacher_specialization_ids = set(
@@ -41,14 +49,14 @@ class CreateLessonForm(forms.ModelForm):
         )
 
         invalid_specializations = [
-            spec.name for spec in specializations
+            spec.translated_name for spec in specializations
             if spec.id not in teacher_specialization_ids
         ]
 
         if invalid_specializations:
             raise forms.ValidationError(
-                'You can only select specializations from your teacher profile. '
-                f'Invalid selections: {", ".join(invalid_specializations)}.'
+                _('You can only select specializations from your teacher profile. Invalid selections: %(specializations)s.'),
+                params={'specializations': ", ".join(invalid_specializations)},
             )
 
         return specializations
@@ -59,16 +67,23 @@ class LessonEditForm(forms.ModelForm):
         model = Lesson
         fields = ('title', 'specializations', 'price', 'cover_image')
         labels = {
-            'cover_image': 'Cover photo (optional)',
+            'cover_image': _('Cover photo (optional)'),
         }
         widgets = {
-            'title': forms.TextInput(attrs={'placeholder': 'Lesson title'}),
+            'title': forms.TextInput(attrs={'placeholder': _('Lesson title')}),
             'specializations': forms.CheckboxSelectMultiple(),
             'price': forms.NumberInput(attrs={'placeholder': '0', 'min': 0}),
             'cover_image': forms.FileInput(
                 attrs={'accept': 'image/*', 'class': 'lesson-cover-input'},
             ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["specializations"].label_from_instance = (
+            lambda obj: obj.translated_name
+        )
 
     def clean_specializations(self):
         specializations = self.cleaned_data.get('specializations')
@@ -83,7 +98,7 @@ class LessonEditForm(forms.ModelForm):
         teacher_profile = getattr(teacher, 'teacher_profile', None)
         if not teacher_profile:
             raise forms.ValidationError(
-                'You need a teacher profile with selected specializations before editing lessons.'
+                _('You need a teacher profile with selected specializations before editing lessons.')
             )
 
         teacher_specialization_ids = set(
@@ -91,14 +106,14 @@ class LessonEditForm(forms.ModelForm):
         )
 
         invalid_specializations = [
-            spec.name for spec in specializations
+            spec.translated_name for spec in specializations
             if spec.id not in teacher_specialization_ids
         ]
 
         if invalid_specializations:
             raise forms.ValidationError(
-                'You can only select specializations from your teacher profile. '
-                f'Invalid selections: {", ".join(invalid_specializations)}.'
+                _('You can only select specializations from your teacher profile. Invalid selections: %(specializations)s.'),
+                params={'specializations': ", ".join(invalid_specializations)},
             )
 
         return specializations
