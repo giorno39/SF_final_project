@@ -11,11 +11,18 @@ class MaterialCreateForm(forms.ModelForm):
         model = Materials
         exclude = ('uploaded_by',)
         widgets = {
-            'title': forms.TextInput(attrs={'placeholder': 'Enter material title…'}),
+            'title': forms.TextInput(attrs={'placeholder': _('Enter material title…')}),
             'specializations': forms.CheckboxSelectMultiple(),
             'content': forms.ClearableFileInput(attrs={'accept': 'application/pdf,.pdf'}),
             'references': forms.URLInput(attrs={'placeholder': 'https://…'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["specializations"].label_from_instance = (
+            lambda obj: obj.translated_name
+        )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -24,11 +31,20 @@ class MaterialCreateForm(forms.ModelForm):
         specializations = cleaned_data.get('specializations')
 
         if reference_url:
-            specialization_names = [spec.name for spec in specializations] if specializations else []
-            validation_result = validate_reference_with_ai(reference_url, specialization_names)
+            specialization_names = [
+                str(spec.translated_name) for spec in specializations
+            ] if specializations else []
+
+            validation_result = validate_reference_with_ai(
+                reference_url,
+                specialization_names,
+            )
 
             if not validation_result.get('is_allowed'):
-                self.add_error('references', validation_result.get('reason', 'This reference is not allowed.'))
+                self.add_error(
+                    'references',
+                    validation_result.get('reason', _('This reference is not allowed.'))
+                )
 
         return cleaned_data
 
@@ -44,6 +60,13 @@ class MaterialEditForm(forms.ModelForm):
             'references': forms.URLInput(attrs={'placeholder': 'https://…'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["specializations"].label_from_instance = (
+            lambda obj: obj.translated_name
+        )
+
     def clean(self):
         cleaned_data = super().clean()
 
@@ -51,8 +74,14 @@ class MaterialEditForm(forms.ModelForm):
         specializations = cleaned_data.get('specializations')
 
         if reference_url:
-            specialization_names = [spec.name for spec in specializations] if specializations else []
-            validation_result = validate_reference_with_ai(reference_url, specialization_names)
+            specialization_names = [
+                str(spec.translated_name) for spec in specializations
+            ] if specializations else []
+
+            validation_result = validate_reference_with_ai(
+                reference_url,
+                specialization_names,
+            )
 
             if not validation_result.get('is_allowed'):
                 self.add_error(

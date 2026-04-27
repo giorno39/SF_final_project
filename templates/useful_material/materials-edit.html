@@ -40,10 +40,10 @@
                         <div
                             class="spec-option"
                             data-value="{{ choice.pk }}"
-                            data-label="{{ choice.name|lower }}"
-                            data-text="{{ choice.name }}"
+                            data-label="{{ choice.translated_name|lower }}"
+                            data-text="{{ choice.translated_name }}"
                         >
-                            {{ choice.name }}
+                            {{ choice.translated_name }}
                         </div>
                     {% endfor %}
                 </div>

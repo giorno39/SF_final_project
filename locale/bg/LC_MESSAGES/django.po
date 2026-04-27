@@ -1,0 +1,1579 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-27 23:03+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: bg <LL@li.org>\n"
+"Language: bg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: .\templates\accounts\change-password.html:7
+#: .\templates\accounts\change-password.html:11
+#: .\templates\accounts\profile-edit.html:41
+msgid "Change password"
+msgstr "Смени паролата"
+
+#: .\templates\accounts\profile-delete.html:5
+msgid "Are you sure you want to delete this profile?"
+msgstr "Сигурни ли сте, че искате да изтриете този профил?"
+
+#: .\templates\accounts\profile-delete.html:9
+msgid "Yes"
+msgstr "Да"
+
+#: .\templates\accounts\profile-delete.html:13
+#: .\templates\lessons\lesson-delete.html:31
+#: .\templates\term-papers\term-paper-delete.html:31
+#: .\templates\trophies\trophy-already-rated.html:18
+#: .\templates\useful_material\materials-delete.html:31
+msgid "Go back"
+msgstr "Назад"
+
+#: .\templates\accounts\profile-details.html:27
+msgid "Name:"
+msgstr "Име:"
+
+#: .\templates\accounts\profile-details.html:30
+msgid "Email:"
+msgstr "Имейл:"
+
+#: .\templates\accounts\profile-details.html:31
+msgid "User type:"
+msgstr "Тип потребител:"
+
+#: .\templates\accounts\profile-details.html:35
+#: .\templates\lessons\lesson-create.html:21
+#: .\templates\lessons\lesson-details.html:85
+#: .\templates\lessons\lesson-edit.html:21
+#: .\templates\term-papers\term-paper-add.html:21
+#: .\templates\useful_material\materials-add.html:21
+#: .\templates\useful_material\materials-edit.html:21
+#: .\templates\useful_material\materials-index.html:23
+msgid "Specializations:"
+msgstr "Специализации:"
+
+#: .\templates\accounts\profile-details.html:41
+msgid "No specializations selected yet."
+msgstr "Все още няма избрани специализации."
+
+#: .\templates\accounts\profile-details.html:47
+msgid "Average rate:"
+msgstr "Средна оценка:"
+
+#: .\templates\accounts\profile-details.html:54
+#: .\templates\lessons\lesson-details.html:53
+#: .\templates\term-papers\term-paper-details.html:100
+#: .\templates\useful_material\materials-details.html:79
+msgid "Edit"
+msgstr "Редактирай"
+
+#: .\templates\accounts\profile-details.html:58
+#: .\templates\lessons\lesson-details.html:59
+#: .\templates\term-papers\term-paper-details.html:103
+#: .\templates\useful_material\materials-details.html:82
+msgid "Delete"
+msgstr "Изтрий"
+
+#: .\templates\accounts\profile-details.html:62
+msgid "Change Password"
+msgstr "Смяна на парола"
+
+#: .\templates\accounts\profile-details.html:68
+msgid "Edit Specializations"
+msgstr "Редактирай специализациите"
+
+#: .\templates\accounts\profile-details.html:74
+msgid "All trophies"
+msgstr "Всички отличия"
+
+#: .\templates\accounts\profile-edit.html:6
+msgid "Edit profile"
+msgstr "Редактиране на профил"
+
+#: .\templates\accounts\profile-edit.html:36
+#: .\templates\lessons\lesson-edit.html:77
+#: .\templates\term-papers\term-paper-edit.html:11
+#: .\templates\useful_material\materials-edit.html:90
+msgid "Save changes"
+msgstr "Запази промените"
+
+#: .\templates\accounts\profile-login.html:6
+#: .\templates\accounts\profile-login.html:11
+msgid "Log in"
+msgstr "Вход"
+
+#: .\templates\accounts\profile-login.html:17
+msgid "Don’t have an account?"
+msgstr "Нямате акаунт?"
+
+#: .\templates\accounts\profile-register.html:6
+msgid "Create account"
+msgstr "Създай акаунт"
+
+#: .\templates\accounts\profile-register.html:11 .\templates\base\base.html:169
+#: .\templates\base\base.html:222
+msgid "Register"
+msgstr "Регистрация"
+
+# | msgid "Specialization Reviews"
+#: .\templates\accounts\reviewer-specialization-request-detail.html:10
+msgid "Review Specialization Request"
+msgstr "Преглед на заявка за специализация"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:11
+msgid "Check the proof and choose an action."
+msgstr "Проверете доказателството и изберете действие."
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:16
+#: .\templates\lessons\lesson-details.html:30
+msgid "Teacher"
+msgstr "Преподавател"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:23
+msgid "Username"
+msgstr "Потребителско име"
+
+# | msgid "Specializations:"
+#: .\templates\accounts\reviewer-specialization-request-detail.html:28
+#: .\templates\lessons\lesson-index.html:43
+msgid "Specialization"
+msgstr "Специализация"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:33
+msgid "Submitted"
+msgstr "Изпратено"
+
+# | msgid "Profile"
+#: .\templates\accounts\reviewer-specialization-request-detail.html:38
+msgid "Proof file"
+msgstr "Файл с доказателство"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:41
+#: .\templates\accounts\reviewer-specialization-requests.html:49
+msgid "Open uploaded file"
+msgstr "Отвори качения файл"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:47
+msgid "Status"
+msgstr "Статус"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:62
+#: .\templates\accounts\reviewer-specialization-request-detail.html:104
+msgid "Reviewer note"
+msgstr "Бележка от проверяващия"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:69
+msgid "Add an optional note for this decision..."
+msgstr "Добавете незадължителна бележка към това решение..."
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:75
+msgid "Reject"
+msgstr "Отхвърли"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:78
+msgid "Approve"
+msgstr "Одобри"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:85
+msgid "Decision summary"
+msgstr "Обобщение на решението"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:92
+#: .\templates\accounts\reviewer-specialization-requests.html:54
+msgid "Reviewed by:"
+msgstr "Прегледано от:"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:93
+#: .\templates\accounts\reviewer-specialization-requests.html:58
+msgid "Reviewed at:"
+msgstr "Прегледано на:"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:100
+msgid "Approval comment"
+msgstr "Коментар при одобрение"
+
+#: .\templates\accounts\reviewer-specialization-request-detail.html:102
+msgid "Rejection comment"
+msgstr "Коментар при отхвърляне"
+
+# | msgid "Specialization Reviews"
+#: .\templates\accounts\reviewer-specialization-requests.html:10
+msgid "Specialization Review Requests"
+msgstr "Заявки за преглед на специализации"
+
+#: .\templates\accounts\reviewer-specialization-requests.html:12
+msgid "Review and browse specialization requests by status."
+msgstr "Преглеждайте и филтрирайте заявките за специализации по статус."
+
+#: .\templates\accounts\reviewer-specialization-requests.html:16
+msgid "Request status filters"
+msgstr "Филтри по статус на заявката"
+
+#: .\templates\accounts\reviewer-specialization-requests.html:39
+msgid "Teacher:"
+msgstr "Преподавател:"
+
+#: .\templates\accounts\reviewer-specialization-requests.html:44
+msgid "Submitted:"
+msgstr "Изпратено:"
+
+#: .\templates\accounts\reviewer-specialization-requests.html:48
+msgid "Proof:"
+msgstr "Доказателство:"
+
+#: .\templates\accounts\reviewer-specialization-requests.html:70
+msgid "Review"
+msgstr "Прегледай"
+
+#: .\templates\accounts\reviewer-specialization-requests.html:72
+msgid "Open"
+msgstr "Отвори"
+
+#: .\templates\accounts\reviewer-specialization-requests.html:80
+#, python-format
+msgid ""
+"\n"
+"              No %(status)s specialization requests right now.\n"
+"            "
+msgstr ""
+"\n"
+"              В момента няма заявки за специализация със статус %(status)s.\n"
+"            "
+
+#: .\templates\accounts\reviewer-specialization-requests.html:89
+#: .\templates\completed_paper\completed-paper-index.html:77
+#: .\templates\lessons\lesson-index.html:74
+#: .\templates\teacher\teacher-taken-papers.html:88
+#: .\templates\term-papers\own-papers-student.html:81
+#: .\templates\term-papers\term-paper-index.html:78
+#: .\templates\useful_material\materials-index.html:52
+msgid "Pagination"
+msgstr "Страниране"
+
+#: .\templates\accounts\reviewer-specialization-requests.html:95
+#: .\templates\teacher\teacher-term-paper-requests.html:106
+#: .\templates\useful_material\materials-details.html:191
+#: .\templates\useful_material\materials-details.html:194
+msgid "Previous"
+msgstr "Предишна"
+
+#: .\templates\accounts\reviewer-specialization-requests.html:100
+#, python-format
+msgid ""
+"\n"
+"            Page %(current)s of %(total)s\n"
+"          "
+msgstr ""
+"\n"
+"            Страница %(current)s от %(total)s\n"
+"          "
+
+#: .\templates\accounts\reviewer-specialization-requests.html:110
+#: .\templates\teacher\teacher-term-paper-requests.html:128
+#: .\templates\useful_material\materials-details.html:204
+#: .\templates\useful_material\materials-details.html:207
+msgid "Next"
+msgstr "Следваща"
+
+# | msgid "Specializations:"
+#: .\templates\accounts\teacher-specialization-proofs.html:10
+msgid "Upload Specialization Proof"
+msgstr "Качване на доказателство за специализация"
+
+#: .\templates\accounts\teacher-specialization-proofs.html:11
+msgid "Step 2 of 2"
+msgstr "Стъпка 2 от 2"
+
+#: .\templates\accounts\teacher-specialization-proofs.html:26
+msgid "Upload your proof document"
+msgstr "Качете документа си за доказателство"
+
+#: .\templates\accounts\teacher-specialization-proofs.html:27
+msgid "Choose File"
+msgstr "Избери файл"
+
+#: .\templates\accounts\teacher-specialization-proofs.html:28
+msgid "Allowed files: PDF, JPG, JPEG, PNG"
+msgstr "Разрешени файлове: PDF, JPG, JPEG, PNG"
+
+#: .\templates\accounts\teacher-specialization-proofs.html:29
+msgid "No file selected"
+msgstr "Няма избран файл"
+
+#: .\templates\accounts\teacher-specialization-proofs.html:46
+msgid "Back"
+msgstr "Назад"
+
+#: .\templates\accounts\teacher-specialization-proofs.html:49
+msgid "Submit for Review"
+msgstr "Изпрати за преглед"
+
+# | msgid "Specializations:"
+#: .\templates\accounts\teacher-specializations.html:11
+msgid "Select your specializations"
+msgstr "Изберете специализациите си"
+
+#: .\templates\accounts\teacher-specializations.html:13
+msgid "Step 1 of 2"
+msgstr "Стъпка 1 от 2"
+
+#: .\templates\accounts\teacher-specializations.html:20
+msgid "Currently requested specializations"
+msgstr "Текущо заявени специализации"
+
+#: .\templates\accounts\teacher-specializations.html:25
+msgid "Pending"
+msgstr "В изчакване"
+
+#: .\templates\accounts\teacher-specializations.html:36
+#: .\templates\completed_paper\completed-paper-index.html:20
+#: .\templates\lessons\lesson-index.html:21
+#: .\templates\teacher\teacher-taken-papers.html:15
+#: .\templates\term-papers\own-papers-student.html:14
+#: .\templates\term-papers\term-paper-index.html:20
+#: .\templates\useful_material\materials-index.html:11
+msgid "Search"
+msgstr "Търсене"
+
+# | msgid "Edit Specializations"
+#: .\templates\accounts\teacher-specializations.html:40
+msgid "Type to filter specializations..."
+msgstr "Въведете текст за филтриране на специализациите..."
+
+# | msgid "No specializations selected yet."
+#: .\templates\accounts\teacher-specializations.html:60
+msgid "No available specializations to request right now."
+msgstr "В момента няма налични специализации за заявяване."
+
+#: .\templates\accounts\teacher-specializations.html:67
+msgid "Continue"
+msgstr "Продължи"
+
+#: .\templates\base\base.html:27
+msgid "Primary navigation"
+msgstr "Основна навигация"
+
+#: .\templates\base\base.html:36
+msgid "Administration"
+msgstr "Администрация"
+
+#: .\templates\base\base.html:45
+msgid "Add Materials"
+msgstr "Добави материали"
+
+#: .\templates\base\base.html:54
+msgid "Add Term Paper"
+msgstr "Добави курсова работа"
+
+#: .\templates\base\base.html:61
+msgid "My Papers"
+msgstr "Моите курсови работи"
+
+#: .\templates\base\base.html:70
+msgid "Specialization Reviews"
+msgstr "Прегледи на специализации"
+
+#: .\templates\base\base.html:79
+msgid "Taken Papers"
+msgstr "Взети курсови работи"
+
+#: .\templates\base\base.html:86
+msgid "Requests"
+msgstr "Заявки"
+
+#: .\templates\base\base.html:93 .\templates\lessons\lesson-create.html:7
+#: .\templates\lessons\lesson-create.html:77
+msgid "Add Lesson"
+msgstr "Добави урок"
+
+#: .\templates\base\base.html:100
+msgid "My Lessons"
+msgstr "Моите уроци"
+
+#: .\templates\base\base.html:112 .\templates\base\base.html:156
+#: .\templates\base\base.html:213
+msgid "Account navigation"
+msgstr "Навигация на профила"
+
+#: .\templates\base\base.html:118 .\templates\base\base.html:123
+#: .\templates\chat\inbox.html:4 .\templates\chat\inbox.html:8
+#: .\templates\teacher\teacher-term-paper-requests.html:75
+msgid "Inbox"
+msgstr "Входящи съобщения"
+
+#: .\templates\base\base.html:132
+msgid "Profile"
+msgstr "Профил"
+
+#: .\templates\base\base.html:146 .\templates\base\base.html:150
+msgid "Log out"
+msgstr "Изход"
+
+#: .\templates\base\base.html:162 .\templates\base\base.html:217
+msgid "Login"
+msgstr "Вход"
+
+#: .\templates\base\base.html:185 .\templates\base\base.html:194
+#: .\templates\base\base.html:237 .\templates\base\base.html:246
+msgid "Language"
+msgstr "Език"
+
+#: .\templates\base\base.html:186 .\templates\base\base.html:238
+msgid "Switch to English"
+msgstr "Превключи на английски"
+
+#: .\templates\base\base.html:195 .\templates\base\base.html:247
+msgid "Switch to Bulgarian"
+msgstr "Превключи на български"
+
+#: .\templates\base\base.html:274
+msgid "© 2027 BRAINBUDDY<span>HIVE</span>. All rights reserved."
+msgstr "© 2027 BRAINBUDDY<span>HIVE</span>. Всички права запазени."
+
+#: .\templates\chat\conversation.html:5
+msgid "Chat"
+msgstr "Чат"
+
+#: .\templates\chat\conversation.html:10
+msgid "Back to inbox"
+msgstr "Обратно към входящите"
+
+#: .\templates\chat\conversation.html:29 .\templates\chat\inbox.html:30
+#: .\templates\completed_paper\completed-paper-index.html:54
+msgid "Unknown"
+msgstr "Неизвестно"
+
+# | msgid "Taken Papers"
+#: .\templates\chat\conversation.html:39
+#: .\templates\teacher\teacher-term-paper-requests.html:70
+msgid "View Paper"
+msgstr "Преглед на курсовата работа"
+
+#: .\templates\chat\conversation.html:42
+msgid "Download"
+msgstr "Изтегли"
+
+#: .\templates\chat\conversation.html:60
+msgid "No messages yet. Say hello!"
+msgstr "Все още няма съобщения. Кажете здравейте!"
+
+#: .\templates\chat\conversation.html:69
+msgid "Type a message..."
+msgstr "Въведете съобщение..."
+
+#: .\templates\chat\conversation.html:72
+msgid "Send message"
+msgstr "Изпрати съобщение"
+
+#: .\templates\chat\inbox.html:36
+#, python-format
+msgid "%(time)s ago"
+msgstr "преди %(time)s"
+
+#: .\templates\chat\inbox.html:49
+msgid "No messages yet"
+msgstr "Все още няма съобщения"
+
+#: .\templates\chat\inbox.html:62
+msgid "No conversations yet."
+msgstr "Все още няма разговори."
+
+#: .\templates\chat\inbox.html:64
+msgid ""
+"When a teacher takes your paper or you message someone, it will appear here."
+msgstr ""
+"Когато преподавател поеме вашата курсова работа или изпратите съобщение на "
+"някого, то ще се появи тук."
+
+#: .\templates\common\index-accounts.html:11
+msgid "Student working together with academic support"
+msgstr "Студент, който работи заедно с академична подкрепа"
+
+#: .\templates\common\index-accounts.html:17
+msgid "Academic support, all in one place"
+msgstr "Академична подкрепа на едно място"
+
+#: .\templates\common\index-accounts.html:18
+msgid "Unlock your academic potential with BrainBuddyHive"
+msgstr "Разкрийте академичния си потенциал с BrainBuddyHive"
+
+#: .\templates\common\index-accounts.html:20
+msgid ""
+"Connect with tutors, discover practical lessons, browse completed work, and "
+"use curated study materials built to make your next task easier."
+msgstr ""
+"Свържете се с преподаватели, открийте практически уроци, разгледайте "
+"завършени работи и използвайте подбрани учебни материали, създадени да "
+"улеснят следващата ви задача."
+
+#: .\templates\common\index-accounts.html:28
+msgid "Find a Tutor"
+msgstr "Намерете преподавател"
+
+# | msgid "Add Materials"
+#: .\templates\common\index-accounts.html:31
+msgid "Explore Materials"
+msgstr "Разгледайте материалите"
+
+#: .\templates\common\index-accounts.html:37
+msgid "BrainBuddyHive sections"
+msgstr "Раздели на BrainBuddyHive"
+
+#: .\templates\common\index-accounts.html:40
+msgid "One-on-one tutoring"
+msgstr "Индивидуални уроци"
+
+#: .\templates\common\index-accounts.html:43
+msgid "Support"
+msgstr "Подкрепа"
+
+#: .\templates\common\index-accounts.html:44
+msgid "One-on-One Tutoring"
+msgstr "Индивидуално обучение"
+
+#: .\templates\common\index-accounts.html:46
+msgid ""
+"Get personalized help with essays, research, and planning from someone who "
+"can guide you step by step."
+msgstr ""
+"Получете персонализирана помощ за есета, проучвания и планиране от човек, "
+"който може да ви насочва стъпка по стъпка."
+
+#: .\templates\common\index-accounts.html:52
+msgid "Explore available tasks"
+msgstr "Разгледайте наличните задачи"
+
+#: .\templates\common\index-accounts.html:59
+msgid "Skill building lessons"
+msgstr "Уроци за развитие на умения"
+
+#: .\templates\common\index-accounts.html:62
+msgid "Learning"
+msgstr "Обучение"
+
+#: .\templates\common\index-accounts.html:63
+msgid "Skill Building Lessons"
+msgstr "Уроци за развитие на умения"
+
+#: .\templates\common\index-accounts.html:65
+msgid ""
+"Build confidence with lessons that break down core ideas, writing habits, "
+"and study strategies into practical steps."
+msgstr ""
+"Изградете увереност с уроци, които разбиват основни идеи, навици за писане и "
+"учебни стратегии на практични стъпки."
+
+# | msgid "My Lessons"
+#: .\templates\common\index-accounts.html:71
+msgid "Browse Lessons"
+msgstr "Разгледайте уроците"
+
+#: .\templates\common\index-accounts.html:78
+msgid "Completed papers and examples"
+msgstr "Завършени курсови работи и примери"
+
+#: .\templates\common\index-accounts.html:81
+msgid "Examples"
+msgstr "Примери"
+
+# | msgid "Add Term Paper"
+#: .\templates\common\index-accounts.html:82
+msgid "Completed Term Papers"
+msgstr "Завършени курсови работи"
+
+#: .\templates\common\index-accounts.html:84
+msgid ""
+"Review finished work to understand structure, pacing, and what a polished "
+"submission can look like."
+msgstr ""
+"Прегледайте завършени работи, за да разберете структурата, темпото и как "
+"изглежда добре оформено предаване."
+
+#: .\templates\common\index-accounts.html:90
+msgid "Explore completed tasks"
+msgstr "Разгледайте завършените задачи"
+
+#: .\templates\common\index-accounts.html:97
+msgid "Study materials and resources"
+msgstr "Учебни материали и ресурси"
+
+#: .\templates\common\index-accounts.html:100
+msgid "Resources"
+msgstr "Ресурси"
+
+# | msgid "Add Materials"
+#: .\templates\common\index-accounts.html:101
+msgid "Study Materials"
+msgstr "Учебни материали"
+
+#: .\templates\common\index-accounts.html:103
+msgid ""
+"Explore guides, references, and supporting resources that help you study "
+"smarter and prepare faster."
+msgstr ""
+"Разгледайте ръководства, източници и помощни ресурси, които ви помагат да "
+"учите по-умно и да се подготвяте по-бързо."
+
+# | msgid "Add Materials"
+#: .\templates\common\index-accounts.html:109
+msgid "View Materials"
+msgstr "Виж материалите"
+
+#: .\templates\common\no-changes_detected.html:12
+#: .\templates\common\no-changes_detected.html:17
+msgid "No changes detected"
+msgstr "Не са открити промени"
+
+#: .\templates\common\no-changes_detected.html:20
+msgid ""
+"Please add a different file or rename the current one before marking the "
+"paper as complete."
+msgstr ""
+"Моля, добавете различен файл или преименувайте текущия, преди да маркирате "
+"курсовата работа като завършена."
+
+#: .\templates\common\no-changes_detected.html:25
+#: .\templates\common\no-perms.html:24
+msgid "Go Back"
+msgstr "Назад"
+
+# | msgid "Taken Papers"
+#: .\templates\common\no-changes_detected.html:29
+msgid "Back to Taken Papers"
+msgstr "Обратно към взетите курсови работи"
+
+#: .\templates\common\no-perms.html:11
+msgid "No permission"
+msgstr "Нямате разрешение"
+
+#: .\templates\common\no-perms.html:16
+msgid "Access denied"
+msgstr "Достъпът е отказан"
+
+#: .\templates\common\no-perms.html:19
+msgid "It looks like you do not have permission to visit this page."
+msgstr "Изглежда, че нямате разрешение да посетите тази страница."
+
+#: .\templates\common\no-perms.html:28
+msgid "Back to Home"
+msgstr "Обратно към началната страница"
+
+#: .\templates\completed_paper\completed-paper-details.html:20
+#: .\templates\teacher\teacher-term-paper-requests.html:38
+#: .\templates\term-papers\term-paper-details.html:19
+msgid "University:"
+msgstr "Университет:"
+
+# | msgid "Specializations:"
+#: .\templates\completed_paper\completed-paper-details.html:30
+#: .\templates\lessons\lesson-details.html:89
+#: .\templates\lessons\lesson-index.html:47
+#: .\templates\useful_material\materials-details.html:23
+#: .\templates\useful_material\materials-index.html:27
+msgid "No specialization"
+msgstr "Няма специализация"
+
+#: .\templates\completed_paper\completed-paper-details.html:36
+#: .\templates\teacher\teacher-taken-papers.html:54
+#: .\templates\term-papers\term-paper-details.html:49
+msgid "Description"
+msgstr "Описание"
+
+#: .\templates\completed_paper\completed-paper-details.html:41
+#: .\templates\term-papers\term-paper-details.html:54
+msgid "No description"
+msgstr "Няма описание"
+
+#: .\templates\completed_paper\completed-paper-details.html:50
+#: .\templates\completed_paper\completed-paper-index.html:47
+msgid "Completed by"
+msgstr "Завършено от"
+
+#: .\templates\completed_paper\completed-paper-details.html:57
+#: .\templates\term-papers\term-paper-details.html:61
+msgid "Download File"
+msgstr "Изтегли файл"
+
+#: .\templates\completed_paper\completed-paper-index.html:12
+msgid "Completed Papers Feed"
+msgstr "Поток със завършени курсови работи"
+
+# | msgid "Specializations:"
+#: .\templates\completed_paper\completed-paper-index.html:35
+#: .\templates\teacher\teacher-taken-papers.html:30
+#: .\templates\term-papers\own-papers-student.html:42
+#: .\templates\term-papers\term-paper-details.html:38
+#: .\templates\term-papers\term-paper-index.html:39
+#: .\templates\term-papers\term-paper-request-teacher.html:115
+#: .\templates\useful_material\materials-details.html:37
+msgid "Specializations"
+msgstr "Специализации"
+
+# | msgid "Specializations:"
+#: .\templates\completed_paper\completed-paper-index.html:40
+#: .\templates\term-papers\own-papers-student.html:47
+#: .\templates\term-papers\term-paper-index.html:44
+msgid "No specializations"
+msgstr "Няма специализации"
+
+#: .\templates\completed_paper\completed-paper-index.html:62
+#: .\templates\lessons\lesson-index.html:59
+#: .\templates\term-papers\own-papers-student.html:66
+#: .\templates\term-papers\term-paper-index.html:63
+#: .\templates\useful_material\materials-index.html:38
+msgid "Details"
+msgstr "Детайли"
+
+#: .\templates\completed_paper\completed-paper-index.html:68
+msgid "No completed papers found"
+msgstr "Не са намерени завършени курсови работи"
+
+#: .\templates\completed_paper\completed-paper-index.html:70
+msgid ""
+"Try a different title or specialization, or clear the filters and browse all "
+"completed papers."
+msgstr ""
+"Опитайте с друго заглавие или специализация, или изчистете филтрите и "
+"разгледайте всички завършени курсови работи."
+
+#: .\templates\completed_paper\completed-paper-index.html:79
+#: .\templates\completed_paper\completed-paper-index.html:83
+#: .\templates\lessons\lesson-index.html:77
+#: .\templates\lessons\lesson-index.html:82
+#: .\templates\teacher\teacher-taken-papers.html:91
+#: .\templates\teacher\teacher-taken-papers.html:98
+#: .\templates\term-papers\own-papers-student.html:83
+#: .\templates\term-papers\own-papers-student.html:87
+#: .\templates\term-papers\term-paper-index.html:82
+#: .\templates\term-papers\term-paper-index.html:85
+#: .\templates\useful_material\materials-index.html:55
+#: .\templates\useful_material\materials-index.html:60
+msgid "Previous page"
+msgstr "Предишна страница"
+
+#: .\templates\completed_paper\completed-paper-index.html:115
+#: .\templates\completed_paper\completed-paper-index.html:119
+#: .\templates\lessons\lesson-index.html:115
+#: .\templates\lessons\lesson-index.html:120
+#: .\templates\teacher\teacher-taken-papers.html:133
+#: .\templates\teacher\teacher-taken-papers.html:140
+#: .\templates\term-papers\own-papers-student.html:117
+#: .\templates\term-papers\own-papers-student.html:121
+#: .\templates\term-papers\term-paper-index.html:118
+#: .\templates\term-papers\term-paper-index.html:121
+#: .\templates\useful_material\materials-index.html:91
+#: .\templates\useful_material\materials-index.html:96
+msgid "Next page"
+msgstr "Следваща страница"
+
+# | msgid "Specializations:"
+#: .\templates\lessons\lesson-create.html:34
+#: .\templates\lessons\lesson-edit.html:34
+#: .\templates\term-papers\term-paper-add.html:34
+#: .\templates\useful_material\materials-add.html:34
+#: .\templates\useful_material\materials-edit.html:34
+msgid "Search specializations..."
+msgstr "Търсене на специализации..."
+
+# | msgid "Delete"
+#: .\templates\lessons\lesson-delete.html:11
+msgid "Delete lesson"
+msgstr "Изтриване на урок"
+
+#: .\templates\lessons\lesson-delete.html:13
+#: .\templates\term-papers\term-paper-delete.html:13
+#: .\templates\useful_material\materials-delete.html:13
+msgid "Confirmation required"
+msgstr "Необходимо е потвърждение"
+
+# | msgid "Are you sure you want to delete this profile?"
+#: .\templates\lessons\lesson-delete.html:20
+msgid "Are you sure you want to delete this lesson?"
+msgstr "Сигурни ли сте, че искате да изтриете този урок?"
+
+#: .\templates\lessons\lesson-delete.html:27
+#: .\templates\term-papers\term-paper-delete.html:27
+#: .\templates\useful_material\materials-delete.html:27
+msgid "Yes, delete"
+msgstr "Да, изтрий"
+
+#: .\templates\lessons\lesson-details.html:23
+#, python-format
+msgid "€%(price)s / hr"
+msgstr "€%(price)s / час"
+
+#: .\templates\lessons\lesson-details.html:38
+msgid ""
+"Experienced educator on BrainBuddy Hive. Offers structured lessons across "
+"the selected specialization areas."
+msgstr ""
+"Опитен преподавател в BrainBuddy Hive. Предлага структурирани уроци в "
+"избраните области на специализация."
+
+# | msgid "Edit profile"
+#: .\templates\lessons\lesson-details.html:41
+msgid "View profile"
+msgstr "Виж профила"
+
+#: .\templates\lessons\lesson-details.html:72
+msgid "Contact teacher"
+msgstr "Свържи се с преподавателя"
+
+#: .\templates\lessons\lesson-details.html:98
+msgid "Format:"
+msgstr "Формат:"
+
+#: .\templates\lessons\lesson-details.html:99
+msgid "One-to-one or small group session (confirm with your teacher)."
+msgstr "Индивидуална или малка групова сесия (потвърдете с преподавателя)."
+
+#: .\templates\lessons\lesson-details.html:107
+msgid "Prerequisites:"
+msgstr "Предварителни изисквания:"
+
+#: .\templates\lessons\lesson-details.html:108
+msgid ""
+"Interest in the selected specialization areas. Prior experience helpful but "
+"not required."
+msgstr ""
+"Интерес към избраните области на специализация. Предишен опит е полезен, но "
+"не е задължителен."
+
+# | msgid "Add Lesson"
+#: .\templates\lessons\lesson-edit.html:7
+msgid "Edit lesson"
+msgstr "Редактиране на урок"
+
+#: .\templates\lessons\lesson-index.html:13
+msgid "Lesson Discovery Feed"
+msgstr "Поток за откриване на уроци"
+
+#: .\templates\lessons\lesson-index.html:38
+msgid "Learn from an experienced teacher and build practical skills."
+msgstr "Учете се от опитен преподавател и изграждайте практически умения."
+
+#: .\templates\lessons\lesson-index.html:50
+msgid "Price"
+msgstr "Цена"
+
+#: .\templates\lessons\lesson-index.html:54
+#, python-format
+msgid "Price: €%(price)s"
+msgstr "Цена: €%(price)s"
+
+#: .\templates\lessons\lesson-index.html:65
+msgid "No lessons found"
+msgstr "Не са намерени уроци"
+
+#: .\templates\lessons\lesson-index.html:67
+msgid ""
+"Try a different title or specialization, or clear the filters and browse all "
+"lessons."
+msgstr ""
+"Опитайте с друго заглавие или специализация, или изчистете филтрите и "
+"разгледайте всички уроци."
+
+#: .\templates\teacher\teacher-complete-paper.html:6
+#: .\templates\teacher\teacher-taken-papers.html:73
+msgid "Complete paper"
+msgstr "Завърши курсова работа"
+
+#: .\templates\teacher\teacher-complete-paper.html:12
+msgid "Content:"
+msgstr "Съдържание:"
+
+#: .\templates\teacher\teacher-complete-paper.html:22
+msgid "Solution:"
+msgstr "Решение:"
+
+#: .\templates\teacher\teacher-complete-paper.html:33
+msgid "Mark complete"
+msgstr "Маркирай като завършена"
+
+#: .\templates\teacher\teacher-taken-papers.html:9
+#: .\templates\term-papers\own-papers-student.html:9
+msgid "Paper title"
+msgstr "Заглавие на курсова работа"
+
+#: .\templates\teacher\teacher-taken-papers.html:35
+msgid "None"
+msgstr "Няма"
+
+#: .\templates\teacher\teacher-taken-papers.html:43
+#: .\templates\teacher\teacher-term-paper-requests.html:35
+msgid "Deadline:"
+msgstr "Краен срок:"
+
+#: .\templates\teacher\teacher-taken-papers.html:48
+msgid "Price Cap:"
+msgstr "Максимална цена:"
+
+#: .\templates\teacher\teacher-taken-papers.html:59
+#: .\templates\teacher\teacher-term-paper-requests.html:51
+msgid "No description provided."
+msgstr "Няма предоставено описание."
+
+#: .\templates\teacher\teacher-taken-papers.html:67
+msgid "Open File"
+msgstr "Отвори файл"
+
+#: .\templates\teacher\teacher-taken-papers.html:70
+msgid "Unassign"
+msgstr "Премахни поемането"
+
+#: .\templates\teacher\teacher-taken-papers.html:79
+msgid "You don't have any taken papers"
+msgstr "Нямате взети курсови работи"
+
+#: .\templates\teacher\teacher-taken-papers.html:81
+msgid ""
+"Try a different title or specialization, or clear the search and browse all "
+"available papers."
+msgstr ""
+"Опитайте с друго заглавие или специализация, или изчистете търсенето и "
+"разгледайте всички налични курсови работи."
+
+# | msgid "Requests"
+#: .\templates\teacher\teacher-term-paper-requests.html:4
+msgid "Teacher Requests"
+msgstr "Заявки към преподавател"
+
+# | msgid "Requests"
+#: .\templates\teacher\teacher-term-paper-requests.html:13
+msgid "Paper requests"
+msgstr "Заявки за курсови работи"
+
+#: .\templates\teacher\teacher-term-paper-requests.html:15
+msgid "Requests from students asking for your help."
+msgstr "Заявки от студенти, които искат вашата помощ."
+
+#: .\templates\teacher\teacher-term-paper-requests.html:41
+msgid "Budget:"
+msgstr "Бюджет:"
+
+#: .\templates\teacher\teacher-term-paper-requests.html:46
+msgid "Description:"
+msgstr "Описание:"
+
+# | msgid "My Papers"
+#: .\templates\teacher\teacher-term-paper-requests.html:58
+msgid "Paper:"
+msgstr "Курсова работа:"
+
+#: .\templates\teacher\teacher-term-paper-requests.html:61
+msgid "Student:"
+msgstr "Студент:"
+
+#: .\templates\teacher\teacher-term-paper-requests.html:83
+msgid "Accept"
+msgstr "Приеми"
+
+#: .\templates\teacher\teacher-term-paper-requests.html:90
+msgid "Decline"
+msgstr "Откажи"
+
+#: .\templates\teacher\teacher-term-paper-requests.html:102
+msgid "Requests pagination"
+msgstr "Страниране на заявките"
+
+#: .\templates\teacher\teacher-term-paper-requests.html:135
+msgid "No pending requests."
+msgstr "Няма чакащи заявки."
+
+#: .\templates\term-papers\own-papers-student.html:29
+#: .\templates\term-papers\term-paper-details.html:82
+#: .\templates\term-papers\term-paper-index.html:34
+msgid "Completed"
+msgstr "Завършена"
+
+#: .\templates\term-papers\own-papers-student.html:54
+#: .\templates\term-papers\term-paper-details.html:32
+#: .\templates\term-papers\term-paper-index.html:51
+msgid "Deadline"
+msgstr "Краен срок"
+
+#: .\templates\term-papers\own-papers-student.html:59
+#: .\templates\term-papers\term-paper-index.html:56
+msgid "Price cap"
+msgstr "Максимална цена"
+
+#: .\templates\term-papers\own-papers-student.html:72
+#: .\templates\term-papers\term-paper-index.html:69
+msgid "No term papers found"
+msgstr "Не са намерени курсови работи"
+
+#: .\templates\term-papers\own-papers-student.html:74
+msgid ""
+"Try a different title or clear the search and browse all available papers."
+msgstr ""
+"Опитайте с друго заглавие или изчистете търсенето и разгледайте всички "
+"налични курсови работи."
+
+# | msgid "Add Term Paper"
+#: .\templates\term-papers\term-paper-add.html:7
+#: .\templates\term-papers\term-paper-add.html:112
+msgid "Add term paper"
+msgstr "Добавяне на курсова работа"
+
+#: .\templates\term-papers\term-paper-add.html:107
+msgid "Describe with AI"
+msgstr "Опиши с AI"
+
+#: .\templates\term-papers\term-paper-delete.html:11
+msgid "Delete term paper"
+msgstr "Изтриване на курсова работа"
+
+# | msgid "Are you sure you want to delete this profile?"
+#: .\templates\term-papers\term-paper-delete.html:20
+msgid "Are you sure you want to delete this post?"
+msgstr "Сигурни ли сте, че искате да изтриете тази публикация?"
+
+# | msgid "No specializations selected yet."
+#: .\templates\term-papers\term-paper-details.html:43
+msgid "No specializations selected."
+msgstr "Няма избрани специализации."
+
+#: .\templates\term-papers\term-paper-details.html:65
+msgid "Already taken"
+msgstr "Вече е взета"
+
+# | msgid "Taken Papers"
+#: .\templates\term-papers\term-paper-details.html:67
+msgid "Taken by"
+msgstr "Взета от"
+
+# | msgid "Taken Papers"
+#: .\templates\term-papers\term-paper-details.html:73
+msgid "Take term paper"
+msgstr "Вземи курсовата работа"
+
+#: .\templates\term-papers\term-paper-details.html:76
+msgid "Currently requested"
+msgstr "Вече е заявена"
+
+#: .\templates\term-papers\term-paper-details.html:84
+msgid "Rate"
+msgstr "Оцени"
+
+# | msgid "Requests"
+#: .\templates\term-papers\term-paper-details.html:92
+msgid "Request again"
+msgstr "Заяви отново"
+
+# | msgid "Requests"
+#: .\templates\term-papers\term-paper-details.html:94
+msgid "Request teacher"
+msgstr "Заяви преподавател"
+
+# | msgid "Add Term Paper"
+#: .\templates\term-papers\term-paper-edit.html:6
+msgid "Edit term paper"
+msgstr "Редактиране на курсова работа"
+
+#: .\templates\term-papers\term-paper-index.html:12
+msgid "Term Paper Discovery Feed"
+msgstr "Поток за откриване на курсови работи"
+
+#: .\templates\term-papers\term-paper-index.html:71
+msgid ""
+"Try a different title or specialization, or clear the filters and browse all "
+"available papers."
+msgstr ""
+"Опитайте с друго заглавие или специализация, или изчистете филтрите и "
+"разгледайте всички налични курсови работи."
+
+#: .\templates\term-papers\term-paper-request-teacher.html:9
+msgid "Top AI Teacher Recommendations"
+msgstr "Най-добри AI препоръки за преподаватели"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:11
+msgid ""
+"These teachers are ranked as the best fit based on the paper topic, "
+"specializations, previous completed papers, trust score, and trophies."
+msgstr ""
+"Тези преподаватели са подредени като най-подходящи въз основа на темата на "
+"курсовата работа, специализациите, предишни завършени работи, оценката на "
+"доверие и отличията."
+
+#: .\templates\term-papers\term-paper-request-teacher.html:17
+#: .\templates\term-papers\term-paper-request-teacher.html:22
+msgid "Teacher Recommendations"
+msgstr "Препоръки за преподаватели"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:19
+msgid ""
+"AI recommendations are temporarily unavailable. Showing fallback "
+"recommendations instead."
+msgstr "AI препоръките временно не са налични. Показват се резервни препоръки."
+
+#: .\templates\term-papers\term-paper-request-teacher.html:24
+msgid "Showing fallback recommendations based on the available matching data."
+msgstr ""
+"Показват се резервни препоръки въз основа на наличните данни за съвпадение."
+
+#: .\templates\term-papers\term-paper-request-teacher.html:43
+#, python-format
+msgid "Top #%(rank)s"
+msgstr "Топ #%(rank)s"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:48
+msgid "Fallback match"
+msgstr "Резервно съвпадение"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:52
+msgid "AI match"
+msgstr "AI съвпадение"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:76
+#, python-format
+msgid "AI Score: %(score)s%%"
+msgstr "AI оценка: %(score)s%%"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:86
+#, python-format
+msgid "Trust Score: %(score)s%%"
+msgstr "Оценка на доверие: %(score)s%%"
+
+# | msgid "Average rate:"
+#: .\templates\term-papers\term-paper-request-teacher.html:97
+#, python-format
+msgid "Average Trophy Rate: %(rate)s"
+msgstr "Средна оценка от отличия: %(rate)s"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:101
+#, python-format
+msgid "Relevant completed papers: %(count)s"
+msgstr "Релевантни завършени курсови работи: %(count)s"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:106
+msgid "Fallback recommendation"
+msgstr "Резервна препоръка"
+
+# | msgid "No specializations selected yet."
+#: .\templates\term-papers\term-paper-request-teacher.html:120
+msgid "No specializations yet"
+msgstr "Все още няма специализации"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:126
+msgid "Why this teacher"
+msgstr "Защо този преподавател"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:135
+msgid "Pending request"
+msgstr "Чакаща заявка"
+
+# | msgid "Requests"
+#: .\templates\term-papers\term-paper-request-teacher.html:141
+msgid "Request help"
+msgstr "Заяви помощ"
+
+#: .\templates\term-papers\term-paper-request-teacher.html:153
+msgid "No teachers available yet."
+msgstr "Все още няма налични преподаватели."
+
+# | msgid "All trophies"
+#: .\templates\trophies\trophy-add.html:7
+msgid "Add trophy"
+msgstr "Добавяне на отличие"
+
+#: .\templates\trophies\trophy-add.html:12
+msgid "Submit rating"
+msgstr "Изпрати оценка"
+
+# | msgid "Average rate:"
+#: .\templates\trophies\trophy-already-rated.html:10
+msgid "Already rated"
+msgstr "Вече е оценено"
+
+#: .\templates\trophies\trophy-already-rated.html:13
+msgid ""
+"This completed task has already been rated, so you cannot submit another "
+"rating."
+msgstr ""
+"Тази завършена задача вече е оценена, затова не можете да изпратите друга "
+"оценка."
+
+#: .\templates\trophies\trophy-list.html:21
+msgid "Project:"
+msgstr "Проект:"
+
+#: .\templates\trophies\trophy-list.html:26
+msgid "Comment:"
+msgstr "Коментар:"
+
+#: .\templates\trophies\trophy-list.html:30
+msgid "No written feedback yet."
+msgstr "Все още няма писмена обратна връзка."
+
+# | msgid "All trophies"
+#: .\templates\trophies\trophy-list.html:37
+msgid "No trophies yet"
+msgstr "Все още няма отличия"
+
+#: .\templates\trophies\trophy-list.html:39
+msgid "This teacher has not received any ratings yet."
+msgstr "Този преподавател все още не е получил оценки."
+
+# | msgid "Add Materials"
+#: .\templates\useful_material\materials-add.html:7
+msgid "Add New Material"
+msgstr "Добавяне на нов материал"
+
+#: .\templates\useful_material\materials-add.html:64
+#: .\templates\useful_material\materials-edit.html:64
+msgid "Choose PDF"
+msgstr "Избери PDF"
+
+#: .\templates\useful_material\materials-add.html:65
+#: .\templates\useful_material\materials-add.html:94
+#: .\templates\useful_material\materials-edit.html:69
+#: .\templates\useful_material\materials-edit.html:100
+msgid "No file chosen"
+msgstr "Няма избран файл"
+
+#: .\templates\useful_material\materials-add.html:68
+#: .\templates\useful_material\materials-edit.html:74
+msgid "Allowed format: PDF only • Max size: 2MB"
+msgstr "Разрешен формат: само PDF • Максимален размер: 2MB"
+
+# | msgid "Add Materials"
+#: .\templates\useful_material\materials-add.html:84
+msgid "Add Material"
+msgstr "Добави материал"
+
+#: .\templates\useful_material\materials-delete.html:11
+msgid "Delete material"
+msgstr "Изтриване на материал"
+
+# | msgid "Are you sure you want to delete this profile?"
+#: .\templates\useful_material\materials-delete.html:20
+msgid "Are you sure you want to delete this material?"
+msgstr "Сигурни ли сте, че искате да изтриете този материал?"
+
+#: .\templates\useful_material\materials-details.html:32
+msgid "Title"
+msgstr "Заглавие"
+
+# | msgid "No specializations selected yet."
+#: .\templates\useful_material\materials-details.html:42
+msgid "No specialization selected"
+msgstr "Няма избрана специализация"
+
+#: .\templates\useful_material\materials-details.html:49
+msgid "Reference"
+msgstr "Източник"
+
+#: .\templates\useful_material\materials-details.html:60
+msgid "Download PDF"
+msgstr "Изтегли PDF"
+
+#: .\templates\useful_material\materials-details.html:66
+msgid "Open Reference"
+msgstr "Отвори източника"
+
+#: .\templates\useful_material\materials-details.html:72
+msgid "Uploaded by"
+msgstr "Качено от"
+
+#: .\templates\useful_material\materials-details.html:91
+msgid "Discussion"
+msgstr "Дискусия"
+
+#: .\templates\useful_material\materials-details.html:95
+#, python-format
+msgid ""
+"\n"
+"                You have %(count)s comment remaining for the next 24 hours.\n"
+"              "
+msgid_plural ""
+"\n"
+"                You have %(count)s comments remaining for the next 24 "
+"hours.\n"
+"              "
+msgstr[0] ""
+"\n"
+"                Остава ви %(count)s коментар за следващите 24 часа.\n"
+"              "
+msgstr[1] ""
+"\n"
+"                Остават ви %(count)s коментара за следващите 24 часа.\n"
+"              "
+
+#: .\templates\useful_material\materials-details.html:103
+msgid "Log in to join the discussion."
+msgstr "Влезте в профила си, за да се включите в дискусията."
+
+#: .\templates\useful_material\materials-details.html:120
+msgid "Post comment"
+msgstr "Публикувай коментар"
+
+#: .\templates\useful_material\materials-details.html:146
+msgid "Like comment"
+msgstr "Харесай коментара"
+
+#: .\templates\useful_material\materials-details.html:150
+#, python-format
+msgid ""
+"\n"
+"                            %(count)s like\n"
+"                          "
+msgid_plural ""
+"\n"
+"                            %(count)s likes\n"
+"                          "
+msgstr[0] ""
+"\n"
+"                            %(count)s харесване\n"
+"                          "
+msgstr[1] ""
+"\n"
+"                            %(count)s харесвания\n"
+"                          "
+
+#: .\templates\useful_material\materials-details.html:162
+#, python-format
+msgid ""
+"\n"
+"                          %(count)s like\n"
+"                        "
+msgid_plural ""
+"\n"
+"                          %(count)s likes\n"
+"                        "
+msgstr[0] ""
+"\n"
+"                          %(count)s харесване\n"
+"                        "
+msgstr[1] ""
+"\n"
+"                          %(count)s харесвания\n"
+"                        "
+
+#: .\templates\useful_material\materials-details.html:178
+msgid "No discussion yet"
+msgstr "Все още няма дискусия"
+
+#: .\templates\useful_material\materials-details.html:180
+msgid "Be the first to leave a comment for this material."
+msgstr "Бъдете първият, който ще остави коментар за този материал."
+
+#: .\templates\useful_material\materials-details.html:187
+msgid "Comments pages"
+msgstr "Страници с коментари"
+
+#: .\templates\useful_material\materials-details.html:190
+#: .\templates\useful_material\materials-details.html:193
+msgid "First"
+msgstr "Първа"
+
+#: .\templates\useful_material\materials-details.html:198
+#, python-format
+msgid ""
+"\n"
+"                  Page %(current)s of %(total)s\n"
+"                "
+msgstr ""
+"\n"
+"                  Страница %(current)s от %(total)s\n"
+"                "
+
+#: .\templates\useful_material\materials-details.html:205
+#: .\templates\useful_material\materials-details.html:208
+msgid "Last"
+msgstr "Последна"
+
+# | msgid "Add Materials"
+#: .\templates\useful_material\materials-edit.html:7
+msgid "Edit material"
+msgstr "Редактиране на материал"
+
+#: .\templates\useful_material\materials-index.html:19
+msgid "Title:"
+msgstr "Заглавие:"
+
+#: .\templates\useful_material\materials-index.html:33
+msgid "File:"
+msgstr "Файл:"
+
+#: .\templates\useful_material\materials-index.html:33
+msgid "PDF uploaded"
+msgstr "PDF файлът е качен"
+
+#: .\templates\useful_material\materials-index.html:43
+msgid "No materials found"
+msgstr "Не са намерени материали"
+
+#: .\templates\useful_material\materials-index.html:45
+msgid ""
+"Try a different title or specialization, or clear the filters and browse all "
+"materials."
+msgstr ""
+"Опитайте с друго заглавие или специализация, или изчистете филтрите и "
+"разгледайте всички материали."
+
+msgid "Approved"
+msgstr "Одобрена"
+
+msgid "Rejected"
+msgstr "Отхвърлена"
+
+msgid "Accepted"
+msgstr "Приета"
+
+msgid "Declined"
+msgstr "Отказана"
+
+msgid "Canceled"
+msgstr "Отменена"
+
+msgid "Reviewer"
+msgstr "Проверяващ"
+
+msgid "Student"
+msgstr "Студент"
+
+msgid "Only PDF, JPG, JPEG, and PNG files are allowed."
+msgstr "Разрешени са само PDF, JPG, JPEG и PNG файлове."
+
+msgid "A user with this email already exists."
+msgstr "Потребител с този имейл вече съществува."
+
+msgid "This email is already in use by another account."
+msgstr "Този имейл вече се използва от друг акаунт."
+
+msgid "Please select at least one specialization."
+msgstr "Моля, изберете поне една специализация."
+
+msgid "User type"
+msgstr "Тип потребител"
+
+msgid "Mathematics"
+msgstr "Математика"
+
+msgid "Physics"
+msgstr "Физика"
+
+msgid "Chemistry"
+msgstr "Химия"
+
+msgid "Biology"
+msgstr "Биология"
+
+msgid "Computer Science"
+msgstr "Компютърни науки"
+
+msgid "Programming"
+msgstr "Програмиране"
+
+msgid "Engineering"
+msgstr "Инженерство"
+
+msgid "Statistics"
+msgstr "Статистика"
+
+msgid "Economics"
+msgstr "Икономика"
+
+msgid "Business & Management"
+msgstr "Бизнес и мениджмънт"
+
+msgid "Accounting"
+msgstr "Счетоводство"
+
+msgid "Law"
+msgstr "Право"
+
+msgid "Political Science"
+msgstr "Политически науки"
+
+msgid "Psychology"
+msgstr "Психология"
+
+msgid "Sociology"
+msgstr "Социология"
+
+msgid "Philosophy"
+msgstr "Философия"
+
+msgid "History"
+msgstr "История"
+
+msgid "Geography"
+msgstr "География"
+
+msgid "Literature"
+msgstr "Литература"
+
+msgid "Linguistics"
+msgstr "Лингвистика"
+
+msgid "English Language"
+msgstr "Английски език"
+
+msgid "Japanese Language"
+msgstr "Японски език"
+
+msgid "Spanish Language"
+msgstr "Испански език"
+
+msgid "French Language"
+msgstr "Френски език"
+
+msgid "Art & Design"
+msgstr "Изкуство и дизайн"
+
+msgid "Drawing & Illustration"
+msgstr "Рисуване и илюстрация"
+
+msgid "Music"
+msgstr "Музика"
+
+msgid "Education & Pedagogy"
+msgstr "Образование и педагогика"
+
+msgid "Search by title..."
+msgstr "Търсене по заглавие..."
+
+msgid "Materials Feed"
+msgstr "Поток с материали"
+
+msgid "Search by title…"
+msgstr "Търсене по заглавие…"
+
+msgid "All specializations"
+msgstr "Всички специализации"
+
+msgid "Enter material title…"
+msgstr "Въведете заглавие на материала…"
+
+msgid "This reference is not allowed."
+msgstr "Тази референция не е позволена."
+
+msgid "Write your comment here..."
+msgstr "Напишете коментара си тук..."
+
+msgid "Cover photo (optional)"
+msgstr "Корица (по избор)"
+
+msgid "Lesson title"
+msgstr "Заглавие на урока"
+
+msgid "You need a teacher profile with selected specializations before creating lessons."
+msgstr "Необходим е преподавателски профил с избрани специализации, преди да създавате уроци."
+
+msgid "You need a teacher profile with selected specializations before editing lessons."
+msgstr "Необходим е преподавателски профил с избрани специализации, преди да редактирате уроци."
+
+msgid "You can only select specializations from your teacher profile. Invalid selections: %(specializations)s."
+msgstr "Можете да избирате само специализации от преподавателския си профил. Невалидни избори: %(specializations)s."

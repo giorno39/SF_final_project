@@ -18,7 +18,7 @@
 
               <div class="materials-details-tags">
                 {% for specialization in object.specializations.all %}
-                  <span class="materials-details-tag">{{ specialization.name }}</span>
+                  <span class="materials-details-tag">{{ specialization.translated_name }}</span>
                 {% empty %}
                   <span class="materials-details-tag materials-details-tag--muted">{% trans "No specialization" %}</span>
                 {% endfor %}
@@ -37,7 +37,7 @@
             <span class="materials-details-info-label">{% trans "Specializations" %}</span>
             <p class="materials-details-info-value">
               {% for specialization in object.specializations.all %}
-                {{ specialization.name }}{% if not forloop.last %}, {% endif %}
+                {{ specialization.translated_name }}{% if not forloop.last %}, {% endif %}
               {% empty %}
                 {% trans "No specialization selected" %}
               {% endfor %}
