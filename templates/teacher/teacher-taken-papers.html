@@ -29,11 +29,11 @@
             <div class="taken-paper-row__spec-block">
               <span class="taken-paper-row__spec-heading">{% trans "Specializations" %}</span>
               <div class="taken-paper-row__specs">
-                {% for spec in object.specializations.all %}
-                  <span class="taken-paper-row__spec-pill">{{ spec.name }}</span>
-                {% empty %}
-                  <span class="taken-paper-row__spec-pill taken-paper-row__spec-pill--empty">{% trans "None" %}</span>
-                {% endfor %}
+              {% for spec in object.specializations.all %}
+                <span class="taken-paper-row__spec-pill">{{ spec.translated_name }}</span>
+              {% empty %}
+                <span class="taken-paper-row__spec-pill taken-paper-row__spec-pill--empty">{% trans "None" %}</span>
+              {% endfor %}
               </div>
             </div>
           </div>

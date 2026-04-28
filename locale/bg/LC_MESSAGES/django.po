@@ -1640,3 +1640,75 @@ msgstr "Отписахте се от курсовата работа. Тя от�
 
 msgid "Fallback: top pre-ranked teacher."
 msgstr "Резервна препоръка: най-високо класираният предварително оценен преподавател."
+
+msgid "First name"
+msgstr "Име"
+
+msgid "Last name"
+msgstr "Фамилия"
+
+msgid "name@example.com"
+msgstr "name@example.com"
+
+msgid "Your password was successfully updated."
+msgstr "Паролата ви беше успешно променена."
+
+msgid "You have already requested one or more of the selected specializations."
+msgstr "Вече сте заявили една или повече от избраните специализации."
+
+msgid "All selected specializations are already pending review."
+msgstr "Всички избрани специализации вече чакат преглед."
+
+msgid "Please select your specializations first."
+msgstr "Моля, първо изберете специализации."
+
+msgid "Something went wrong. Please try again."
+msgstr "Нещо се обърка. Моля, опитайте отново."
+
+msgid "Please attach a proof file."
+msgstr "Моля, прикачете файл с доказателство."
+
+msgid "Your specialization requests were submitted for review."
+msgstr "Заявките ви за специализации бяха изпратени за преглед."
+
+msgid "This request has already been reviewed."
+msgstr "Тази заявка вече е прегледана."
+
+msgid "Specialization request approved successfully."
+msgstr "Заявката за специализация беше одобрена успешно."
+
+msgid "Specialization request rejected."
+msgstr "Заявката за специализация беше отхвърлена."
+
+msgid "Invalid action."
+msgstr "Невалидно действие."
+
+msgid "Rating"
+msgstr "Оценка"
+
+msgid "Comment"
+msgstr "Коментар"
+
+msgid "0 – 5"
+msgstr "0 – 5"
+
+msgid "Teacher user ID"
+msgstr "ID на преподавател"
+
+msgid "Describe the teacher’s communication, quality of work, and whether the paper was delivered on time. This helps us improve future recommendations."
+msgstr "Опишете комуникацията с преподавателя, качеството на работата и дали курсовата работа беше предадена навреме. Това ни помага да подобрим бъдещите препоръки."
+
+msgid "Please enter a valid comment."
+msgstr "Моля, въведете валиден коментар."
+
+msgid "You can post up to 3 comments per 24 hours for this material."
+msgstr "Можете да публикувате до 3 коментара за 24 часа за този материал."
+
+msgid "Your comment was posted successfully."
+msgstr "Коментарът ви беше публикуван успешно."
+
+msgid "Like removed."
+msgstr "Харесването е премахнато."
+
+msgid "Comment liked."
+msgstr "Коментарът е харесан."

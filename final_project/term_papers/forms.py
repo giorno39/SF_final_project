@@ -91,3 +91,46 @@ class TermPaperSearchForm(forms.Form):
         self.fields["specialization"].label_from_instance = (
             lambda obj: obj.translated_name
         )
+
+class TermPaperEditForm(forms.ModelForm):
+    class Meta:
+        model = TermPaper
+        fields = (
+            "title",
+            "death_line",
+            "price_cap",
+            "description",
+        )
+
+        labels = {
+            "title": _("Title"),
+            "death_line": _("Deadline"),
+            "price_cap": _("Price cap"),
+            "description": _("Description"),
+        }
+
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "placeholder": _("Term paper title"),
+            }),
+            "death_line": forms.DateInput(
+                attrs={"type": "date"},
+                format="%Y-%m-%d",
+            ),
+            "price_cap": forms.NumberInput(attrs={
+                "placeholder": _("Maximum budget (e.g. 100)"),
+                "min": 0,
+            }),
+            "description": forms.Textarea(attrs={
+                "placeholder": _("Describe what you need..."),
+                "rows": 5,
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["death_line"].input_formats = ["%Y-%m-%d"]
+
+        if self.instance and self.instance.pk and self.instance.death_line:
+            self.initial["death_line"] = self.instance.death_line.strftime("%Y-%m-%d")

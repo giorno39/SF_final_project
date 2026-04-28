@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views import generic as views
 from django.utils.translation import gettext_lazy as _
 
+from final_project.accounts.models import TypesOfUsers
 from final_project.core.permissions_mixins import TeacherRequiredMixin
 from final_project.lessons.forms import CreateLessonForm, LessonEditForm, LessonSearchForm
 from final_project.lessons.models import Lesson
@@ -141,7 +142,7 @@ class OwnLessonView(TeacherRequiredMixin, views.ListView):
     def get(self, request, *args, **kwargs):
         result = super().get(request, *args, **kwargs)
 
-        if request.user.user_type == 'student':
+        if request.user.user_type == TypesOfUsers.STUDENT:
             return redirect('index')
 
         return result
@@ -150,7 +151,7 @@ class OwnLessonView(TeacherRequiredMixin, views.ListView):
         context = super().get_context_data(**kwargs)
 
         context['search_form'] = LessonSearchForm(self.request.GET)
-        context['lesson_feed_title'] = 'My lessons'
+        context['lesson_feed_title'] = _('My Lessons')
         context['get_params'] = _lesson_feed_querystring(self.request)
 
         return context

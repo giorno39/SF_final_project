@@ -12,6 +12,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic as views
 from django.contrib.auth.decorators import login_required
+from django.utils.translation import gettext_lazy as _
 
 from final_project import settings
 from final_project.useful_materials.forms import (
@@ -150,7 +151,7 @@ def add_material_comment(request, pk):
     form = MaterialCommentForm(request.POST)
 
     if not form.is_valid():
-        messages.error(request, 'Please enter a valid comment.')
+        messages.error(request, _("Please enter a valid comment."))
         return redirect('materials-details', pk=material.pk)
 
     last_24h = timezone.now() - timedelta(hours=24)
@@ -162,7 +163,7 @@ def add_material_comment(request, pk):
     ).count()
 
     if comments_count >= 3:
-        messages.error(request, 'You can post up to 3 comments per 24 hours for this material.')
+        messages.error(request, _("You can post up to 3 comments per 24 hours for this material."))
         return redirect('materials-details', pk=material.pk)
 
     comment = form.save(commit=False)
@@ -170,7 +171,7 @@ def add_material_comment(request, pk):
     comment.author = request.user
     comment.save()
 
-    messages.success(request, 'Your comment was posted successfully.')
+    messages.success(request, _("Your comment was posted successfully."))
     return redirect('materials-details', pk=material.pk)
 
 
@@ -196,13 +197,13 @@ def toggle_material_comment_like(request, pk):
 
     if existing_vote:
         existing_vote.delete()
-        messages.success(request, 'Like removed.')
+        messages.success(request, _("Like removed."))
     else:
         MaterialCommentVote.objects.create(
             comment=comment,
             user=request.user,
         )
-        messages.success(request, 'Comment liked.')
+        messages.success(request, _("Comment liked."))
 
     page = request.POST.get('page')
     if page:

@@ -10,6 +10,9 @@ class CreateLessonForm(forms.ModelForm):
         model = Lesson
         exclude = ('teacher',)
         labels = {
+            'title': _('Title'),
+            'specializations': _('Specializations'),
+            'price': _('Price'),
             'cover_image': _('Cover photo (optional)'),
         }
         widgets = {
@@ -67,6 +70,9 @@ class LessonEditForm(forms.ModelForm):
         model = Lesson
         fields = ('title', 'specializations', 'price', 'cover_image')
         labels = {
+            'title': _('Title'),
+            'specializations': _('Specializations'),
+            'price': _('Price'),
             'cover_image': _('Cover photo (optional)'),
         }
         widgets = {

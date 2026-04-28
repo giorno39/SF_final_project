@@ -10,6 +10,12 @@ class MaterialCreateForm(forms.ModelForm):
     class Meta:
         model = Materials
         exclude = ('uploaded_by',)
+        labels = {
+            "title": _("Title"),
+            "specializations": _("Specializations"),
+            "content": _("File"),
+            "references": _("Reference"),
+        }
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': _('Enter material title…')}),
             'specializations': forms.CheckboxSelectMultiple(),
@@ -32,7 +38,7 @@ class MaterialCreateForm(forms.ModelForm):
 
         if reference_url:
             specialization_names = [
-                str(spec.translated_name) for spec in specializations
+                spec.name for spec in specializations
             ] if specializations else []
 
             validation_result = validate_reference_with_ai(
@@ -53,6 +59,12 @@ class MaterialEditForm(forms.ModelForm):
     class Meta:
         model = Materials
         exclude = ('uploaded_by',)
+        labels = {
+            "title": _("Title"),
+            "specializations": _("Specializations"),
+            "content": _("File"),
+            "references": _("Reference"),
+        }
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': _('Enter material title…')}),
             'specializations': forms.CheckboxSelectMultiple(),
@@ -75,7 +87,7 @@ class MaterialEditForm(forms.ModelForm):
 
         if reference_url:
             specialization_names = [
-                str(spec.translated_name) for spec in specializations
+                spec.name for spec in specializations
             ] if specializations else []
 
             validation_result = validate_reference_with_ai(

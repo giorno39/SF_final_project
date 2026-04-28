@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic as views
+from django.utils.translation import gettext_lazy as _
 
 from final_project.core.permissions_mixins import StudentRequiredMixin
 from final_project.term_papers.models import TermPaper
@@ -27,9 +28,18 @@ class CreateTrophyView(StudentRequiredMixin, views.CreateView):
 
         form.instance.project = term_paper.title
         form.instance.completed_by = term_paper.taken_by
-        form.fields['rate'].widget.attrs.setdefault('placeholder', '0 – 5')
+        form.fields['rate'].label = _('Rating')
+        form.fields['comment'].label = _('Comment')
+
+        form.fields['rate'].widget.attrs.setdefault(
+            'placeholder',
+            _('0 – 5')
+        )
+
         form.fields['comment'].widget.attrs.update({
-            'placeholder': 'Describe the teacher’s communication, quality of work, and whether the paper was delivered on time. This helps us improve future recommendations.',
+            'placeholder': _(
+                'Describe the teacher’s communication, quality of work, and whether the paper was delivered on time. This helps us improve future recommendations.'
+            ),
             'rows': 5,
         })
         return form

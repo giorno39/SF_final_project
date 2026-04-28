@@ -66,12 +66,28 @@
             {% endif %}
         </p>
 
-        <div>
+        <div class="lesson-cover-file-field">
             {{ form.cover_image.label_tag }}
-            {{ form.cover_image }}
-            {% if form.cover_image.errors %}
-                <span class="field-error">{{ form.cover_image.errors.0 }}</span>
-            {% endif %}
+
+            <div class="custom-file">
+                <label class="custom-file-label" for="{{ form.cover_image.id_for_label }}">
+                    {% trans "Choose File" %}
+                </label>
+
+                <span class="custom-file-name" id="lesson-cover-file-name">
+                    {% if object.cover_image %}
+                        {{ object.cover_image.name }}
+                    {% else %}
+                        {% trans "No file chosen" %}
+                    {% endif %}
+                </span>
+
+                {{ form.cover_image }}
+
+                {% if form.cover_image.errors %}
+                    <span class="field-error">{{ form.cover_image.errors.0 }}</span>
+                {% endif %}
+            </div>
         </div>
 
         <button type="submit">{% trans "Save changes" %}</button>
@@ -79,4 +95,20 @@
 </div>
 
 <script src="{% static 'js/specialization-picker.js' %}"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("{{ form.cover_image.id_for_label }}");
+    const fileName = document.getElementById("lesson-cover-file-name");
+    const noFileChosenText = "{% trans 'No file chosen' %}";
+
+    if (fileInput && fileName) {
+      fileInput.addEventListener("change", function () {
+        fileName.textContent = fileInput.files.length > 0
+          ? fileInput.files[0].name
+          : noFileChosenText;
+      });
+    }
+  });
+</script>
 {% endblock %}

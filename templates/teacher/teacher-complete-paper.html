@@ -21,9 +21,25 @@
         <div class="paper-file-field">
             <label class="paper-file-label">{% trans "Solution:" %}</label>
 
-            <div class="paper-file-upload-box">
+        <div class="paper-file-field">
+            <label class="paper-file-label">{% trans "Solution:" %}</label>
+
+            <div class="custom-file">
+                <label class="custom-file-label" for="{{ form.content.id_for_label }}">
+                    {% trans "Choose File" %}
+                </label>
+
+                <span class="custom-file-name" id="teacher-complete-file-name">
+                    {% trans "No file chosen" %}
+                </span>
+
                 {{ form.content }}
+
+                {% if form.content.errors %}
+                    <span class="field-error">{{ form.content.errors.0 }}</span>
+                {% endif %}
             </div>
+        </div>
 
             {% if form.content.errors %}
                 <span class="field-error">{{ form.content.errors.0 }}</span>
@@ -33,4 +49,21 @@
         <button type="submit">{% trans "Mark complete" %}</button>
     </form>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("{{ form.content.id_for_label }}");
+    const fileName = document.getElementById("teacher-complete-file-name");
+    const noFileChosenText = "{% trans 'No file chosen' %}";
+
+    if (fileInput && fileName) {
+      fileInput.addEventListener("change", function () {
+        fileName.textContent = fileInput.files.length > 0
+          ? fileInput.files[0].name
+          : noFileChosenText;
+      });
+    }
+  });
+</script>
+
 {% endblock %}

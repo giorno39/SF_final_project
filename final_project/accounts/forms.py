@@ -90,9 +90,9 @@ class UserEditForm(forms.ModelForm):
         model = UserModel
         fields = ('first_name', 'last_name', 'email')
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'First name'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Last name'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'name@example.com'}),
+            'first_name': forms.TextInput(attrs={'placeholder': _('First name')}),
+            'last_name': forms.TextInput(attrs={'placeholder': _('Last name')}),
+            'email': forms.EmailInput(attrs={'placeholder': _('name@example.com')}),
         }
 
     def clean_email(self):

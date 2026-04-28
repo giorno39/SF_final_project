@@ -47,7 +47,7 @@ class SignUpView(views.CreateView):
         response = super().form_valid(form)
         login(self.request, self.object)
 
-        if self.object.user_type == TypesOfUsers.teacher.value:
+        if self.object.user_type == TypesOfUsers.TEACHER:
             return redirect('teacher-specializations')
 
         return response
@@ -63,7 +63,10 @@ class ChangePasswordView(auth_views.PasswordChangeView):
     form_class = PasswordChangeStyledForm
 
     def form_valid(self, form):
-        messages.success(self.request, 'Your password was successfully updated.')
+        messages.success(
+            self.request,
+            _('Your password was successfully updated.')
+        )
         return super().form_valid(form)
 
 
@@ -181,7 +184,7 @@ class TeacherSpecializationsView(TeacherRequiredMixin, View):
         if already_requested_ids:
             messages.warning(
                 request,
-                "You have already requested one or more of the selected specializations."
+                _("You have already requested one or more of the selected specializations.")
             )
             specialization_ids = [
                 spec_id for spec_id in specialization_ids
@@ -191,7 +194,7 @@ class TeacherSpecializationsView(TeacherRequiredMixin, View):
         if not specialization_ids:
             messages.warning(
                 request,
-                "All selected specializations are already pending review."
+                _("All selected specializations are already pending review.")
             )
             return render(
                 request,
@@ -217,11 +220,11 @@ class TeacherSpecializationProofUploadView(TeacherRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         specializations = self.get_selected_specializations(request)
         if not specializations:
-            messages.warning(request, "Please select your specializations first.")
+            messages.warning(request, _("Please select your specializations first."))
             return redirect("teacher-specializations")
 
         formset = TeacherSpecializationProofFormSet(
-            initial=[{} for _ in specializations]
+            initial=[{} for spec in specializations]
         )
         paired_forms = list(zip(specializations, formset.forms))
 
@@ -238,24 +241,33 @@ class TeacherSpecializationProofUploadView(TeacherRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         specializations = self.get_selected_specializations(request)
         if not specializations:
-            messages.warning(request, "Please select your specializations first.")
+            messages.warning(
+                request,
+                _("Please select your specializations first.")
+            )
             return redirect("teacher-specializations")
 
         formset = TeacherSpecializationProofFormSet(
             request.POST,
             request.FILES,
-            initial=[{} for _ in specializations],
+            initial=[{} for spec in specializations],
         )
 
         if len(formset.forms) != len(specializations):
-            messages.error(request, "Something went wrong. Please try again.")
+            messages.error(
+                request,
+                _("Something went wrong. Please try again.")
+            )
             return redirect("teacher-specializations")
 
         all_valid = True
         for form in formset.forms:
             form.full_clean()
             if not form.cleaned_data.get("proof_file"):
-                form.add_error("proof_file", "Please attach a proof file.")
+                form.add_error(
+                    "proof_file",
+                    _("Please attach a proof file.")
+                )
                 all_valid = False
             elif form.errors:
                 all_valid = False
@@ -272,7 +284,7 @@ class TeacherSpecializationProofUploadView(TeacherRequiredMixin, View):
                 },
             )
 
-        teacher_profile, _ = TeacherProfile.objects.get_or_create(user=request.user)
+        teacher_profile, created = TeacherProfile.objects.get_or_create(user=request.user)
 
         for specialization, form in zip(specializations, formset.forms):
             proof_file = form.cleaned_data["proof_file"]
@@ -292,7 +304,7 @@ class TeacherSpecializationProofUploadView(TeacherRequiredMixin, View):
         request.session.pop(self.session_key, None)
         messages.success(
             request,
-            "Your specialization requests were submitted for review.",
+            _("Your specialization requests were submitted for review.")
         )
         return redirect("index")
 
@@ -365,7 +377,7 @@ class ReviewerSpecializationRequestDetailView(ReviewerRequiredMixin, View):
         specialization_request = self.get_object(pk)
 
         if specialization_request.status != "pending":
-            messages.warning(request, "This request has already been reviewed.")
+            messages.warning(request, _("This request has already been reviewed."))
             return redirect(
                 "reviewer-specialization-request-detail",
                 pk=specialization_request.pk,
@@ -386,17 +398,18 @@ class ReviewerSpecializationRequestDetailView(ReviewerRequiredMixin, View):
                 specialization_request.specialization
             )
 
-            messages.success(request, "Specialization request approved successfully.")
+            messages.success(request, _("Specialization request approved successfully.")
+)
             return redirect("reviewer-specialization-requests")
 
         if action == "reject":
             specialization_request.status = "rejected"
             specialization_request.save()
 
-            messages.success(request, "Specialization request rejected.")
+            messages.success(request, _("Specialization request rejected."))
             return redirect("reviewer-specialization-requests")
 
-        messages.error(request, "Invalid action.")
+        messages.error(request, _("Invalid action."))
         return redirect(
             "reviewer-specialization-request-detail",
             pk=specialization_request.pk,

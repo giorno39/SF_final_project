@@ -21,7 +21,7 @@ from final_project.completed_papers.models import CompletedPaper
 from final_project.core.funcs import get_user_by_id
 from final_project.chat.models import Conversation, Message
 from final_project.core.permissions_mixins import StudentRequiredMixin, TeacherRequiredMixin
-from final_project.term_papers.forms import TermPaperCreateForm, TermPaperSearchForm
+from final_project.term_papers.forms import TermPaperCreateForm, TermPaperSearchForm, TermPaperEditForm
 from final_project.term_papers.models import TermPaper, TermPaperRequest
 from final_project.term_papers.services.teacher_recommendation import rank_teachers_with_ai
 from final_project.term_papers.services.term_paper_description import describe_term_paper_with_ai
@@ -168,7 +168,7 @@ class TermPaperCreateView(StudentRequiredMixin, views.CreateView):
 
 class TermPaperEditView(views.UpdateView):
     model = TermPaper
-    fields = ('title', 'death_line', 'price_cap','description')
+    form_class = TermPaperEditForm
     template_name = 'term-papers/term-paper-edit.html'
 
     def get_success_url(self):
@@ -507,7 +507,7 @@ def send_term_paper_request(request, pk, teacher_pk):
     term_paper = get_object_or_404(TermPaper, pk=pk, user=request.user)
 
     if term_paper.taken_by:
-        messages.error(request, 'This term paper has already been taken.')
+        messages.error(request,  _('This term paper has already been taken.'))
         return redirect('term-paper-details', pk=pk)
 
     teacher = UserModel.objects.filter(
@@ -516,7 +516,7 @@ def send_term_paper_request(request, pk, teacher_pk):
     ).first()
 
     if not teacher:
-        messages.error(request, 'Selected teacher does not exist.')
+        messages.error(request, _('Selected teacher does not exist.'))
         return redirect('term-paper-request-teacher', pk=pk)
 
     existing_pending_request = TermPaperRequest.objects.filter(
@@ -525,7 +525,7 @@ def send_term_paper_request(request, pk, teacher_pk):
     ).exists()
 
     if existing_pending_request:
-        messages.error(request, 'You already have a pending request for this term paper.')
+        messages.error(request, _('You already have a pending request for this term paper.'))
         return redirect('term-paper-request-teacher', pk=pk)
 
     term_paper_request, created = TermPaperRequest.objects.get_or_create(
@@ -539,7 +539,7 @@ def send_term_paper_request(request, pk, teacher_pk):
 
     if not created:
         if term_paper_request.status == TermPaperRequest.StatusChoices.PENDING:
-            messages.error(request, 'You have already requested this teacher.')
+            messages.error(request, _('You have already requested this teacher.'))
             return redirect('term-paper-request-teacher', pk=pk)
 
         term_paper_request.student = request.user
@@ -601,7 +601,7 @@ def send_term_paper_request(request, pk, teacher_pk):
     except Exception:
         pass
 
-    messages.success(request, 'Your request was sent successfully.')
+    messages.success(request, _('Your request was sent successfully.'))
     return redirect('chat-conversation', pk=conversation.pk)
 
 class TeacherTermPaperRequestsListView(TeacherRequiredMixin, views.ListView):
@@ -722,7 +722,7 @@ def accept_term_paper_request(request, request_pk):
     except Exception:
         pass
 
-    messages.success(request, 'You accepted the request.')
+    messages.success(request, _('You accepted the request.'))
     return redirect('chat-conversation', pk=conversation.pk)
 
 
@@ -743,7 +743,7 @@ def decline_term_paper_request(request, request_pk):
         return redirect('teacher-term-paper-requests')
 
     if term_paper_request.status != TermPaperRequest.StatusChoices.PENDING:
-        messages.error(request, 'This request has already been processed.')
+        messages.error(request, _('This request has already been processed.'))
         return redirect('teacher-term-paper-requests')
 
     term_paper_request.status = TermPaperRequest.StatusChoices.DECLINED
@@ -805,7 +805,7 @@ def decline_term_paper_request(request, request_pk):
     except Exception:
         pass
 
-    messages.success(request, 'You declined the request.')
+    messages.success(request, _('You declined the request.'))
     return redirect('teacher-term-paper-requests')
 
 @login_required

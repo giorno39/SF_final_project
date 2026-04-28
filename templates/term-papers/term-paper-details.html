@@ -38,7 +38,7 @@
         <span class="term-paper-details-section-label">{% trans "Specializations" %}</span>
         <div class="term-paper-details-specs">
           {% for spec in object.specializations.all %}
-            <span class="term-paper-details-spec-pill">{{ spec.name }}</span>
+            <span class="term-paper-details-spec-pill">{{ spec.translated_name }}</span>
           {% empty %}
             <span class="term-paper-details-spec-empty">{% trans "No specializations selected." %}</span>
           {% endfor %}
