@@ -1,6 +1,7 @@
 from statistics import mean
 import json
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 from django.db.models import Avg, Count, Prefetch
 
 from final_project.accounts.models import TeacherProfile
@@ -13,6 +14,11 @@ from final_project.ai.client import get_openai_client
 UserModel = get_user_model()
 
 DEBUG_EMPTY_AI_SENTINEL = True
+
+def _language_name(language_code):
+    if language_code and language_code.startswith("bg"):
+        return "Bulgarian"
+    return "English"
 
 def _safe_float(value, default=0.0):
     try:
@@ -96,7 +102,10 @@ def build_teacher_candidate(profile, term_paper):
         "teacher_name": teacher.get_full_name() or teacher.username,
         "email": teacher.email,
         "trust_score": profile.trust_score,
-        "specializations": [spec.name for spec in profile.specializations.all()],
+        "specializations": [
+            str(spec.translated_name)
+            for spec in profile.specializations.all()
+        ],
         "specialization_overlap": specialization_overlap,
         "avg_trophy_rate": round(avg_trophy_rate, 2),
         "trophy_count": len(trophies),
@@ -153,12 +162,12 @@ def _fallback_recommendations(candidates, result_size):
             "base_score": c["base_score"],
             "rank": i + 1,
             "score": None,
-            "reason": "Fallback: top pre-ranked teacher.",
+            "reason": str(_("Fallback: top pre-ranked teacher.")),
         }
         for i, c in enumerate(candidates[:result_size])
     ])
 
-def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
+def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3, language="en"):
     candidates = get_pre_ranked_teacher_candidates(
         term_paper=term_paper,
         shortlist_size=shortlist_size,
@@ -168,6 +177,8 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
         return []
 
     client = get_openai_client()
+
+    reason_language = _language_name(language)
 
     prompt_payload = {
         "term_paper": {
@@ -215,7 +226,7 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
                     '      "teacher_id": 1,\n'
                     '      "rank": 1,\n'
                     '      "score": 92,\n'
-                    '      "reason": "One short sentence."\n'
+                    f'      "reason": "One short sentence in {reason_language}."\n'
                     "    }\n"
                     "  ]\n"
                     "}\n\n"
@@ -224,6 +235,7 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3):
                     f"- Return between 1 and {min(result_size, len(candidates))} recommendations.\n"
                     "- Never return an empty recommendations array when teachers are provided.\n"
                     "- Pick the best available matches even if the fit is imperfect.\n"
+                    f'- The "reason" field must be written in {reason_language}.\n'
                     "- Return valid JSON only.\n\n"
                     f"Here is the data:\n{json.dumps(prompt_payload, ensure_ascii=False)}"
                 ),

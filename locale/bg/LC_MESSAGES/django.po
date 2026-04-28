@@ -1577,3 +1577,66 @@ msgstr "Необходим е преподавателски профил с и�
 
 msgid "You can only select specializations from your teacher profile. Invalid selections: %(specializations)s."
 msgstr "Можете да избирате само специализации от преподавателския си профил. Невалидни избори: %(specializations)s."
+
+msgid "Term paper title"
+msgstr "Заглавие на курсовата работа"
+
+msgid "University or institution"
+msgstr "Университет или институция"
+
+msgid "Maximum budget (e.g. 100)"
+msgstr "Максимален бюджет (напр. 100)"
+
+msgid "Describe what you need..."
+msgstr "Опишете от какво имате нужда..."
+
+msgid "You do not have permission to perform this action."
+msgstr "Нямате разрешение да извършите това действие."
+
+msgid "Please upload a PDF first."
+msgstr "Моля, първо качете PDF файл."
+
+msgid "This term paper already has a pending teacher request."
+msgstr "Тази курсова работа вече има чакаща заявка към преподавател."
+
+msgid "This term paper has already been taken."
+msgstr "Тази курсова работа вече е взета."
+
+msgid "Selected teacher does not exist."
+msgstr "Избраният преподавател не съществува."
+
+msgid "You already have a pending request for this term paper."
+msgstr "Вече имате чакаща заявка за тази курсова работа."
+
+msgid "You have already requested this teacher."
+msgstr "Вече сте изпратили заявка към този преподавател."
+
+msgid "Your request was sent successfully."
+msgstr "Заявката ви беше изпратена успешно."
+
+msgid "Request not found."
+msgstr "Заявката не е намерена."
+
+msgid "This request has already been processed."
+msgstr "Тази заявка вече е обработена."
+
+msgid "You accepted the request."
+msgstr "Приехте заявката."
+
+msgid "You declined the request."
+msgstr "Отказахте заявката."
+
+msgid "Term paper not found."
+msgstr "Курсовата работа не е намерена."
+
+msgid "You cannot unassigned this term paper."
+msgstr "Не можете да се отпишете от тази курсова работа."
+
+msgid "Completed papers cannot be unassigned"
+msgstr "Завършени курсови работи не могат да бъдат отказвани."
+
+msgid "You unassigned yourself from the term paper. It is now available again."
+msgstr "Отписахте се от курсовата работа. Тя отново е налична."
+
+msgid "Fallback: top pre-ranked teacher."
+msgstr "Резервна препоръка: най-високо класираният предварително оценен преподавател."

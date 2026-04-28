@@ -25,7 +25,7 @@
 
         <div class="completed-paper-header-right">
           {% for spec in object.specializations.all %}
-            <span class="completed-paper-tag">{{ spec.name }}</span>
+            <span class="completed-paper-tag">{{ spec.translated_name }}</span>
           {% empty %}
             <span class="completed-paper-tag">{% trans "No specialization" %}</span>
           {% endfor %}

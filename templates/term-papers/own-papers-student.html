@@ -42,7 +42,7 @@
           <span class="paper-meta-label">{% trans "Specializations" %}</span>
           <div class="paper-card-specs">
             {% for spec in object.specializations.all %}
-              <span class="paper-spec-pill">{{ spec.name }}</span>
+              <span class="paper-spec-pill">{{ specialization.translated_name }}</span>
             {% empty %}
               <span class="paper-spec-empty">{% trans "No specializations" %}</span>
             {% endfor %}

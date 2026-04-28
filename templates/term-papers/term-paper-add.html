@@ -40,10 +40,10 @@
                         <div
                             class="spec-option"
                             data-value="{{ choice.pk }}"
-                            data-label="{{ choice.name|lower }}"
-                            data-text="{{ choice.name }}"
+                            data-label="{{ choice.translated_name|lower }}"
+                            data-text="{{ choice.translated_name }}"
                         >
-                            {{ choice.name }}
+                            {{ choice.translated_name }}
                         </div>
                     {% endfor %}
                 </div>
@@ -90,13 +90,25 @@
             {% endif %}
         </p>
 
-        <p>
+        <div class="term-paper-file-field">
             {{ form.content.label_tag }}
-            {{ form.content }}
-            {% if form.content.errors %}
-                <span class="field-error">{{ form.content.errors.0 }}</span>
-            {% endif %}
-        </p>
+
+            <div class="custom-file">
+                <label class="custom-file-label" for="{{ form.content.id_for_label }}">
+                    {% trans "Choose File" %}
+                </label>
+
+                <span class="custom-file-name" id="term-paper-file-name">
+                    {% trans "No file chosen" %}
+                </span>
+
+                {{ form.content }}
+
+                {% if form.content.errors %}
+                    <span class="field-error">{{ form.content.errors.0 }}</span>
+                {% endif %}
+            </div>
+        </div>
 
         <p>
             <button
@@ -115,4 +127,19 @@
 
 <script src="{% static 'js/specialization-picker.js' %}"></script>
 <script src="{% static 'js/term-paper-description.js' %}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("{{ form.content.id_for_label }}");
+    const fileName = document.getElementById("term-paper-file-name");
+    const noFileChosenText = "{% trans 'No file chosen' %}";
+
+    if (fileInput && fileName) {
+      fileInput.addEventListener("change", function () {
+        fileName.textContent = fileInput.files.length > 0
+          ? fileInput.files[0].name
+          : noFileChosenText;
+      });
+    }
+  });
+</script>
 {% endblock %}
