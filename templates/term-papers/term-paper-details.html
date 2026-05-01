@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="term-paper-details-page">
@@ -15,7 +16,7 @@
             <h1 class="term-paper-details-title">{{ object.title }}</h1>
 
             <div class="term-paper-details-meta">
-              <span class="term-paper-details-meta-label">University:</span>
+              <span class="term-paper-details-meta-label">{% trans "University:" %}</span>
               <span>{{ object.university }}</span>
             </div>
           </div>
@@ -28,55 +29,59 @@
 
       <div class="term-paper-details-info-grid term-paper-details-info-grid--single">
         <div class="term-paper-details-info-item">
-          <span class="term-paper-details-info-label">Deadline</span>
+          <span class="term-paper-details-info-label">{% trans "Deadline" %}</span>
           <span class="term-paper-details-info-value">{{ object.death_line }}</span>
         </div>
       </div>
 
       <section class="term-paper-details-specs-block">
-        <span class="term-paper-details-section-label">Specializations</span>
+        <span class="term-paper-details-section-label">{% trans "Specializations" %}</span>
         <div class="term-paper-details-specs">
           {% for spec in object.specializations.all %}
-            <span class="term-paper-details-spec-pill">{{ spec.name }}</span>
+            <span class="term-paper-details-spec-pill">{{ spec.translated_name }}</span>
           {% empty %}
-            <span class="term-paper-details-spec-empty">No specializations selected.</span>
+            <span class="term-paper-details-spec-empty">{% trans "No specializations selected." %}</span>
           {% endfor %}
         </div>
       </section>
 
       <section class="term-paper-details-description">
-        <span class="term-paper-details-description-label">Description</span>
+        <span class="term-paper-details-description-label">{% trans "Description" %}</span>
         <p class="term-paper-details-description-text">
-          {{ object.description|default:"No description" }}
+          {% if object.description %}
+            {{ object.description }}
+          {% else %}
+            {% trans "No description" %}
+          {% endif %}
         </p>
       </section>
 
       <footer class="term-paper-details-actions">
         <a class="term-paper-details-btn" href="{% url 'term-paper-file-open' pk=object.pk %}">
-          Download File
+          {% trans "Download File" %}
         </a>
 
         {% if is_taken and object.completed == False %}
-          <span class="term-paper-details-badge">Already taken</span>
+          <span class="term-paper-details-badge">{% trans "Already taken" %}</span>
           <a class="term-paper-details-btn term-paper-details-btn-secondary" href="{% url 'details-user' pk=object.taken_by_id %}">
-            Taken by
+            {% trans "Taken by" %}
           </a>
         {% else %}
           {% if request.user.user_type == 'teacher' %}
             {% if not has_pending_request %}
               <a class="term-paper-details-btn" href="{% url 'term-paper-take' pk=object.pk %}">
-                Take term paper
+                {% trans "Take term paper" %}
               </a>
             {% else %}
-              <span class="term-paper-details-badge">Currently requested</span>
+              <span class="term-paper-details-badge">{% trans "Currently requested" %}</span>
             {% endif %}
           {% endif %}
         {% endif %}
 
         {% if object.completed %}
-          <span class="term-paper-details-badge">Completed</span>
+          <span class="term-paper-details-badge">{% trans "Completed" %}</span>
           <a class="term-paper-details-btn term-paper-details-btn-secondary" href="{% url 'trophy-add' paper_pk=object.pk %}">
-            Rate
+            {% trans "Rate" %}
           </a>
         {% endif %}
 
@@ -84,18 +89,18 @@
           {% if not is_taken and not has_pending_request %}
             <a class="term-paper-details-btn term-paper-details-btn-secondary" href="{% url 'term-paper-request-teacher' pk=object.pk %}">
               {% if has_declined_request %}
-                Request again
+                {% trans "Request again" %}
               {% else %}
-                Request teacher
+                {% trans "Request teacher" %}
               {% endif %}
             </a>
           {% endif %}
 
           <a class="term-paper-details-btn term-paper-details-btn-secondary" href="{% url 'term-paper-edit' pk=object.pk %}">
-            Edit
+            {% trans "Edit" %}
           </a>
           <a class="term-paper-details-btn term-paper-details-btn-secondary" href="{% url 'term-paper-delete' pk=object.pk %}">
-            Delete
+            {% trans "Delete" %}
           </a>
         {% endif %}
       </footer>

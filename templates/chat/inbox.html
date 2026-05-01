@@ -1,10 +1,11 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
-{% block title %}Inbox — BrainBuddyHive{% endblock %}
+{% block title %}{% trans "Inbox" %} — BrainBuddyHive{% endblock %}
 
 {% block content %}
 <section class="inbox-wrap">
-  <h1 class="inbox-title">Inbox</h1>
+  <h1 class="inbox-title">{% trans "Inbox" %}</h1>
 
   {% if conversations_data %}
     <div class="inbox-list">
@@ -26,11 +27,14 @@
                 {% if item.other_user %}
                   {{ item.other_user.get_full_name|default:item.other_user.username }}
                 {% else %}
-                  Unknown
+                  {% trans "Unknown" %}
                 {% endif %}
               </span>
+
               {% if item.last_message %}
-                <span class="inbox-time">{{ item.last_message.timestamp|timesince }} ago</span>
+                <span class="inbox-time">
+                  {% blocktrans with time=item.last_message.timestamp|timesince %}{{ time }} ago{% endblocktrans %}
+                </span>
               {% endif %}
             </div>
 
@@ -42,7 +46,7 @@
               {% if item.last_message %}
                 {{ item.last_message.content|truncatechars:80 }}
               {% else %}
-                No messages yet
+                {% trans "No messages yet" %}
               {% endif %}
             </p>
           </div>
@@ -55,8 +59,10 @@
     </div>
   {% else %}
     <div class="inbox-empty">
-      <p>No conversations yet.</p>
-      <p class="muted">When a teacher takes your paper or you message someone, it will appear here.</p>
+      <p>{% trans "No conversations yet." %}</p>
+      <p class="muted">
+        {% trans "When a teacher takes your paper or you message someone, it will appear here." %}
+      </p>
     </div>
   {% endif %}
 </section>

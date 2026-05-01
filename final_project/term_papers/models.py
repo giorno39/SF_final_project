@@ -3,6 +3,7 @@ from django.core import validators
 from django.db import models
 from final_project.accounts.models import Specialization
 from final_project.core.validators import file_size_validator, pdf_only_validator
+from django.utils.translation import gettext_lazy as _
 
 UserModel = get_user_model()
 
@@ -81,10 +82,10 @@ class TermPaper(models.Model):
 
 class TermPaperRequest(models.Model):
     class StatusChoices(models.TextChoices):
-        PENDING = 'pending', 'Pending'
-        ACCEPTED = 'accepted', 'Accepted'
-        DECLINED = 'declined', 'Declined'
-        CANCELED = 'canceled', 'Canceled'
+        PENDING = "pending", _("Pending")
+        ACCEPTED = "accepted", _("Accepted")
+        DECLINED = "declined", _("Declined")
+        CANCELED = "canceled", _("Canceled")
 
     term_paper = models.ForeignKey(
         TermPaper,

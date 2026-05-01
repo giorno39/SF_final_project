@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="container trophies-wrap">
@@ -17,20 +18,27 @@
       </div>
 
       <div class="trophy-project">
-        <span class="trophy-label">Project:</span>
+        <span class="trophy-label">{% trans "Project:" %}</span>
         {{ object.project }}
       </div>
 
       <div class="trophy-comment">
-        <span class="trophy-label">Comment:</span>
+        <span class="trophy-label">{% trans "Comment:" %}</span>
         {% if object.comment %}
           <p class="trophy-comment-text">{{ object.comment }}</p>
         {% else %}
-          <p class="trophy-comment-empty">No written feedback yet.</p>
+          <p class="trophy-comment-empty">{% trans "No written feedback yet." %}</p>
         {% endif %}
       </div>
 
     </article>
+  {% empty %}
+    <div class="search-empty-state">
+      <h3 class="search-empty-state-title">{% trans "No trophies yet" %}</h3>
+      <p class="search-empty-state-text">
+        {% trans "This teacher has not received any ratings yet." %}
+      </p>
+    </div>
   {% endfor %}
 
 </section>

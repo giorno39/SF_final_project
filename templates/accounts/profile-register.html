@@ -1,13 +1,15 @@
 {% extends 'base/base.html' %}
-{% block content %}
+{% load i18n %}
 
-    <div class="auth-form-container">
-     <h2>Create account</h2>
-     <form class="auth-form" method="post" action="{% url 'register-user' %}">
-                {{ form.as_p }}
-                <input type="hidden" name="next" value="{{ next }}">
-                <button type="submit">Register</button>
-                {% csrf_token %}
-            </form>
-    </div>
+{% block content %}
+<div class="auth-form-container">
+    <h2>{% trans "Create account" %}</h2>
+
+    <form class="auth-form" method="post" action="{% url 'register-user' %}">
+        {{ form.as_p }}
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit">{% trans "Register" %}</button>
+        {% csrf_token %}
+    </form>
+</div>
 {% endblock %}

@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="container lesson-wrap">
@@ -7,27 +8,27 @@
     <header class="lesson-header">
       <div class="lesson-avatar">!</div>
       <div>
-        <h1 class="lesson-title">Delete lesson</h1>
+        <h1 class="lesson-title">{% trans "Delete lesson" %}</h1>
         <p class="lesson-sub">
-          <span class="badge">Confirmation required</span>
+          <span class="badge">{% trans "Confirmation required" %}</span>
         </p>
       </div>
     </header>
 
     <div class="lesson-info">
       <p class="term-paper-card-p">
-        Are you sure you want to delete this lesson?
+        {% trans "Are you sure you want to delete this lesson?" %}
       </p>
     </div>
 
     <div class="lesson-actions">
       <form method="post" action="{% url 'lesson-delete' pk=object.pk %}">
         {% csrf_token %}
-        <button type="submit" class="btn">Yes, delete</button>
+        <button type="submit" class="btn">{% trans "Yes, delete" %}</button>
       </form>
 
       <a class="main-card-link" href="{% url 'lesson-details' pk=object.pk %}">
-        Go back
+        {% trans "Go back" %}
       </a>
     </div>
 

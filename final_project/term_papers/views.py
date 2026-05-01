@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic as views
+from django.utils.translation import gettext_lazy as _, get_language
 import os
 
 from final_project import settings
@@ -20,7 +21,7 @@ from final_project.completed_papers.models import CompletedPaper
 from final_project.core.funcs import get_user_by_id
 from final_project.chat.models import Conversation, Message
 from final_project.core.permissions_mixins import StudentRequiredMixin, TeacherRequiredMixin
-from final_project.term_papers.forms import TermPaperCreateForm, TermPaperSearchForm
+from final_project.term_papers.forms import TermPaperCreateForm, TermPaperSearchForm, TermPaperEditForm
 from final_project.term_papers.models import TermPaper, TermPaperRequest
 from final_project.term_papers.services.teacher_recommendation import rank_teachers_with_ai
 from final_project.term_papers.services.term_paper_description import describe_term_paper_with_ai
@@ -111,7 +112,7 @@ class TermPaperIndexView(views.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = TermPaperSearchForm(self.request.GET)
-        context['term_paper_feed_title'] = 'Term Paper Discovery Feed'
+        context["term_paper_feed_title"] = _("Term Paper Discovery Feed")
         context['get_params'] = _term_paper_feed_querystring(self.request)
         return context
 
@@ -159,7 +160,7 @@ class TermPaperCreateView(StudentRequiredMixin, views.CreateView):
         result = super().get(request, *args, **kwargs)
         c_user = get_user_by_id(self.request.user.pk)
 
-        if c_user.user_type == 'teacher':
+        if c_user.user_type == TypesOfUsers.TEACHER:
             return redirect('index')
 
         return result
@@ -167,7 +168,7 @@ class TermPaperCreateView(StudentRequiredMixin, views.CreateView):
 
 class TermPaperEditView(views.UpdateView):
     model = TermPaper
-    fields = ('title', 'death_line', 'price_cap','description')
+    form_class = TermPaperEditForm
     template_name = 'term-papers/term-paper-edit.html'
 
     def get_success_url(self):
@@ -230,7 +231,7 @@ def take_term_paper(request, pk):
 
     c_user = get_user_by_id(request.user.pk)
 
-    if c_user.user_type == 'student' or c_user.user_type == 'reviewer':
+    if c_user.user_type == TypesOfUsers.STUDENT or c_user.user_type == TypesOfUsers.REVIEWER:
         return redirect('term-paper-details', pk=pk)
 
     term_paper = TermPaper.objects \
@@ -242,7 +243,7 @@ def take_term_paper(request, pk):
     ).exists()
 
     if has_pending_request:
-        messages.error(request, 'This term paper already has a pending teacher request.')
+        messages.error(request, _('This term paper already has a pending teacher request.'))
         return redirect('term-paper-details', pk=pk)
 
     term_paper.taken_by_id = request.user.pk
@@ -486,6 +487,7 @@ class TermPaperRequestTeacherListView(StudentRequiredMixin, views.DetailView):
                 term_paper=self.object,
                 shortlist_size=8,
                 result_size=3,
+                language=get_language(),
             )
         except Exception as exc:
             ai_error = str(exc)
@@ -499,22 +501,22 @@ class TermPaperRequestTeacherListView(StudentRequiredMixin, views.DetailView):
 
 @login_required
 def send_term_paper_request(request, pk, teacher_pk):
-    if request.user.user_type != TypesOfUsers.student.value:
+    if request.user.user_type != TypesOfUsers.STUDENT:
         return render(request, "no-perms.html")
 
     term_paper = get_object_or_404(TermPaper, pk=pk, user=request.user)
 
     if term_paper.taken_by:
-        messages.error(request, 'This term paper has already been taken.')
+        messages.error(request,  _('This term paper has already been taken.'))
         return redirect('term-paper-details', pk=pk)
 
     teacher = UserModel.objects.filter(
         pk=teacher_pk,
-        user_type=TypesOfUsers.teacher.value,
+        user_type=TypesOfUsers.TEACHER,
     ).first()
 
     if not teacher:
-        messages.error(request, 'Selected teacher does not exist.')
+        messages.error(request, _('Selected teacher does not exist.'))
         return redirect('term-paper-request-teacher', pk=pk)
 
     existing_pending_request = TermPaperRequest.objects.filter(
@@ -523,7 +525,7 @@ def send_term_paper_request(request, pk, teacher_pk):
     ).exists()
 
     if existing_pending_request:
-        messages.error(request, 'You already have a pending request for this term paper.')
+        messages.error(request, _('You already have a pending request for this term paper.'))
         return redirect('term-paper-request-teacher', pk=pk)
 
     term_paper_request, created = TermPaperRequest.objects.get_or_create(
@@ -537,7 +539,7 @@ def send_term_paper_request(request, pk, teacher_pk):
 
     if not created:
         if term_paper_request.status == TermPaperRequest.StatusChoices.PENDING:
-            messages.error(request, 'You have already requested this teacher.')
+            messages.error(request, _('You have already requested this teacher.'))
             return redirect('term-paper-request-teacher', pk=pk)
 
         term_paper_request.student = request.user
@@ -599,7 +601,7 @@ def send_term_paper_request(request, pk, teacher_pk):
     except Exception:
         pass
 
-    messages.success(request, 'Your request was sent successfully.')
+    messages.success(request, _('Your request was sent successfully.'))
     return redirect('chat-conversation', pk=conversation.pk)
 
 class TeacherTermPaperRequestsListView(TeacherRequiredMixin, views.ListView):
@@ -622,7 +624,7 @@ class TeacherTermPaperRequestsListView(TeacherRequiredMixin, views.ListView):
 
 @login_required
 def accept_term_paper_request(request, request_pk):
-    if request.user.user_type != TypesOfUsers.teacher.value:
+    if request.user.user_type != TypesOfUsers.TEACHER:
         return render(request, "common/no-perms.html")
 
     term_paper_request = (
@@ -720,13 +722,13 @@ def accept_term_paper_request(request, request_pk):
     except Exception:
         pass
 
-    messages.success(request, 'You accepted the request.')
+    messages.success(request, _('You accepted the request.'))
     return redirect('chat-conversation', pk=conversation.pk)
 
 
 @login_required
 def decline_term_paper_request(request, request_pk):
-    if request.user.user_type != TypesOfUsers.teacher.value:
+    if request.user.user_type != TypesOfUsers.TEACHER:
         return render(request, "common/no-perms.html")
 
     term_paper_request = (
@@ -741,7 +743,7 @@ def decline_term_paper_request(request, request_pk):
         return redirect('teacher-term-paper-requests')
 
     if term_paper_request.status != TermPaperRequest.StatusChoices.PENDING:
-        messages.error(request, 'This request has already been processed.')
+        messages.error(request, _('This request has already been processed.'))
         return redirect('teacher-term-paper-requests')
 
     term_paper_request.status = TermPaperRequest.StatusChoices.DECLINED
@@ -803,7 +805,7 @@ def decline_term_paper_request(request, request_pk):
     except Exception:
         pass
 
-    messages.success(request, 'You declined the request.')
+    messages.success(request, _('You declined the request.'))
     return redirect('teacher-term-paper-requests')
 
 @login_required
@@ -812,21 +814,21 @@ def unassign_term_paper(request, pk):
     from channels.layers import get_channel_layer
     from final_project.chat.models import Conversation, Message
 
-    if request.user.user_type != TypesOfUsers.teacher.value:
+    if request.user.user_type != TypesOfUsers.TEACHER:
         return render(request, "common/no-perms.html")
 
     term_paper = TermPaper.objects.filter(pk=pk).select_related('user', 'taken_by').first()
 
     if not term_paper:
-        messages.error(request, 'Term paper not found.')
+        messages.error(request, _('Term paper not found.'))
         return redirect('teacher-papers')
 
     if term_paper.taken_by != request.user:
-        messages.error(request, 'You cannot unassigned this term paper.')
+        messages.error(request, _('You cannot unassigned this term paper.'))
         return redirect('teacher-papers')
 
     if term_paper.completed:
-        messages.error(request, 'Completed papers cannot be unassigned')
+        messages.error(request, _('Completed papers cannot be unassigned'))
         return redirect('teacher-papers')
 
     teacher_profile = get_or_create_teacher_profile(request.user)
@@ -906,20 +908,29 @@ def unassign_term_paper(request, pk):
     term_paper.taken_by = None
     term_paper.save()
 
-    messages.success(request, 'You unassigned yourself from the term paper. It is now available again.')
+    messages.success(
+        request,
+        _("You unassigned yourself from the term paper. It is now available again.")
+    )
     return redirect('teacher-papers')
 
 
 @login_required
 @require_POST
 def generate_term_paper_description(request):
-    if request.user.user_type != TypesOfUsers.student.value:
-        return JsonResponse({"error": "You do not have permission to perform this action."}, status=403)
+    if request.user.user_type != TypesOfUsers.STUDENT:
+        return JsonResponse(
+            {"error": str(_("You do not have permission to perform this action."))},
+            status=403,
+        )
 
     uploaded_file = request.FILES.get("content")
 
     if not uploaded_file:
-        return JsonResponse({"error": "Please upload a PDF first."}, status=400)
+        return JsonResponse(
+            {"error": str(_("Please upload a PDF first."))},
+            status=400,
+        )
 
     try:
         description = describe_term_paper_with_ai(uploaded_file)

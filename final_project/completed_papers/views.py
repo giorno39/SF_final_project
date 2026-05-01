@@ -5,6 +5,7 @@ import os
 from final_project import settings
 from final_project.completed_papers.forms import CompletedPaperSearchForm
 from final_project.completed_papers.models import CompletedPaper
+from django.utils.translation import gettext_lazy as _
 
 def _completed_paper_feed_querystring(request):
     q = request.GET.copy()
@@ -42,7 +43,7 @@ class CompletedPapersIndexView(views.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = CompletedPaperSearchForm(self.request.GET)
-        context['completed_paper_feed_title'] = 'Completed Papers Feed'
+        context['completed_paper_feed_title'] = _('Completed Papers Feed')
         context['get_params'] = _completed_paper_feed_querystring(self.request)
         return context
 

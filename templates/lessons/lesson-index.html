@@ -1,17 +1,24 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <section class="lesson-feed">
   <div class="container lesson-feed-inner">
 
-    <h1 class="lesson-feed-title">{{ lesson_feed_title|default:"Lesson Discovery Feed" }}</h1>
+    <h1 class="lesson-feed-title">
+      {% if lesson_feed_title %}
+        {{ lesson_feed_title }}
+      {% else %}
+        {% trans "Lesson Discovery Feed" %}
+      {% endif %}
+    </h1>
 
     <form class="search-form" method="get" action="{{ request.path }}">
       <div class="search-bar">
         {{ search_form.lesson_title }}
         {{ search_form.specialization }}
-        <button class="btn" type="submit">Search</button>
+        <button class="btn" type="submit">{% trans "Search" %}</button>
       </div>
     </form>
 
@@ -27,48 +34,52 @@
           </div>
           <div class="lesson-card-body">
             <h2 class="lesson-card-title">{{ object.title }}</h2>
-                <p class="lesson-card-desc">
-                  Learn from an experienced teacher and build practical skills.
-                </p>
-            <div class="lesson-card-tags">
+            <p class="lesson-card-desc">
+              {% trans "Learn from an experienced teacher and build practical skills." %}
+            </p>
 
+            <div class="lesson-card-tags">
               {% for specialization in object.specializations.all %}
-                <span class="lesson-card-tag" title="Specialization">
-                  {{ specialization.name }}
+                <span class="lesson-card-tag" title="{% trans 'Specialization' %}">
+                  {{ specialization.translated_name }}
                 </span>
               {% empty %}
-                <span class="lesson-card-tag">No specialization</span>
+                <span class="lesson-card-tag">{% trans "No specialization" %}</span>
               {% endfor %}
 
-              <span class="lesson-card-tag" title="Price">
+              <span class="lesson-card-tag" title="{% trans 'Price' %}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
                   <path d="M0 80V229.5c0 17 6.7 33.3 18.7 45.3l176 176c25 25 65.5 25 90.5 0L418.7 317.3c25-25 25-65.5 0-90.5l-176-176c-12-12-28.3-18.7-45.3-18.7H48C21.5 32 0 53.5 0 80zm112 32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/>
                 </svg>
-                Price: €{{ object.price }}
+                {% blocktrans with price=object.price %}Price: €{{ price }}{% endblocktrans %}
               </span>
             </div>
 
-            <a class="lesson-card-cta" href="{% url 'lesson-details' pk=object.pk %}">Details</a>
+            <a class="lesson-card-cta" href="{% url 'lesson-details' pk=object.pk %}">
+              {% trans "Details" %}
+            </a>
           </div>
-    </article>
-    {% empty %}
-      <div class="search-empty-state">
-        <h3 class="search-empty-state-title">No lessons found</h3>
-        <p class="search-empty-state-text">
-          Try a different title or specialization, or clear the filters and browse all lessons.
-        </p>
-      </div>
-    {% endfor %}
+        </article>
+      {% empty %}
+        <div class="search-empty-state">
+          <h3 class="search-empty-state-title">{% trans "No lessons found" %}</h3>
+          <p class="search-empty-state-text">
+            {% trans "Try a different title or specialization, or clear the filters and browse all lessons." %}
+          </p>
+        </div>
+      {% endfor %}
     </div>
 
     {% if page_obj.paginator.num_pages > 1 %}
-      <nav class="pager" aria-label="Pagination">
+      <nav class="pager" aria-label="{% trans 'Pagination' %}">
         {% if page_obj.has_previous %}
-          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">
+          <a class="page-btn"
+             aria-label="{% trans 'Previous page' %}"
+             href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">
             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
           </a>
         {% else %}
-          <span class="page-btn is-disabled">
+          <span class="page-btn is-disabled" aria-label="{% trans 'Previous page' %}">
             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
           </span>
         {% endif %}
@@ -100,12 +111,14 @@
         {% endif %}
 
         {% if page_obj.has_next %}
-          <a class="page-btn" href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.next_page_number }}">
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4 9.4-24.6 0-33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
+          <a class="page-btn"
+             aria-label="{% trans 'Next page' %}"
+             href="?{% if get_params %}{{ get_params }}&amp;{% endif %}page={{ page_obj.next_page_number }}">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
           </a>
         {% else %}
-          <span class="page-btn is-disabled">
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4 9.4-24.6 0-33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
+          <span class="page-btn is-disabled" aria-label="{% trans 'Next page' %}">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
           </span>
         {% endif %}
       </nav>

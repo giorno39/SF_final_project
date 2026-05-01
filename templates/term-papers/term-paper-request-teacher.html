@@ -1,24 +1,27 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="ai-teacher-page">
     <div class="ai-teacher-shell">
         <header class="ai-teacher-header">
             {% if not has_fallen_back %}
-                <h1 class="ai-teacher-header__title">Top AI Teacher Recommendations</h1>
+                <h1 class="ai-teacher-header__title">{% trans "Top AI Teacher Recommendations" %}</h1>
                 <p class="ai-teacher-header__subtitle">
-                    These teachers are ranked as the best fit based on the paper topic, specializations,
-                    previous completed papers, trust score, and trophies.
+                    {% blocktrans trimmed %}
+                      These teachers are ranked as the best fit based on the paper topic, specializations,
+                      previous completed papers, trust score, and trophies.
+                    {% endblocktrans %}
                 </p>
             {% elif ai_error %}
-                <h1 class="ai-teacher-header__title">Teacher Recommendations</h1>
+                <h1 class="ai-teacher-header__title">{% trans "Teacher Recommendations" %}</h1>
                 <p class="ai-teacher-header__subtitle">
-                    AI recommendations are temporarily unavailable. Showing fallback recommendations instead.
+                    {% trans "AI recommendations are temporarily unavailable. Showing fallback recommendations instead." %}
                 </p>
             {% else %}
-                <h1 class="ai-teacher-header__title">Teacher Recommendations</h1>
+                <h1 class="ai-teacher-header__title">{% trans "Teacher Recommendations" %}</h1>
                 <p class="ai-teacher-header__subtitle">
-                    Showing fallback recommendations based on the available matching data.
+                    {% trans "Showing fallback recommendations based on the available matching data." %}
                 </p>
             {% endif %}
         </header>
@@ -37,16 +40,16 @@
                     <article class="ai-teacher-card">
                         <div class="ai-teacher-card__topbar">
                             <span class="ai-teacher-card__rank-badge">
-                                Top #{{ recommendation.rank }}
+                                {% blocktrans with rank=recommendation.rank %}Top #{{ rank }}{% endblocktrans %}
                             </span>
 
                             {% if has_fallen_back %}
                                 <span class="ai-teacher-card__source-badge">
-                                    Fallback match
+                                    {% trans "Fallback match" %}
                                 </span>
                             {% else %}
                                 <span class="ai-teacher-card__source-badge ai-teacher-card__source-badge--ai">
-                                    AI match
+                                    {% trans "AI match" %}
                                 </span>
                             {% endif %}
                         </div>
@@ -70,7 +73,7 @@
                                     <div class="ai-teacher-card__metrics">
                                         <div class="ai-teacher-metric">
                                             <div class="ai-teacher-metric__top">
-                                                <span>AI Score: {{ recommendation.score }}%</span>
+                                                <span>{% blocktrans with score=recommendation.score %}AI Score: {{ score }}%{% endblocktrans %}</span>
                                                 <strong>{{ recommendation.score }}%</strong>
                                             </div>
                                             <div class="ai-teacher-metric__bar">
@@ -80,7 +83,7 @@
 
                                         <div class="ai-teacher-metric">
                                             <div class="ai-teacher-metric__top">
-                                                <span>Trust Score: {{ recommendation.trust_score }}%</span>
+                                                <span>{% blocktrans with score=recommendation.trust_score %}Trust Score: {{ score }}%{% endblocktrans %}</span>
                                                 <strong>{{ recommendation.trust_score }}%</strong>
                                             </div>
                                             <div class="ai-teacher-metric__bar">
@@ -91,16 +94,16 @@
 
                                     <div class="ai-teacher-card__chips">
                                         <span class="ai-teacher-chip ai-teacher-chip--gold">
-                                            Average Trophy Rate: {{ recommendation.avg_trophy_rate }}
+                                            {% blocktrans with rate=recommendation.avg_trophy_rate %}Average Trophy Rate: {{ rate }}{% endblocktrans %}
                                         </span>
 
                                         <span class="ai-teacher-chip">
-                                            Relevant completed papers: {{ recommendation.relevant_completed_papers_count }}
+                                            {% blocktrans with count=recommendation.relevant_completed_papers_count %}Relevant completed papers: {{ count }}{% endblocktrans %}
                                         </span>
 
                                         {% if has_fallen_back %}
                                             <span class="ai-teacher-chip ai-teacher-chip--soft">
-                                                Fallback recommendation
+                                                {% trans "Fallback recommendation" %}
                                             </span>
                                         {% endif %}
                                     </div>
@@ -109,18 +112,18 @@
 
                             <div class="ai-teacher-card__side">
                                 <div class="ai-teacher-card__section">
-                                    <h4 class="ai-teacher-card__section-title">Specializations</h4>
+                                    <h4 class="ai-teacher-card__section-title">{% trans "Specializations" %}</h4>
                                     <p class="ai-teacher-card__section-text">
                                         {% for spec in recommendation.specializations %}
                                             {{ spec }}{% if not forloop.last %}, {% endif %}
                                         {% empty %}
-                                            No specializations yet
+                                            {% trans "No specializations yet" %}
                                         {% endfor %}
                                     </p>
                                 </div>
 
                                 <div class="ai-teacher-card__section">
-                                    <h4 class="ai-teacher-card__section-title">Why this teacher</h4>
+                                    <h4 class="ai-teacher-card__section-title">{% trans "Why this teacher" %}</h4>
                                     <p class="ai-teacher-card__section-text">
                                         {{ recommendation.reason }}
                                     </p>
@@ -128,12 +131,14 @@
 
                                 <div class="ai-teacher-card__actions">
                                     {% if recommendation.teacher_id in requested_teacher_ids %}
-                                        <span class="ai-teacher-btn ai-teacher-btn--pending">Pending request</span>
+                                        <span class="ai-teacher-btn ai-teacher-btn--pending">
+                                          {% trans "Pending request" %}
+                                        </span>
                                     {% else %}
                                         <form method="post" action="{% url 'send-term-paper-request' pk=term_paper.pk teacher_pk=recommendation.teacher_id %}">
                                             {% csrf_token %}
                                             <button class="ai-teacher-btn ai-teacher-btn--gold" type="submit">
-                                                Request help
+                                                {% trans "Request help" %}
                                             </button>
                                         </form>
                                     {% endif %}
@@ -145,7 +150,7 @@
             </div>
         {% else %}
             <div class="ai-teacher-empty">
-                <p>No teachers available yet.</p>
+                <p>{% trans "No teachers available yet." %}</p>
             </div>
         {% endif %}
     </div>

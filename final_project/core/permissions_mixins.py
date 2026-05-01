@@ -11,7 +11,7 @@ class TeacherRequiredMixin(LoginRequiredMixin):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
 
-        if request.user.user_type != TypesOfUsers.teacher.value:
+        if request.user.user_type != TypesOfUsers.TEACHER:
             return render(request, "common/no-perms.html")
 
         return super().dispatch(request, *args, **kwargs)
@@ -25,7 +25,7 @@ class ReviewerRequiredMixin(LoginRequiredMixin):
 
         if not (
             request.user.is_staff
-            or request.user.user_type == TypesOfUsers.reviewer.value
+            or request.user.user_type == TypesOfUsers.REVIEWER
         ):
             return render(request, "common/no-perms.html")
 
@@ -39,7 +39,7 @@ class StudentRequiredMixin(LoginRequiredMixin):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
 
-        if request.user.user_type != TypesOfUsers.student.value:
+        if request.user.user_type != TypesOfUsers.STUDENT:
             return render(request, "common/no-perms.html")
 
         return super().dispatch(request, *args, **kwargs)

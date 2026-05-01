@@ -1,16 +1,17 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="container lessons-wrap">
 
   <form class="search-form search-form-stacked" method="get" action="{% url 'student-papers' %}">
     <label class="search-form-label" for="{{ search_form.paper_title.id_for_label }}">
-      Paper title
+      {% trans "Paper title" %}
     </label>
 
     <div class="search-bar">
       {{ search_form.paper_title }}
-      <button class="btn" type="submit">search</button>
+      <button class="btn" type="submit">{% trans "Search" %}</button>
     </div>
     {% csrf_token %}
   </form>
@@ -25,7 +26,7 @@
           </div>
 
           {% if object.completed %}
-            <span class="badge">Completed</span>
+            <span class="badge">{% trans "Completed" %}</span>
           {% else %}
             {% with latest_request=object.requests.first %}
               {% if latest_request %}
@@ -38,54 +39,52 @@
         </header>
 
         <div class="paper-card-specs-block">
-          <span class="paper-meta-label">Specializations</span>
+          <span class="paper-meta-label">{% trans "Specializations" %}</span>
           <div class="paper-card-specs">
             {% for spec in object.specializations.all %}
-              <span class="paper-spec-pill">{{ spec.name }}</span>
+              <span class="paper-spec-pill">{{ spec.translated_name }}</span>
             {% empty %}
-              <span class="paper-spec-empty">No specializations</span>
+              <span class="paper-spec-empty">{% trans "No specializations" %}</span>
             {% endfor %}
           </div>
         </div>
 
         <div class="paper-card-meta">
           <div class="paper-meta-row">
-            <span class="paper-meta-label">Deadline</span>
+            <span class="paper-meta-label">{% trans "Deadline" %}</span>
             <span class="paper-meta-value">{{ object.death_line }}</span>
           </div>
 
           <div class="paper-meta-row">
-            <span class="paper-meta-label">Price cap</span>
+            <span class="paper-meta-label">{% trans "Price cap" %}</span>
             <span class="paper-meta-value">{{ object.price_cap }}</span>
           </div>
         </div>
 
         <div class="lesson-actions">
           <a class="main-card-link" href="{% url 'term-paper-details' pk=object.pk %}">
-            Details
+            {% trans "Details" %}
           </a>
         </div>
       </article>
     {% empty %}
       <div class="search-empty-state">
-        <h3 class="search-empty-state-title">No term papers found</h3>
+        <h3 class="search-empty-state-title">{% trans "No term papers found" %}</h3>
         <p class="search-empty-state-text">
-          Try a different title or clear the search and browse all available papers.
+          {% trans "Try a different title or clear the search and browse all available papers." %}
         </p>
       </div>
     {% endfor %}
   </div>
 
   {% if page_obj.paginator.num_pages > 1 %}
-    <nav class="pager" aria-label="Pagination">
+    <nav class="pager" aria-label="{% trans 'Pagination' %}">
       {% if page_obj.has_previous %}
-        <a class="page-btn" href="?page={{ page_obj.previous_page_number }}">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
+        <a class="page-btn" aria-label="{% trans 'Previous page' %}" href="?page={{ page_obj.previous_page_number }}">
+          ‹
         </a>
       {% else %}
-        <span class="page-btn is-disabled">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M257.5 445.1c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L206.6 281 314 173.5c9.4-9.4 9.4-24.6 0-33.9L291.3 117c-9.4-9.4-24.6-9.4-33.9 0L129 245.4c-9.4 9.4-9.4 24.6 0 34.0l128.5 128.5z"/></svg>
-        </span>
+        <span class="page-btn is-disabled" aria-label="{% trans 'Previous page' %}">‹</span>
       {% endif %}
 
       {% if page_obj.number > 2 %}
@@ -115,13 +114,11 @@
       {% endif %}
 
       {% if page_obj.has_next %}
-        <a class="page-btn" href="?page={{ page_obj.next_page_number }}">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
+        <a class="page-btn" aria-label="{% trans 'Next page' %}" href="?page={{ page_obj.next_page_number }}">
+          ›
         </a>
       {% else %}
-        <span class="page-btn is-disabled">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9c-9.4-9.4-24.6-9.4-33.9 0L134 89.5c-9.4 9.4-9.4 24.6 0 33.9L241.4 231 134 338.5c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0L319 288.6c9.4-9.4 9.4-24.6 0-34.0L190.5 66.9z"/></svg>
-        </span>
+        <span class="page-btn is-disabled" aria-label="{% trans 'Next page' %}">›</span>
       {% endif %}
     </nav>
   {% endif %}

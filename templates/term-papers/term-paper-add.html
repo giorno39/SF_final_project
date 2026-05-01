@@ -1,9 +1,11 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="auth-form-container">
-    <h2>Add term paper</h2>
+    <h2>{% trans "Add term paper" %}</h2>
+
     <form class="auth-form" method="post" action="{% url 'term-paper-add' %}" enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -16,7 +18,7 @@
         </p>
 
         <div class="spec-picker-wrap">
-            <label class="spec-picker-label">Specializations:</label>
+            <label class="spec-picker-label">{% trans "Specializations:" %}</label>
 
             {% if form.specializations.errors %}
                 <span class="field-error">{{ form.specializations.errors.0 }}</span>
@@ -29,7 +31,7 @@
                     type="text"
                     id="specSearch"
                     class="spec-search-input"
-                    placeholder="Search specializations..."
+                    placeholder="{% trans 'Search specializations...' %}"
                     autocomplete="off"
                 >
 
@@ -38,10 +40,10 @@
                         <div
                             class="spec-option"
                             data-value="{{ choice.pk }}"
-                            data-label="{{ choice.name|lower }}"
-                            data-text="{{ choice.name }}"
+                            data-label="{{ choice.translated_name|lower }}"
+                            data-text="{{ choice.translated_name }}"
                         >
-                            {{ choice.name }}
+                            {{ choice.translated_name }}
                         </div>
                     {% endfor %}
                 </div>
@@ -88,13 +90,25 @@
             {% endif %}
         </p>
 
-        <p>
+        <div class="term-paper-file-field">
             {{ form.content.label_tag }}
-            {{ form.content }}
-            {% if form.content.errors %}
-                <span class="field-error">{{ form.content.errors.0 }}</span>
-            {% endif %}
-        </p>
+
+            <div class="custom-file">
+                <label class="custom-file-label" for="{{ form.content.id_for_label }}">
+                    {% trans "Choose File" %}
+                </label>
+
+                <span class="custom-file-name" id="term-paper-file-name">
+                    {% trans "No file chosen" %}
+                </span>
+
+                {{ form.content }}
+
+                {% if form.content.errors %}
+                    <span class="field-error">{{ form.content.errors.0 }}</span>
+                {% endif %}
+            </div>
+        </div>
 
         <p>
             <button
@@ -102,15 +116,30 @@
                 id="describeWithAiBtn"
                 data-url="{% url 'generate-term-paper-description' %}"
             >
-                Describe with AI
+                {% trans "Describe with AI" %}
             </button>
             <span id="aiDescribeStatus"></span>
         </p>
 
-        <button type="submit">Add term paper</button>
+        <button type="submit">{% trans "Add term paper" %}</button>
     </form>
 </div>
 
 <script src="{% static 'js/specialization-picker.js' %}"></script>
 <script src="{% static 'js/term-paper-description.js' %}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("{{ form.content.id_for_label }}");
+    const fileName = document.getElementById("term-paper-file-name");
+    const noFileChosenText = "{% trans 'No file chosen' %}";
+
+    if (fileInput && fileName) {
+      fileInput.addEventListener("change", function () {
+        fileName.textContent = fileInput.files.length > 0
+          ? fileInput.files[0].name
+          : noFileChosenText;
+      });
+    }
+  });
+</script>
 {% endblock %}

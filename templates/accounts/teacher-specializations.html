@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="container lesson-wrap">
@@ -7,21 +8,21 @@
     <header class="lesson-header">
       <div class="lesson-avatar">★</div>
       <div>
-        <h1 class="lesson-title">Select your specializations</h1>
+        <h1 class="lesson-title">{% trans "Select your specializations" %}</h1>
         <p class="lesson-sub">
-          <span class="badge">Step 1 of 2</span>
+          <span class="badge">{% trans "Step 1 of 2" %}</span>
         </p>
       </div>
     </header>
 
     {% if pending_requests %}
       <section class="field">
-        <label>Currently requested specializations</label>
+        <label>{% trans "Currently requested specializations" %}</label>
         <div class="specializations-grid">
           {% for req in pending_requests %}
             <div class="spec-option spec-option--pending">
-              <span class="spec-label">{{ req.specialization.name }}</span>
-              <span class="badge">Pending</span>
+              <span class="spec-label">{{ req.specialization.translated_name }}</span>
+              <span class="badge">{% trans "Pending" %}</span>
             </div>
           {% endfor %}
         </div>
@@ -32,8 +33,13 @@
       {% csrf_token %}
 
       <div class="field">
-        <label for="specSearch">Search</label>
-        <input id="specSearch" type="text" placeholder="Type to filter specializations..." class="input">
+        <label for="specSearch">{% trans "Search" %}</label>
+        <input
+          id="specSearch"
+          type="text"
+          placeholder="{% trans 'Type to filter specializations...' %}"
+          class="input"
+        >
       </div>
 
       {% if form.specializations.errors %}
@@ -50,13 +56,15 @@
           </label>
         {% empty %}
           <div class="spec-option spec-option--empty">
-            <span class="spec-label">No available specializations to request right now.</span>
+            <span class="spec-label">
+              {% trans "No available specializations to request right now." %}
+            </span>
           </div>
         {% endfor %}
       </div>
 
       <div class="lesson-actions">
-        <button type="submit" class="btn">Continue</button>
+        <button type="submit" class="btn">{% trans "Continue" %}</button>
       </div>
 
     </form>

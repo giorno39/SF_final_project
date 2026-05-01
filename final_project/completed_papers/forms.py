@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from final_project.accounts.models import Specialization
 from final_project.completed_papers.models import CompletedPaper
@@ -10,8 +11,8 @@ class CompletedPaperSearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'placeholder': 'Search by title...',
-                'autocomplete': 'off',
+                "placeholder": _("Search by title..."),
+                "autocomplete": "off",
             }
         ),
     )
@@ -19,5 +20,12 @@ class CompletedPaperSearchForm(forms.Form):
     specialization = forms.ModelChoiceField(
         queryset=Specialization.objects.all(),
         required=False,
-        empty_label='All specializations',
+        empty_label=_("All specializations"),
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["specialization"].label_from_instance = (
+            lambda obj: obj.translated_name
+        )

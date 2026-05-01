@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="lesson-detail-page">
@@ -18,13 +19,15 @@
         <div class="lesson-detail-headline">
           <div class="lesson-detail-title-row">
             <h1 class="lesson-detail-title">{{ object.title }}</h1>
-            <span class="lesson-detail-price-badge">€{{ object.price }} / hr</span>
+            <span class="lesson-detail-price-badge">
+              {% blocktrans with price=object.price %}€{{ price }} / hr{% endblocktrans %}
+            </span>
           </div>
         </div>
       </div>
 
       <section class="lesson-detail-teacher" aria-labelledby="lesson-teacher-heading">
-        <h2 id="lesson-teacher-heading" class="lesson-detail-teacher-label">Teacher</h2>
+        <h2 id="lesson-teacher-heading" class="lesson-detail-teacher-label">{% trans "Teacher" %}</h2>
         <div class="lesson-detail-teacher-row">
           <div class="lesson-detail-teacher-avatar" aria-hidden="true">
             {{ object.teacher.first_name|slice:":1"|upper }}{{ object.teacher.last_name|slice:":1"|upper }}
@@ -32,9 +35,11 @@
           <div class="lesson-detail-teacher-body">
             <p class="lesson-detail-teacher-name">{{ object.teacher.get_full_name }}</p>
             <p class="lesson-detail-teacher-bio">
-              Experienced educator on BrainBuddy Hive. Offers structured lessons across the selected specialization areas.
+              {% trans "Experienced educator on BrainBuddy Hive. Offers structured lessons across the selected specialization areas." %}
             </p>
-            <a class="lesson-detail-profile-link" href="{% url 'details-user' pk=object.teacher_id %}">View profile</a>
+            <a class="lesson-detail-profile-link" href="{% url 'details-user' pk=object.teacher_id %}">
+              {% trans "View profile" %}
+            </a>
           </div>
         </div>
       </section>
@@ -45,13 +50,13 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
               <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.8 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160L0 416c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-192c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 192c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l128 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 64z"/>
             </svg>
-            Edit
+            {% trans "Edit" %}
           </a>
           <a class="lesson-detail-action lesson-detail-action--danger" href="{% url 'lesson-delete' pk=object.pk %}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
               <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.2 45 47.2 45H346.7c25 0 45.8-19.7 47.2-45L416 128z"/>
             </svg>
-            Delete
+            {% trans "Delete" %}
           </a>
         </div>
       {% endif %}
@@ -64,7 +69,7 @@
                 <svg class="lesson-contact-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
                   <path d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95.1 57.1 131.5C49 405.6 33 441.1 32.6 441.9c-2.6 5.7-1.6 12.4 2.5 17.1c4.1 4.7 10.7 6.4 16.5 4.3c66.1-24 105.2-45.5 121.3-55.6c26.2 7.9 54.1 12.3 83.1 12.3c141.4 0 256-93.1 256-208S397.4 32 256 32z"/>
                 </svg>
-                <span>Contact teacher</span>
+                <span>{% trans "Contact teacher" %}</span>
               </button>
             </form>
         </div>
@@ -77,11 +82,11 @@
             <path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/>
           </svg>
           <span>
-            <strong>Specializations:</strong>
+            <strong>{% trans "Specializations:" %}</strong>
             {% for specialization in object.specializations.all %}
-              {{ specialization.name }}{% if not forloop.last %}, {% endif %}
+              {{ specialization.translated_name }}{% if not forloop.last %}, {% endif %}
             {% empty %}
-              No specialization
+              {% trans "No specialization" %}
             {% endfor %}
           </span>
         </li>
@@ -89,14 +94,19 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
             <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
           </svg>
-          <span><strong>Format:</strong> One-to-one or small group session (confirm with your teacher).</span>
+          <span>
+            <strong>{% trans "Format:" %}</strong>
+            {% trans "One-to-one or small group session (confirm with your teacher)." %}
+          </span>
         </li>
         <li>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
             <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c0-17.7-14.3-32-32-32s-32 14.3-32 32v32H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32H352c17.7 0 32-14.3 32-32s-14.3-32-32-32H96zM200 384c-13.3 0-24 10.7-24 24s10.7 24 24 24H424c13.3 0 24-10.7 24-24s-10.7-24-24-24H200z"/>
           </svg>
-          <span><strong>Prerequisites:</strong> Interest in the selected specialization areas.
-              Prior experience helpful but not required.</span>
+          <span>
+            <strong>{% trans "Prerequisites:" %}</strong>
+            {% trans "Interest in the selected specialization areas. Prior experience helpful but not required." %}
+          </span>
         </li>
       </ul>
     </article>

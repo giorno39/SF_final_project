@@ -1,7 +1,7 @@
 from datetime import date
 
 from django import forms
-
+from django.utils.translation import gettext_lazy as _
 from final_project.accounts.models import Specialization
 from final_project.term_papers.models import TermPaper
 
@@ -10,41 +10,62 @@ class TermPaperCreateForm(forms.ModelForm):
     class Meta:
         model = TermPaper
         fields = (
-            'title',
-            'specializations',
-            'university',
-            'death_line',
-            'price_cap',
-            'description',
-            'content',
+            "title",
+            "specializations",
+            "university",
+            "death_line",
+            "price_cap",
+            "description",
+            "content",
         )
 
-        widgets = {
-            'title': forms.TextInput(attrs={'placeholder': 'Term paper title'}),
-            'university': forms.TextInput(attrs={'placeholder': 'University or institution'}),
-            'price_cap': forms.NumberInput(attrs={'placeholder': 'Maximum budget (e.g. 100)', 'min': 0}),
-            'description': forms.Textarea(attrs={
-                'placeholder': 'Describe what you need…',
-                'rows': 4,
-                'id': 'id_description',
-            }),
-            'content': forms.ClearableFileInput(attrs={
-                'id': 'id_content',
-                'accept': '.pdf,application/pdf',
-            }),
-            'death_line': forms.SelectDateWidget(
-                years=range(date.today().year, date.today().year + 8),
-                empty_label=('Year', 'Month', 'Day'),
-            ),
-            'specializations': forms.CheckboxSelectMultiple(),
+        labels = {
+            "title": _("Title"),
+            "specializations": _("Specializations"),
+            "university": _("University"),
+            "death_line": _("Deadline"),
+            "price_cap": _("Price cap"),
+            "description": _("Description"),
+            "content": _("Content"),
         }
 
-    def clean_specializations(self):
-        specs = self.cleaned_data.get("specializations")
-        if not specs or specs.count() == 0:
-            raise forms.ValidationError("Please select at least one specialization.")
-        return specs
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "placeholder": _("Term paper title"),
+            }),
+            "university": forms.TextInput(attrs={
+                "placeholder": _("University or institution"),
+            }),
+            "price_cap": forms.NumberInput(attrs={
+                "placeholder": _("Maximum budget (e.g. 100)"),
+                "min": 0,
+            }),
+            "death_line": forms.DateInput(
+                attrs={
+                    "type": "date",
+                },
+                format="%Y-%m-%d",
+            ),
+            "description": forms.Textarea(attrs={
+                "placeholder": _("Describe what you need..."),
+                "rows": 5,
+            }),
+            "specializations": forms.CheckboxSelectMultiple(),
+            "content": forms.FileInput(attrs={
+                "accept": "application/pdf,.pdf",
+            }),
+        }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["specializations"].label_from_instance = (
+            lambda obj: obj.translated_name
+        )
+
+
+from django import forms
+from django.utils.translation import gettext_lazy as _
 
 class TermPaperSearchForm(forms.Form):
     paper_title = forms.CharField(
@@ -52,8 +73,8 @@ class TermPaperSearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'placeholder': 'Search by title...',
-                'autocomplete': 'off',
+                "placeholder": _("Search by title..."),
+                "autocomplete": "off",
             }
         ),
     )
@@ -61,5 +82,55 @@ class TermPaperSearchForm(forms.Form):
     specialization = forms.ModelChoiceField(
         queryset=Specialization.objects.all(),
         required=False,
-        empty_label='All specializations',
+        empty_label=_("All specializations"),
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["specialization"].label_from_instance = (
+            lambda obj: obj.translated_name
+        )
+
+class TermPaperEditForm(forms.ModelForm):
+    class Meta:
+        model = TermPaper
+        fields = (
+            "title",
+            "death_line",
+            "price_cap",
+            "description",
+        )
+
+        labels = {
+            "title": _("Title"),
+            "death_line": _("Deadline"),
+            "price_cap": _("Price cap"),
+            "description": _("Description"),
+        }
+
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "placeholder": _("Term paper title"),
+            }),
+            "death_line": forms.DateInput(
+                attrs={"type": "date"},
+                format="%Y-%m-%d",
+            ),
+            "price_cap": forms.NumberInput(attrs={
+                "placeholder": _("Maximum budget (e.g. 100)"),
+                "min": 0,
+            }),
+            "description": forms.Textarea(attrs={
+                "placeholder": _("Describe what you need..."),
+                "rows": 5,
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["death_line"].input_formats = ["%Y-%m-%d"]
+
+        if self.instance and self.instance.pk and self.instance.death_line:
+            self.initial["death_line"] = self.instance.death_line.strftime("%Y-%m-%d")

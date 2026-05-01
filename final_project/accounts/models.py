@@ -5,6 +5,7 @@ from django.contrib.auth import models as auth_models
 from django.contrib.auth.models import UserManager
 from django.core import validators
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
 from final_project.core.model_mixins import NumberChoicesEnumMixin
@@ -13,10 +14,10 @@ from final_project.core.model_mixins import NumberChoicesEnumMixin
 # Create your models here.
 
 
-class TypesOfUsers(NumberChoicesEnumMixin, Enum):
-    student = 'student'
-    teacher = 'teacher'
-    reviewer = 'reviewer'
+class TypesOfUsers(models.TextChoices):
+    STUDENT = "student", _("Student")
+    TEACHER = "teacher", _("Teacher")
+    REVIEWER = "reviewer", _("Reviewer")
 
 
 class AppUser(auth_models.AbstractUser):
@@ -40,8 +41,8 @@ class AppUser(auth_models.AbstractUser):
     )
 
     user_type = models.CharField(
-        choices=TypesOfUsers.choices(),
-        max_length=TypesOfUsers.max_type_length(),
+        choices=TypesOfUsers.choices,
+        max_length=20,
     )
 
     objects = UserManager()
@@ -52,6 +53,41 @@ class AppUser(auth_models.AbstractUser):
 
 class Specialization(models.Model):
     name = models.CharField(max_length=100, unique=True)
+
+    TRANSLATION_MAP = {
+        "Mathematics": _("Mathematics"),
+        "Physics": _("Physics"),
+        "Chemistry": _("Chemistry"),
+        "Biology": _("Biology"),
+        "Computer Science": _("Computer Science"),
+        "Programming": _("Programming"),
+        "Engineering": _("Engineering"),
+        "Statistics": _("Statistics"),
+        "Economics": _("Economics"),
+        "Business & Management": _("Business & Management"),
+        "Accounting": _("Accounting"),
+        "Law": _("Law"),
+        "Political Science": _("Political Science"),
+        "Psychology": _("Psychology"),
+        "Sociology": _("Sociology"),
+        "Philosophy": _("Philosophy"),
+        "History": _("History"),
+        "Geography": _("Geography"),
+        "Literature": _("Literature"),
+        "Linguistics": _("Linguistics"),
+        "English Language": _("English Language"),
+        "Japanese Language": _("Japanese Language"),
+        "Spanish Language": _("Spanish Language"),
+        "French Language": _("French Language"),
+        "Art & Design": _("Art & Design"),
+        "Drawing & Illustration": _("Drawing & Illustration"),
+        "Music": _("Music"),
+        "Education & Pedagogy": _("Education & Pedagogy"),
+    }
+
+    @property
+    def translated_name(self):
+        return self.TRANSLATION_MAP.get(self.name, self.name)
 
     class Meta:
         ordering = ("name",)
@@ -113,9 +149,9 @@ class StudentProfile(models.Model):
 
 
 class SpecializationRequestStatus(models.TextChoices):
-    PENDING = "pending", "Pending"
-    APPROVED = "approved", "Approved"
-    REJECTED = "rejected", "Rejected"
+    PENDING = "pending", _("Pending")
+    APPROVED = "approved", _("Approved")
+    REJECTED = "rejected", _("Rejected")
 
 class TeacherSpecializationRequest(models.Model):
     teacher = models.ForeignKey(

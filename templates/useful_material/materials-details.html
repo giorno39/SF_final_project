@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="materials-details-page">
@@ -17,9 +18,9 @@
 
               <div class="materials-details-tags">
                 {% for specialization in object.specializations.all %}
-                  <span class="materials-details-tag">{{ specialization.name }}</span>
+                  <span class="materials-details-tag">{{ specialization.translated_name }}</span>
                 {% empty %}
-                  <span class="materials-details-tag materials-details-tag--muted">No specialization</span>
+                  <span class="materials-details-tag materials-details-tag--muted">{% trans "No specialization" %}</span>
                 {% endfor %}
               </div>
             </div>
@@ -28,24 +29,24 @@
 
         <div class="materials-details-info">
           <div class="materials-details-info-block">
-            <span class="materials-details-info-label">Title</span>
+            <span class="materials-details-info-label">{% trans "Title" %}</span>
             <p class="materials-details-info-value">{{ object.title }}</p>
           </div>
 
           <div class="materials-details-info-block">
-            <span class="materials-details-info-label">Specializations</span>
+            <span class="materials-details-info-label">{% trans "Specializations" %}</span>
             <p class="materials-details-info-value">
               {% for specialization in object.specializations.all %}
-                {{ specialization.name }}{% if not forloop.last %}, {% endif %}
+                {{ specialization.translated_name }}{% if not forloop.last %}, {% endif %}
               {% empty %}
-                No specialization selected
+                {% trans "No specialization selected" %}
               {% endfor %}
             </p>
           </div>
 
           {% if object.references %}
             <div class="materials-details-info-block">
-              <span class="materials-details-info-label">Reference</span>
+              <span class="materials-details-info-label">{% trans "Reference" %}</span>
               <p class="materials-details-info-value materials-details-reference-text">
                 {{ object.references }}
               </p>
@@ -56,29 +57,29 @@
         <div class="materials-details-actions">
           {% if object.content %}
             <a class="materials-btn materials-btn--primary" href="{% url 'materials-download' pk=object.pk %}">
-              Download PDF
+              {% trans "Download PDF" %}
             </a>
           {% endif %}
 
           {% if object.references %}
             <a class="materials-btn materials-btn--primary" href="{{ object.references }}" target="_blank" rel="noopener noreferrer">
-              Open Reference
+              {% trans "Open Reference" %}
             </a>
           {% endif %}
 
           {% if object.uploaded_by_id %}
             <a class="materials-btn materials-btn--primary" href="{% url 'details-user' pk=object.uploaded_by_id %}">
-              Uploaded by
+              {% trans "Uploaded by" %}
             </a>
           {% endif %}
 
           {% if is_owner %}
             <div class="materials-details-actions-row">
               <a class="materials-btn materials-btn--primary materials-btn--half" href="{% url 'materials-edit' pk=object.pk %}">
-                Edit
+                {% trans "Edit" %}
               </a>
               <a class="materials-btn materials-btn--primary materials-btn--half" href="{% url 'materials-delete' pk=object.pk %}">
-                Delete
+                {% trans "Delete" %}
               </a>
             </div>
           {% endif %}
@@ -87,15 +88,19 @@
 
       <section class="materials-discussion-card">
         <div class="materials-discussion-header">
-          <h2 class="materials-discussion-title">Discussion</h2>
+          <h2 class="materials-discussion-title">{% trans "Discussion" %}</h2>
 
           {% if user.is_authenticated %}
             <p class="materials-discussion-subtitle">
-              You have {{ remaining_comments }} comment{{ remaining_comments|pluralize }} remaining for the next 24 hours.
+              {% blocktrans count count=remaining_comments %}
+                You have {{ count }} comment remaining for the next 24 hours.
+              {% plural %}
+                You have {{ count }} comments remaining for the next 24 hours.
+              {% endblocktrans %}
             </p>
           {% else %}
             <p class="materials-discussion-subtitle">
-              Log in to join the discussion.
+              {% trans "Log in to join the discussion." %}
             </p>
           {% endif %}
         </div>
@@ -112,7 +117,7 @@
             </div>
 
             <button class="materials-comment-submit" type="submit">
-              Post comment
+              {% trans "Post comment" %}
             </button>
           </form>
         {% endif %}
@@ -138,11 +143,15 @@
                       <button
                         type="submit"
                         class="materials-comment-like-btn {% if comment.user_has_liked %}materials-comment-like-btn--active{% endif %}"
-                        aria-label="Like comment"
+                        aria-label="{% trans 'Like comment' %}"
                       >
                         <span class="materials-comment-like-icon">♥</span>
                         <span class="materials-comment-like-text">
-                          {{ comment.likes_count }} like{{ comment.likes_count|pluralize }}
+                          {% blocktrans count count=comment.likes_count %}
+                            {{ count }} like
+                          {% plural %}
+                            {{ count }} likes
+                          {% endblocktrans %}
                         </span>
                       </button>
                     </form>
@@ -150,7 +159,11 @@
                     <div class="materials-comment-like-static">
                       <span class="materials-comment-like-icon">♥</span>
                       <span class="materials-comment-like-text">
-                        {{ comment.likes_count }} like{{ comment.likes_count|pluralize }}
+                        {% blocktrans count count=comment.likes_count %}
+                          {{ count }} like
+                        {% plural %}
+                          {{ count }} likes
+                        {% endblocktrans %}
                       </span>
                     </div>
                   {% endif %}
@@ -162,35 +175,37 @@
             </article>
           {% empty %}
             <div class="materials-comments-empty">
-              <h3 class="materials-comments-empty-title">No discussion yet</h3>
+              <h3 class="materials-comments-empty-title">{% trans "No discussion yet" %}</h3>
               <p class="materials-comments-empty-text">
-                Be the first to leave a comment for this material.
+                {% trans "Be the first to leave a comment for this material." %}
               </p>
             </div>
           {% endfor %}
         </div>
 
         {% if comments_is_paginated %}
-          <nav class="materials-pagination" aria-label="Comments pages">
+          <nav class="materials-pagination" aria-label="{% trans 'Comments pages' %}">
             <div class="materials-pagination-inner">
               {% if comments.has_previous %}
-                <a class="materials-pagination-btn" href="?page=1">First</a>
-                <a class="materials-pagination-btn" href="?page={{ comments.previous_page_number }}">Previous</a>
+                <a class="materials-pagination-btn" href="?page=1">{% trans "First" %}</a>
+                <a class="materials-pagination-btn" href="?page={{ comments.previous_page_number }}">{% trans "Previous" %}</a>
               {% else %}
-                <span class="materials-pagination-btn materials-pagination-btn--disabled">First</span>
-                <span class="materials-pagination-btn materials-pagination-btn--disabled">Previous</span>
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">{% trans "First" %}</span>
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">{% trans "Previous" %}</span>
               {% endif %}
 
               <span class="materials-pagination-status">
-                Page {{ comments.number }} of {{ comments.paginator.num_pages }}
+                {% blocktrans with current=comments.number total=comments.paginator.num_pages %}
+                  Page {{ current }} of {{ total }}
+                {% endblocktrans %}
               </span>
 
               {% if comments.has_next %}
-                <a class="materials-pagination-btn" href="?page={{ comments.next_page_number }}">Next</a>
-                <a class="materials-pagination-btn" href="?page={{ comments.paginator.num_pages }}">Last</a>
+                <a class="materials-pagination-btn" href="?page={{ comments.next_page_number }}">{% trans "Next" %}</a>
+                <a class="materials-pagination-btn" href="?page={{ comments.paginator.num_pages }}">{% trans "Last" %}</a>
               {% else %}
-                <span class="materials-pagination-btn materials-pagination-btn--disabled">Next</span>
-                <span class="materials-pagination-btn materials-pagination-btn--disabled">Last</span>
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">{% trans "Next" %}</span>
+                <span class="materials-pagination-btn materials-pagination-btn--disabled">{% trans "Last" %}</span>
               {% endif %}
             </div>
           </nav>

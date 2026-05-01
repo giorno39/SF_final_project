@@ -1,13 +1,15 @@
 {% extends 'base/base.html' %}
-
+{% load i18n %}
 
 {% block content %}
-    <h1>Are you sure you want to delete this profile</h1>
-    <form method="post" action={% url 'delete-user' pk=object.pk %}>
+    <h1>{% trans "Are you sure you want to delete this profile?" %}</h1>
+
+    <form method="post" action="{% url 'delete-user' pk=object.pk %}">
         {% csrf_token %}
-        <button>Yes</button>
+        <button>{% trans "Yes" %}</button>
     </form>
-    <a class="main-card-link" href="{% url 'details-user' pk=object.pk %}">Go back</a>
 
-
+    <a class="main-card-link" href="{% url 'details-user' pk=object.pk %}">
+        {% trans "Go back" %}
+    </a>
 {% endblock %}

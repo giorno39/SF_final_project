@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const url = describeBtn.dataset.url;
 
         if (!file) {
-            setStatus('Please upload a PDF first.', true);
+            setStatus('Моля, качете PDF файл първо.', true);
             return;
         }
 
@@ -31,27 +31,37 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.append('content', file);
 
         describeBtn.disabled = true;
-        setStatus('Generating description...');
+        setStatus('Генериране на описание...');
 
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 body: formData,
+                credentials: 'same-origin',
                 headers: {
                     'X-CSRFToken': getCsrfToken(),
+                    'X-Requested-With': 'XMLHttpRequest',
                 },
             });
+
+            const contentType = response.headers.get('content-type') || '';
+
+            if (!contentType.includes('application/json')) {
+                const html = await response.text();
+                console.error('Expected JSON, got HTML/text response:', html);
+                throw new Error('Сървърът върна неочакван отговор. Проверете конзолата за подробности.');
+            }
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Could not generate description.');
+                throw new Error(data.error || 'Описанието не можа да бъде генерирано.');
             }
 
             const generatedText = (data.description || '').trim();
 
             if (!generatedText) {
-                throw new Error('The AI returned an empty description.');
+                throw new Error('AI върна празно описание.');
             }
 
             if (descriptionInput.value.trim()) {
@@ -60,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 descriptionInput.value = generatedText;
             }
 
-            setStatus('Description added.');
+            setStatus('Описанието е добавено.');
         } catch (error) {
             setStatus(error.message, true);
         } finally {

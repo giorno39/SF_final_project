@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="completed-paper-page">
@@ -16,7 +17,7 @@
 
             <div class="completed-paper-meta">
               <span class="completed-paper-meta-icon">🎓</span>
-              <span class="completed-paper-meta-label">University:</span>
+              <span class="completed-paper-meta-label">{% trans "University:" %}</span>
               <span>{{ object.university }}</span>
             </div>
           </div>
@@ -24,32 +25,36 @@
 
         <div class="completed-paper-header-right">
           {% for spec in object.specializations.all %}
-            <span class="completed-paper-tag">{{ spec.name }}</span>
+            <span class="completed-paper-tag">{{ spec.translated_name }}</span>
           {% empty %}
-            <span class="completed-paper-tag">No specialization</span>
+            <span class="completed-paper-tag">{% trans "No specialization" %}</span>
           {% endfor %}
         </div>
       </header>
 
-    <section class="completed-paper-description">
-      <span class="completed-paper-description-label">Description</span>
-      <p class="completed-paper-description-text">
-        {{ object.description|default:"No description" }}
-      </p>
-    </section>
+      <section class="completed-paper-description">
+        <span class="completed-paper-description-label">{% trans "Description" %}</span>
+        <p class="completed-paper-description-text">
+          {% if object.description %}
+            {{ object.description }}
+          {% else %}
+            {% trans "No description" %}
+          {% endif %}
+        </p>
+      </section>
 
       <footer class="completed-paper-footer">
         {% if object.completed_by %}
           <a class="completed-paper-completed" href="{% url 'details-user' pk=object.completed_by_id %}">
             <span class="completed-paper-completed-icon">✔</span>
-            Completed by
+            {% trans "Completed by" %}
           </a>
         {% endif %}
 
         <div class="completed-paper-actions">
           <a class="completed-paper-btn" href="{% url 'completed_paper-open' pk=object.pk %}">
             <span class="completed-paper-btn-icon">↓</span>
-            Download File
+            {% trans "Download File" %}
           </a>
         </div>
       </footer>
