@@ -14,7 +14,7 @@ def create_role_profile(sender, instance, created, **kwargs):
     if not created:
         return
 
-    if instance.user_type == TypesOfUsers.teacher.value:
+    if instance.user_type == TypesOfUsers.TEACHER:
         TeacherProfile.objects.get_or_create(user=instance)
-    elif instance.user_type == TypesOfUsers.student.value:
+    elif instance.user_type == TypesOfUsers.STUDENT:
         StudentProfile.objects.get_or_create(user=instance)
