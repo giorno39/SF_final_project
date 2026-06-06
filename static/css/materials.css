@@ -306,6 +306,7 @@
   border-radius: 14px;
   box-shadow: var(--materials-shadow);
   padding: 18px 20px;
+  overflow: hidden;
 }
 
 .materials-comment-author {
@@ -320,6 +321,9 @@
   color: var(--materials-text);
   line-height: 1.55;
   white-space: pre-line;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
 }
 
 .materials-comment-date {
@@ -542,5 +546,4 @@
     flex-direction: row;
     align-items: flex-start;
   }
-}
 }
