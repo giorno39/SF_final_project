@@ -599,3 +599,40 @@
   color: var(--text);
   font-weight: 500;
 }
+
+.ai-teacher-header__actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.ai-teacher-btn--skip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 24px;
+  border-radius: 999px;
+  background: #eef5ff;
+  border: 1px solid #cfe0fb;
+  color: #163b72;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(31, 95, 174, 0.12);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ai-teacher-btn--skip:hover {
+  background: #dbe9ff;
+  color: #163b72;
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(31, 95, 174, 0.18);
+}
+
+.ai-teacher-btn--skip::before {
+  content: "↪";
+  margin-right: 8px;
+  font-size: 16px;
+}

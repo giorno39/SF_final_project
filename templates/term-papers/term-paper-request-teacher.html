@@ -24,6 +24,13 @@
                     {% trans "Showing fallback recommendations based on the available matching data." %}
                 </p>
             {% endif %}
+
+            <div class="ai-teacher-header__actions">
+                <a class="ai-teacher-btn ai-teacher-btn--skip"
+                   href="{% url 'term-paper-details' pk=term_paper.pk %}">
+                    {% trans "Skip recommendations" %}
+                </a>
+            </div>
         </header>
 
         {% if messages %}
