@@ -56,6 +56,16 @@ class TermPaperCreateForm(forms.ModelForm):
             }),
         }
 
+    def clean_death_line(self):
+        death_line = self.cleaned_data.get("death_line")
+
+        if death_line and death_line < date.today():
+            raise forms.ValidationError(
+                _("Deadline cannot be in the past.")
+            )
+
+        return death_line
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -126,6 +136,16 @@ class TermPaperEditForm(forms.ModelForm):
                 "rows": 5,
             }),
         }
+
+    def clean_death_line(self):
+        death_line = self.cleaned_data.get("death_line")
+
+        if death_line and death_line < date.today():
+            raise forms.ValidationError(
+                _("Deadline cannot be in the past.")
+            )
+
+        return death_line
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
