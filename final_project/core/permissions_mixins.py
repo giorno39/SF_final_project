@@ -5,7 +5,7 @@ from final_project.accounts.models import TypesOfUsers
 
 
 class TeacherRequiredMixin(LoginRequiredMixin):
-    login_url = "login-user"   # replace if your url name is different
+    login_url = "login-user"
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:

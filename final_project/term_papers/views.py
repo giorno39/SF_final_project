@@ -6,6 +6,7 @@ from channels.layers import get_channel_layer
 from django import forms
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.http import FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -188,7 +189,7 @@ class TermPaperEditView(views.UpdateView):
         return result
 
 
-class TermPaperDeleteView(views.DeleteView):
+class TermPaperDeleteView(StudentRequiredMixin, views.DeleteView):
     model = TermPaper
     template_name = 'term-papers/term-paper-delete.html'
     success_url = reverse_lazy('term-paper-index')
