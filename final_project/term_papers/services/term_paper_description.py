@@ -23,6 +23,11 @@ def describe_term_paper_with_ai(uploaded_file):
 
     client = get_openai_client()
 
+    if client is None:
+        raise ValueError(
+            "AI description generation is currently unavailable because no OpenAI API key is configured."
+        )
+
     uploaded_file.seek(0)
 
     uploaded = client.files.create(
@@ -34,35 +39,49 @@ def describe_term_paper_with_ai(uploaded_file):
         purpose='user_data',
     )
 
-    response = client.responses.create(
-        model=settings.OPENAI_MODEL,
-        input=[
-            {
-                "role": "system",
-                "content": (
-                    "You read university term paper PDFs and produce a short, clear "
-                    "description for a form field. Return plain text only."
-                ),
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "input_text",
-                        "text": (
-                            "Read this PDF and write a concise description of the term paper. "
-                            "Include the topic, requirements, expected deliverables, and any "
-                            "important constraints."
-                        ),
-                    },
-                    {
-                        "type": "input_file",
-                        "file_id": uploaded.id,
-                    },
-                ],
-            },
-        ],
-    )
+    try:
+        uploaded = client.files.create(
+            file=(
+                uploaded_file.name,
+                uploaded_file.file,
+                uploaded_file.content_type or 'application/pdf',
+            ),
+            purpose='user_data',
+        )
+
+        response = client.responses.create(
+            model=settings.OPENAI_MODEL,
+            input=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You read university term paper PDFs and produce a short, clear "
+                        "description for a form field. Return plain text only."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": (
+                                "Read this PDF and write a concise description of the term paper. "
+                                "Include the topic, requirements, expected deliverables, and any "
+                                "important constraints."
+                            ),
+                        },
+                        {
+                            "type": "input_file",
+                            "file_id": uploaded.id,
+                        },
+                    ],
+                },
+            ],
+        )
+    except Exception:
+        raise ValueError(
+            "AI description generation is currently unavailable. Please try again later or enter the description manually."
+        )
 
     description = (response.output_text or '').strip()
 
