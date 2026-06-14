@@ -178,6 +178,9 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3, language=
 
     client = get_openai_client()
 
+    if client is None:
+        return _fallback_recommendations(candidates, result_size)
+
     reason_language = _language_name(language)
 
     prompt_payload = {
@@ -202,46 +205,49 @@ def rank_teachers_with_ai(term_paper, shortlist_size=8, result_size=3, language=
         ),
     }
 
-    response = client.responses.create(
-        model=settings.OPENAI_MODEL,
-        input=[
-            {
-                "role": "system",
-                "content": (
-                    "You are helping rank teachers for a university term paper platform. "
-                    "Return valid JSON only. "
-                    "Do not include markdown fences. "
-                    "Do not include commentary outside the JSON. "
-                    "Prefer teachers whose background, past completed papers, and reputation "
-                    "best match the term paper."
-                ),
-            },
-            {
-                "role": "user",
-                "content": (
-                    "Return JSON with this exact shape:\n"
-                    "{\n"
-                    '  "recommendations": [\n'
-                    "    {\n"
-                    '      "teacher_id": 1,\n'
-                    '      "rank": 1,\n'
-                    '      "score": 92,\n'
-                    f'      "reason": "One short sentence in {reason_language}."\n'
-                    "    }\n"
-                    "  ]\n"
-                    "}\n\n"
-                    "Rules:\n"
-                    f"- You have {len(candidates)} available teachers.\n"
-                    f"- Return between 1 and {min(result_size, len(candidates))} recommendations.\n"
-                    "- Never return an empty recommendations array when teachers are provided.\n"
-                    "- Pick the best available matches even if the fit is imperfect.\n"
-                    f'- The "reason" field must be written in {reason_language}.\n'
-                    "- Return valid JSON only.\n\n"
-                    f"Here is the data:\n{json.dumps(prompt_payload, ensure_ascii=False)}"
-                ),
-            },
-        ],
-    )
+    try:
+        response = client.responses.create(
+            model=settings.OPENAI_MODEL,
+            input=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are helping rank teachers for a university term paper platform. "
+                        "Return valid JSON only. "
+                        "Do not include markdown fences. "
+                        "Do not include commentary outside the JSON. "
+                        "Prefer teachers whose background, past completed papers, and reputation "
+                        "best match the term paper."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": (
+                        "Return JSON with this exact shape:\n"
+                        "{\n"
+                        '  "recommendations": [\n'
+                        "    {\n"
+                        '      "teacher_id": 1,\n'
+                        '      "rank": 1,\n'
+                        '      "score": 92,\n'
+                        f'      "reason": "One short sentence in {reason_language}."\n'
+                        "    }\n"
+                        "  ]\n"
+                        "}\n\n"
+                        "Rules:\n"
+                        f"- You have {len(candidates)} available teachers.\n"
+                        f"- Return between 1 and {min(result_size, len(candidates))} recommendations.\n"
+                        "- Never return an empty recommendations array when teachers are provided.\n"
+                        "- Pick the best available matches even if the fit is imperfect.\n"
+                        f'- The "reason" field must be written in {reason_language}.\n'
+                        "- Return valid JSON only.\n\n"
+                        f"Here is the data:\n{json.dumps(prompt_payload, ensure_ascii=False)}"
+                    ),
+                },
+            ],
+        )
+    except Exception:
+        return _fallback_recommendations(candidates, result_size)
 
     raw_text = (response.output_text or "").strip()
 

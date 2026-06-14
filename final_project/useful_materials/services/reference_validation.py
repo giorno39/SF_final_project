@@ -19,6 +19,51 @@ BLOCKED_KEYWORDS = [
     'webcam',
 ]
 
+def _fallback_validate_reference(url, specialization_names, preview):
+    combined_text = normalize_text(
+        ' '.join([
+            preview.get('title', ''),
+            preview.get('meta_description', ''),
+            preview.get('text_excerpt', ''),
+        ])
+    ).lower()
+
+    normalized_specializations = [
+        normalize_text(name).lower()
+        for name in specialization_names
+        if normalize_text(name)
+    ]
+
+    matched_specializations = [
+        name
+        for name in specialization_names
+        if normalize_text(name).lower() in combined_text
+    ]
+
+    is_relevant = bool(matched_specializations)
+
+    if not normalized_specializations:
+        is_relevant = True
+
+    if not is_relevant:
+        return {
+            'is_allowed': False,
+            'is_safe': True,
+            'is_relevant': False,
+            'matched_specializations': [],
+            'reason': 'The reference appears safe, but it does not clearly match the selected specializations.',
+            'preview': preview,
+        }
+
+    return {
+        'is_allowed': True,
+        'is_safe': True,
+        'is_relevant': True,
+        'matched_specializations': matched_specializations,
+        'reason': 'Reference accepted using fallback validation because AI validation is unavailable.',
+        'preview': preview,
+    }
+
 
 def normalize_text(value):
     return ' '.join((value or '').split()).strip()
@@ -99,6 +144,13 @@ def validate_reference_with_ai(url, specialization_names):
 
     client = get_openai_client()
 
+    if client is None:
+        return _fallback_validate_reference(
+            url=url,
+            specialization_names=specialization_names,
+            preview=preview,
+        )
+
     prompt = f"""
 You are validating whether a submitted educational reference link is acceptable for an academic materials platform.
 
@@ -136,10 +188,17 @@ Return ONLY valid JSON in this format:
 }}
 """.strip()
 
-    response = client.responses.create(
-        model='gpt-4.1-mini',
-        input=prompt,
-    )
+    try:
+        response = client.responses.create(
+            model='gpt-4.1-mini',
+            input=prompt,
+        )
+    except Exception:
+        return _fallback_validate_reference(
+            url=url,
+            specialization_names=specialization_names,
+            preview=preview,
+        )
 
     raw_output = response.output_text.strip()
 
