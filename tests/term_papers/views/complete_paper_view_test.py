@@ -20,18 +20,15 @@ class CompleteTermPaperViewTest(BaseTestCase):
         'user_type': 'student',
     }
 
-    def test_complete_paper__when__accessed_not_by_the_user_that_took_the_paper__expect_redirect(self):
+    def test_complete_paper__when_accessed_not_by_the_user_that_took_the_paper__expect_not_found(self):
         profile_user = self._create_user_and_login(self.VALID_STUDENT_DATA)
         user = self._create_user_and_login(self.VALID_TEACHER_DATA)
 
+        # Paper taken by the student, not by the logged-in teacher.
         paper = create_term_paper_for_1_user(profile_user, taken=profile_user)
 
         response = self.client.get(reverse_lazy('term-paper-complete', kwargs={'pk': paper.pk}))
 
-        expected_url = reverse_lazy('term-paper-details', kwargs={
-            'pk': paper.pk,
-        })
-        self.assertRedirects(response, expected_url, status_code=302, target_status_code=200, msg_prefix='',
-                             fetch_redirect_response=True)
-
-
+        # The view's queryset only contains papers taken by request.user, so this
+        # paper is invisible to the teacher and the lookup 404s.
+        self.assertEqual(404, response.status_code)

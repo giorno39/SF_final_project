@@ -15,7 +15,9 @@ class UserEditViewTests(BaseTestCase):
         'user_type': 'teacher',
     }
 
-    def test_edit_profile__when_someone_else_tries_to_access_expect_redirect(self):
+    def test_edit_profile__always_edits_the_logged_in_user(self):
+        # ProfileEdit.get_object() returns request.user, so the pk in the URL is
+        # ignored and a user can only ever edit their own profile.
         profile_user = self._create_user_and_login({
             'username': self.VALID_TEACHER_DATA['username'] + '1',
             'password': self.VALID_TEACHER_DATA['password'],
@@ -27,6 +29,5 @@ class UserEditViewTests(BaseTestCase):
 
         response = self.client.get(reverse_lazy('edit-user', kwargs={'pk': profile_user.pk}))
 
-        expected_url = reverse_lazy('details-user', kwargs={'pk': profile_user.pk})
-        self.assertRedirects(response, expected_url, status_code=302, target_status_code=200, msg_prefix='',
-                             fetch_redirect_response=True)
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(user.pk, response.context['object'].pk)
