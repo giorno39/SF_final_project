@@ -30,16 +30,10 @@ class OwnLessonViewTest(BaseTestCase):
         queryset = response.context['object_list']
         self.assertEqual(2, len(queryset))
 
-
-
-
-    def test_own_lesson_view__when_accessed_by_a_student_expect_redirect_to_index(self):
-        profile_user = self._create_user_and_login(self.VALID_STUDENT_DATA)
+    def test_own_lesson_view__when_accessed_by_a_student_expect_no_perms(self):
+        self._create_user_and_login(self.VALID_STUDENT_DATA)
 
         response = self.client.get(reverse_lazy('own-lesson-index'))
 
-        expected_url = reverse_lazy('index')
-        self.assertRedirects(response, expected_url, status_code=302, target_status_code=200, msg_prefix='',
-                             fetch_redirect_response=True)
-
-
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'common/no-perms.html')

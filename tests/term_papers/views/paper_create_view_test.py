@@ -1,7 +1,6 @@
 from django.urls import reverse_lazy
 
 from tests.accounts.base_test_case import BaseTestCase
-from tests.utils.creation_utils import create_term_paper_for_1_user
 
 
 class PaperCreateViewTest(BaseTestCase):
@@ -19,11 +18,10 @@ class PaperCreateViewTest(BaseTestCase):
         'user_type': 'student',
     }
 
-    def test_create_view__when_accessed_by_a_teacher_expect_redirect(self):
+    def test_create_view__when_accessed_by_a_teacher_expect_no_perms(self):
         self._create_user_and_login(self.VALID_TEACHER_DATA)
 
         response = self.client.get(reverse_lazy('term-paper-add'))
 
-        expected_url = reverse_lazy('index')
-        self.assertRedirects(response, expected_url, status_code=302, target_status_code=200, msg_prefix='',
-                             fetch_redirect_response=True)
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'common/no-perms.html')

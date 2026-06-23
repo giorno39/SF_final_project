@@ -1,4 +1,7 @@
+from datetime import timedelta
+
 from django.urls import reverse_lazy
+from django.utils import timezone
 
 from tests.accounts.base_test_case import BaseTestCase
 from tests.utils.creation_utils import create_term_paper_for_1_user
@@ -22,17 +25,18 @@ class PaperIndexViewTest(BaseTestCase):
     def test_index_paper_view__when_there_are_only_old_papers__expect_empty_queryset(self):
         user = self._create_user_and_login(self.VALID_TEACHER_DATA)
 
-        paper = create_term_paper_for_1_user(user)
+        # death_line in the past -> filtered out of the feed.
+        create_term_paper_for_1_user(user, date=timezone.now().date() - timedelta(days=1))
 
         response = self.client.get(reverse_lazy('term-paper-index'))
         queryset = response.context['object_list']
         self.assertEqual(0, len(queryset))
 
-
     def test_index_paper_view__when_there_is_a_active_paper__expect_correct_queryset(self):
         user = self._create_user_and_login(self.VALID_TEACHER_DATA)
 
-        paper = create_term_paper_for_1_user(user, date='2024-07-19')
+        # Future deadline, not taken, no pending request -> shows in the feed.
+        create_term_paper_for_1_user(user, date=timezone.now().date() + timedelta(days=14))
 
         response = self.client.get(reverse_lazy('term-paper-index'))
         queryset = response.context['object_list']
