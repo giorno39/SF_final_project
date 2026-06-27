@@ -113,6 +113,80 @@
 .auth-form ul{ list-style:none; padding-left:0; margin:0; }
 .auth-form li{ margin:.35rem 0; }
 
+/* ===== Field help text (e.g. username rules) ===== */
+.auth-form .helptext{
+  display:block;
+  margin:.4rem 0 .2rem;
+  font-size:.78rem;
+  line-height:1.4;
+  color:var(--muted);
+}
+
+/* ===== Password requirement checklist ===== */
+.auth-form .pw-field{ margin-bottom:.35rem; }
+
+.auth-form .pw-rules{
+  list-style:none;
+  margin:.1rem 0 1rem;
+  padding:0;
+  font-size:.82rem;
+}
+.auth-form .pw-rules li{
+  display:flex;
+  align-items:center;
+  gap:.55rem;
+  margin:.3rem 0;
+  color:var(--muted);
+  transition:color .15s ease;
+}
+.auth-form .pw-rule-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  width:17px;
+  height:17px;
+  border:2px solid #cbd5e1;
+  border-radius:50%;
+  background:#fff;
+  transition:background-color .15s ease, border-color .15s ease;
+}
+.auth-form .pw-rule-icon::before{
+  content:"\2713";          /* check mark */
+  font-size:.66rem;
+  font-weight:700;
+  line-height:1;
+  color:transparent;
+  transition:color .15s ease;
+}
+.auth-form .pw-rules li.valid{
+  color:#15803d;
+}
+.auth-form .pw-rules li.valid .pw-rule-icon{
+  background:#16a34a;
+  border-color:#16a34a;
+}
+.auth-form .pw-rules li.valid .pw-rule-icon::before{
+  color:#fff;
+}
+
+/* ===== Field / form errors ===== */
+.auth-form .field-error{
+  display:block;
+  margin-top:.3rem;
+  font-size:.8rem;
+  color:#dc2626;
+}
+.auth-form .form-errors{
+  margin:0 0 1rem;
+  padding:.6rem .75rem;
+  background:#fef2f2;
+  border:1px solid #fecaca;
+  border-left:3px solid #dc2626;
+  border-radius:10px;
+}
+.auth-form .form-errors .field-error{ margin:0; }
+
 /* ===== Primary actions in card forms (override global pill buttons) ===== */
 .auth-form input[type="submit"],
 .auth-form-container input[type="submit"],

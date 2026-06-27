@@ -20,7 +20,7 @@ LOCALE_PATHS = [
 
 SECRET_KEY = 'django-insecure-+ggl=+_-t^5&@no!75iv*3x7kqjt7rh6(bj@4u&8=a7#hzmtdx'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -115,6 +115,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+
 
 if DEBUG:
     AUTH_PASSWORD_VALIDATORS = []

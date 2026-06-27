@@ -35,5 +35,5 @@ urlpatterns += i18n_patterns(
     path('chat/', include('final_project.chat.urls')),
 )
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Serve uploaded media files even with DEBUG=False so the local demo still works.
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

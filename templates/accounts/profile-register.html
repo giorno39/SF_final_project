@@ -6,10 +6,155 @@
     <h2>{% trans "Create account" %}</h2>
 
     <form class="auth-form" method="post" action="{% url 'register-user' %}">
-        {{ form.as_p }}
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="form-errors">
+                {% for error in form.non_field_errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <p>
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {% for error in form.username.errors %}
+                <span class="field-error">{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {% for error in form.email.errors %}
+                <span class="field-error">{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.user_type.label_tag }}
+            {{ form.user_type }}
+            {% for error in form.user_type.errors %}
+                <span class="field-error">{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        <p class="pw-field">
+            {{ form.password1.label_tag }}
+            {{ form.password1 }}
+            {% for error in form.password1.errors %}
+                <span class="field-error">{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        <ul class="pw-rules" id="pw-rules" aria-live="polite">
+            <li data-rule="length"><span class="pw-rule-icon"></span>{% trans "At least 8 characters" %}</li>
+            <li data-rule="notnumeric"><span class="pw-rule-icon"></span>{% trans "Not entirely numeric" %}</li>
+            <li data-rule="similar"><span class="pw-rule-icon"></span>{% trans "Not too similar to your username or email" %}</li>
+            <li data-rule="common"><span class="pw-rule-icon"></span>{% trans "Not a commonly used password" %}</li>
+        </ul>
+
+        <p class="pw-field">
+            {{ form.password2.label_tag }}
+            {{ form.password2 }}
+            {% for error in form.password2.errors %}
+                <span class="field-error">{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        <ul class="pw-rules" id="pw-match" aria-live="polite">
+            <li data-rule="match"><span class="pw-rule-icon"></span>{% trans "Passwords match" %}</li>
+        </ul>
+
         <input type="hidden" name="next" value="{{ next }}">
         <button type="submit">{% trans "Register" %}</button>
-        {% csrf_token %}
     </form>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    const pw = document.getElementById('id_password1');
+    const pw2 = document.getElementById('id_password2');
+    const rules = document.getElementById('pw-rules');
+    if (!pw || !rules) return;
+
+    const usernameEl = document.getElementById('id_username');
+    const emailEl = document.getElementById('id_email');
+    const matchEl = document.querySelector('#pw-match li[data-rule="match"]');
+
+    const li = {};
+    rules.querySelectorAll('li[data-rule]').forEach(function (el) {
+        li[el.dataset.rule] = el;
+    });
+
+    // Subset of Django's common-password list (most frequent entries).
+    const COMMON = new Set([
+        'password', '123456', '123456789', '12345678', '12345', '1234567',
+        '1234567890', 'qwerty', 'abc123', 'password1', 'password123', '111111',
+        '123123', 'admin', 'admin123', 'letmein', 'welcome', 'monkey', '1234',
+        'dragon', 'sunshine', 'princess', 'football', 'iloveyou', '000000',
+        'qwerty123', 'superman', 'michael', 'shadow', 'master', 'jennifer',
+        'batman', 'trustno1', 'baseball', 'passw0rd', 'login', 'starwars',
+        'hello123', 'whatever', 'qwertyuiop', 'zxcvbnm', 'asdfghjkl', 'aa123456',
+        'root', 'test', 'guest', 'user', 'changeme', 'secret', 'pass', 'azerty',
+        'q1w2e3r4', '1q2w3e4r', 'qazwsx', '654321', '666666', '121212', '987654321'
+    ]);
+
+    // Approximation of difflib.SequenceMatcher.quick_ratio used by Django's
+    // UserAttributeSimilarityValidator (default max_similarity = 0.7).
+    function quickRatio(a, b) {
+        if (!a.length && !b.length) return 1;
+        const ca = {}, cb = {};
+        for (const ch of a) ca[ch] = (ca[ch] || 0) + 1;
+        for (const ch of b) cb[ch] = (cb[ch] || 0) + 1;
+        let m = 0;
+        for (const ch in ca) if (cb[ch]) m += Math.min(ca[ch], cb[ch]);
+        return (2 * m) / (a.length + b.length);
+    }
+
+    function tooSimilar(val) {
+        val = val.toLowerCase();
+        const candidates = [];
+        if (usernameEl && usernameEl.value) candidates.push(usernameEl.value);
+        if (emailEl && emailEl.value) {
+            candidates.push(emailEl.value);
+            candidates.push(emailEl.value.split('@')[0]);
+        }
+        for (let c of candidates) {
+            c = (c || '').toLowerCase().trim();
+            if (!c) continue;
+            const parts = c.split(/[\W_]+/).filter(Boolean);
+            parts.push(c);
+            for (const p of parts) {
+                if (p.length < 1) continue;
+                if (quickRatio(val, p) >= 0.7) return true;
+            }
+        }
+        return false;
+    }
+
+    function setState(el, ok) {
+        if (el) el.classList.toggle('valid', ok);
+    }
+
+    function evaluate() {
+        const v = pw.value;
+        const has = v.length > 0;
+        setState(li.length, v.length >= 8);
+        setState(li.notnumeric, has && !/^\d+$/.test(v));
+        setState(li.similar, has && !tooSimilar(v));
+        setState(li.common, has && !COMMON.has(v.toLowerCase()));
+        setState(matchEl, has && pw2 && pw2.value.length > 0 && v === pw2.value);
+    }
+
+    pw.addEventListener('input', evaluate);
+    if (pw2) pw2.addEventListener('input', evaluate);
+    if (usernameEl) usernameEl.addEventListener('input', evaluate);
+    if (emailEl) emailEl.addEventListener('input', evaluate);
+    evaluate();
+})();
+</script>
 {% endblock %}
