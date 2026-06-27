@@ -43,7 +43,7 @@ class UserDetailsViewTests(BaseTestCase):
         response = self.client.get(reverse_lazy('details-user', kwargs={'pk': user.pk}))
 
         self.assertIsNotNone(response.context['avg_rate'])
-        self.assertEquals(2.5, response.context['avg_rate'])
+        self.assertEqual(2.5, response.context['avg_rate'])
 
     def test_user_details__when_teacher_without_trophies_expect_no_avg_rate(self):
         user = self._create_user_and_login(self.VALID_TEACHER_DATA)

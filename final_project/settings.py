@@ -84,7 +84,17 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [{
+                "address": "redis://127.0.0.1:6379",
+                # Redis 8.x / redis-py 8.x default to RESP3 on the wire, which
+                # breaks channels_redis blocking pops (TimeoutError in
+                # await_many_dispatch). Force RESP2 to fix it.
+                "protocol": 2,
+                "socket_keepalive": True,
+                "health_check_interval": 30,
+            }],
+            "capacity": 1500,
+            "expiry": 10,
         },
     },
 }

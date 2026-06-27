@@ -440,7 +440,7 @@ textarea::placeholder{
 label{display:block; font-weight:600; margin:.4rem 0 .25rem}
 
 /* Buttons (generic) — primary */
-button:not(.nav-toggle):not(.main-card-link),
+button:not(.nav-toggle):not(.main-card-link):not(.header-icon-btn),
 .btn{
   appearance:none;
   border:0;
@@ -455,15 +455,15 @@ button:not(.nav-toggle):not(.main-card-link),
   box-shadow:none;
   transition:var(--btn-transition);
 }
-button:not(.nav-toggle):not(.main-card-link):hover,
+button:not(.nav-toggle):not(.main-card-link):not(.header-icon-btn):hover,
 .btn:hover{
   background:var(--brand-600);
 }
-button:not(.nav-toggle):not(.main-card-link):active,
+button:not(.nav-toggle):not(.main-card-link):not(.header-icon-btn):active,
 .btn:active{
   background:var(--brand-700);
 }
-button:not(.nav-toggle):not(.main-card-link):focus-visible,
+button:not(.nav-toggle):not(.main-card-link):not(.header-icon-btn):focus-visible,
 .btn:focus-visible{
   outline:none;
   box-shadow:0 0 0 3px rgba(24,100,171,.35);
@@ -773,6 +773,13 @@ html {
   margin: 0 0 0 .75rem;
   padding: 0;
   height: 100%;
+}
+
+.logout-form {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 button.language-toggle-btn {
