@@ -16,9 +16,9 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
-from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.static import serve
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
 ]
@@ -36,4 +36,8 @@ urlpatterns += i18n_patterns(
 )
 
 # Serve uploaded media files even with DEBUG=False so the local demo still works.
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# NOTE: django.conf.urls.static.static() returns [] when DEBUG is False, so we
+# register the serve view directly instead. For local/demo use only — not production.
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+]
